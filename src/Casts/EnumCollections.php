@@ -6,15 +6,14 @@ use BackedEnum;
 use Datomatic\EnumCollection\EnumCollection;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use UnitEnum;
 
 class EnumCollections implements CastsAttributes
 {
     /**
      * @param  Model  $model
-     * @param string  $key
-     * @param string $value
+     * @param  string  $key
+     * @param  string  $value
      * @param  array  $attributes
      * @return EnumCollection|mixed
      */
@@ -66,11 +65,11 @@ class EnumCollections implements CastsAttributes
         $enumClass = $this->getEnumCollectionClass($model, $key);
 
         return json_encode(collect($enumCollection)->map(function ($value) use ($enumClass) {
-
             if ($value instanceof UnitEnum) {
                 if ($value instanceof BackedEnum) {
                     return $value->value;
                 }
+
                 return $value->name;
             }
 
@@ -79,24 +78,24 @@ class EnumCollections implements CastsAttributes
             } else {
                 return $enumClass::fromName(intval($value));
             }
-
         })->toArray());
     }
 
     /**
-     * @param Model $model
-     * @param string $key
+     * @param  Model  $model
+     * @param  string  $key
      * @return string
+     *
      * @throws \Exception
      */
     private function getEnumCollectionClass(Model $model, string $key): string
     {
-        if(empty($model->enumCollections) || !is_array($model->enumCollections)){
+        if (empty($model->enumCollections) || ! is_array($model->enumCollections)) {
             throw new \Exception('enumCollections array property not defined on Model '.get_class($model));
         }
 
-        if(!isset($model->enumCollections[$key])){
-            throw new \Exception("On model ".get_class($model)." enumCollections array don't has '{$key}' key");
+        if (! isset($model->enumCollections[$key])) {
+            throw new \Exception('On model '.get_class($model)." enumCollections array don't has '{$key}' key");
         }
 
         return $model->enumCollections[$key];

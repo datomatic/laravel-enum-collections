@@ -3,8 +3,8 @@
 namespace Datomatic\EnumCollection;
 
 use BackedEnum;
-use UnitEnum;
 use Illuminate\Support\Collection;
+use UnitEnum;
 
 /**
  * @extends Collection<int,UnitEnum>
@@ -18,7 +18,6 @@ class EnumCollection extends Collection
         }
 
         if (! $enum instanceof UnitEnum && $this->first()) {
-
             $enumClass = get_class($this->first());
 
             if (is_subclass_of($enumClass, BackedEnum::class) &&
