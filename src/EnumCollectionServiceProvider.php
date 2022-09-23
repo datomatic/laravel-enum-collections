@@ -15,11 +15,6 @@ class EnumCollectionServiceProvider extends PackageServiceProvider
          *
          * More info: https://github.com/spatie/laravel-package-tools
          */
-        $package
-            ->name('laravel-enum-collections')
-            ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_laravel-enum-collections_table')
-            ->hasCommand(EnumCollectionCommand::class);
+        $package->name('laravel-enum-collections');
     }
 }
