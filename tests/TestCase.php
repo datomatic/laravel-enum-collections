@@ -2,9 +2,9 @@
 
 namespace Datomatic\EnumCollection\Tests;
 
+use Datomatic\EnumCollection\EnumCollectionServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Datomatic\EnumCollection\EnumCollectionServiceProvider;
 
 class TestCase extends Orchestra
 {
