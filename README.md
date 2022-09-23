@@ -5,7 +5,7 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/datomatic/laravel-enum-collections/Fix%20PHP%20code%20style%20issues?label=code%20style)](https://github.com/datomatic/laravel-enum-collections/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/datomatic/laravel-enum-collections.svg?style=flat-square)](https://packagist.org/packages/datomatic/laravel-enum-collections)
 
-Save a collection of Enums in an Eloquent field and interact with him
+Save a collection of Enums in an Eloquent field and interact with it.
 
 ## Installation
 
