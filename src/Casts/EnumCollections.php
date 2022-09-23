@@ -1,25 +1,30 @@
 <?php
 
-namespace Datomatic\EnumCollection\Casts;
+namespace Datomatic\EnumCollections\Casts;
 
 use BackedEnum;
-use Datomatic\EnumCollection\EnumCollection;
+use Datomatic\EnumCollections\EnumCollection;
+use Exception;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use UnitEnum;
 
 class EnumCollections implements CastsAttributes
 {
     /**
-     * @param  Model  $model
-     * @param  string  $key
-     * @param  string  $value
-     * @param  array  $attributes
+     * @param Model $model
+     * @param string $key
+     * @param $value
+     * @param array $attributes
      * @return EnumCollection|mixed
+     * @throws Exception
      */
     public function get($model, string $key, $value, array $attributes)
     {
         $enumArray = json_decode($value);
+
         if (! is_array($enumArray)) {
             return new EnumCollection();
         }
@@ -28,20 +33,7 @@ class EnumCollections implements CastsAttributes
 
         $enumCollection = new EnumCollection();
         foreach ($enumArray as $enumValue) {
-            $enum = null;
-
-            if (is_subclass_of($enumClass, BackedEnum::class)) {
-                $enum = $enumClass::tryFrom($enumValue);
-            }
-
-            if (! $enum && is_string($value)) {
-                foreach ($enumClass::cases() as $case) {
-                    if ($case->name === $value) {
-                        $enum = $case;
-                        break;
-                    }
-                }
-            }
+            $enum = EnumCollection::tryGetEnumFromValue($enumValue, $enumClass);
 
             if ($enum) {
                 $enumCollection->push($enum);
@@ -56,7 +48,7 @@ class EnumCollections implements CastsAttributes
      *
      * @param  Model  $model
      * @param  string  $key
-     * @param  EnumCollection|array  $enumCollection
+     * @param  EnumCollection|array|string|int|UnitEnum|null  $enumCollection
      * @param  array  $attributes
      * @return string|false
      */
@@ -64,21 +56,24 @@ class EnumCollections implements CastsAttributes
     {
         $enumClass = $this->getEnumCollectionClass($model, $key);
 
-        return json_encode(collect($enumCollection)->map(function ($value) use ($enumClass) {
-            if ($value instanceof UnitEnum) {
-                if ($value instanceof BackedEnum) {
-                    return $value->value;
+        if(! $enumCollection instanceof Collection){
+            $enumCollection = collect(Arr::wrap($enumCollection));
+        }
+        return $enumCollection->map(function ($value) use ($enumClass, $enumCollection) {
+
+            $enum = EnumCollection::tryGetEnumFromValue($value, $enumClass);
+
+            if ($enum) {
+                if ($enum instanceof BackedEnum) {
+                    return $enum->value;
                 }
 
-                return $value->name;
+                return $enum->name;
             }
 
-            if (is_subclass_of($enumClass, BackedEnum::class)) {
-                return $enumClass::tryfrom(intval($value)) ?? $enumClass::tryfrom($value);
-            } else {
-                return $enumClass::fromName(intval($value));
-            }
-        })->toArray());
+            return null;
+
+        })->filter()->values()->toJson();
     }
 
     /**
@@ -86,18 +81,19 @@ class EnumCollections implements CastsAttributes
      * @param  string  $key
      * @return string
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function getEnumCollectionClass(Model $model, string $key): string
     {
         if (empty($model->enumCollections) || ! is_array($model->enumCollections)) {
-            throw new \Exception('enumCollections array property not defined on Model '.get_class($model));
+            throw new Exception('enumCollections array property not defined on Model '.get_class($model));
         }
 
         if (! isset($model->enumCollections[$key])) {
-            throw new \Exception('On model '.get_class($model)." enumCollections array don't has '{$key}' key");
+            throw new Exception('On model '.get_class($model)." enumCollections array don't has '{$key}' key");
         }
 
         return $model->enumCollections[$key];
     }
+
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Datomatic\EnumCollection;
+namespace Datomatic\EnumCollections;
 
 use BackedEnum;
 use Illuminate\Support\Collection;
@@ -11,31 +11,36 @@ use UnitEnum;
  */
 class EnumCollection extends Collection
 {
-    public function contains($key, $operator = null, $enum = null)
+    public function contains($key, $operator = null, $value = null)
     {
-        if ($this->isEmpty()) {
-            return false;
+        if($this->count()){
+            $enumClass = get_class($this->first());
+            $enum = self::tryGetEnumFromValue($key, $enumClass);
+
+            return in_array($enum, $this->items);
         }
 
-        if (! $enum instanceof UnitEnum && $this->first()) {
-            $enumClass = get_class($this->first());
+        return false;
+    }
 
-            if (is_subclass_of($enumClass, BackedEnum::class) &&
-                (is_string($enum) || is_int($enum))
-            ) {
-                $enum = $enumClass::tryFrom($enum);
-            }
+    public static function tryGetEnumFromValue(mixed $value, mixed $enumClass): ?UnitEnum
+    {
+        if ($value instanceof UnitEnum) {
+            return $value;
+        }
 
-            if (! $enum && is_string($enum)) {
-                foreach ($enumClass::cases() as $case) {
-                    if ($case->name === $enum) {
-                        $enum = $case;
-                        break;
-                    }
+        if(is_string($value)) {
+            foreach ($enumClass::cases() as $case) {
+                if ($case->name === $value) {
+                    return $case;
                 }
             }
         }
 
-        return parent::contains($key, $operator, $enum);
+        if (is_subclass_of($enumClass, BackedEnum::class)) {
+            return $enumClass::tryFrom(intval($value)) ?? $enumClass::tryFrom($value);
+        }
+
+        return null;
     }
 }

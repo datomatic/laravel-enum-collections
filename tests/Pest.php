@@ -1,5 +1,5 @@
 <?php
 
-use Datomatic\EnumCollection\Tests\TestCase;
+use Datomatic\EnumCollections\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);

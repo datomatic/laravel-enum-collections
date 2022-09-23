@@ -1,6 +1,6 @@
 <?php
 
-namespace Datomatic\EnumCollection;
+namespace Datomatic\EnumCollections;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Datomatic\EnumCollection\Traits;
+namespace Datomatic\EnumCollections\Traits;
 
 use BackedEnum;
 use Illuminate\Database\Eloquent\Builder;

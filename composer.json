@@ -34,13 +34,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Datomatic\\EnumCollection\\": "src",
-            "Datomatic\\EnumCollection\\Database\\Factories\\": "database/factories"
+            "Datomatic\\EnumCollections\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Datomatic\\EnumCollection\\Tests\\": "tests"
+            "Datomatic\\EnumCollections\\Tests\\": "tests"
         }
     },
     "scripts": {
