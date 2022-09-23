@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Datomatic\EnumCollection\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class EnumCollectionCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-enum-collections';
 
     public $description = 'My command';
 
