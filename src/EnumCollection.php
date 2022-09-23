@@ -13,7 +13,7 @@ class EnumCollection extends Collection
 {
     public function contains($key, $operator = null, $value = null)
     {
-        if($this->count()){
+        if ($this->count()) {
             $enumClass = get_class($this->first());
             $enum = self::tryGetEnumFromValue($key, $enumClass);
 
@@ -29,7 +29,7 @@ class EnumCollection extends Collection
             return $value;
         }
 
-        if(is_string($value)) {
+        if (is_string($value)) {
             foreach ($enumClass::cases() as $case) {
                 if ($case->name === $value) {
                     return $case;

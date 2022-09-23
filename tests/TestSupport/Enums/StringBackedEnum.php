@@ -13,5 +13,4 @@ enum StringBackedEnum: string
     case LARGE = 'L';
 
     case EXTRA_LARGE = 'XL';
-
 }

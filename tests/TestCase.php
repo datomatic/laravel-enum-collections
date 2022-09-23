@@ -3,14 +3,12 @@
 namespace Datomatic\EnumCollections\Tests;
 
 use Datomatic\EnumCollections\EnumCollectionServiceProvider;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {
-
     protected function setUp(): void
     {
         parent::setUp();

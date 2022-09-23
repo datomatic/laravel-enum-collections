@@ -11,5 +11,4 @@ enum IntBackedEnum: int
     case PUBLIC = 2;
 
     case PROTECTED = 3;
-
 }

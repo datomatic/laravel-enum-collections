@@ -23,17 +23,18 @@ class TestModel extends Model
     protected $table = 'test_models';
 
     protected $guarded = [];
+
     public $timestamps = false;
 
     protected $casts = [
         'visibilities' => EnumCollections::class,
         'colors' => EnumCollections::class,
-        'sizes' => EnumCollections::class
+        'sizes' => EnumCollections::class,
     ];
 
     public array $enumCollections = [
         'visibilities' => IntBackedEnum::class,
         'colors' => PureEnum::class,
-        'sizes' => StringBackedEnum::class
+        'sizes' => StringBackedEnum::class,
     ];
 }

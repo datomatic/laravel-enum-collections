@@ -14,11 +14,12 @@ use UnitEnum;
 class EnumCollections implements CastsAttributes
 {
     /**
-     * @param Model $model
-     * @param string $key
+     * @param  Model  $model
+     * @param  string  $key
      * @param $value
-     * @param array $attributes
+     * @param  array  $attributes
      * @return EnumCollection|mixed
+     *
      * @throws Exception
      */
     public function get($model, string $key, $value, array $attributes)
@@ -56,11 +57,11 @@ class EnumCollections implements CastsAttributes
     {
         $enumClass = $this->getEnumCollectionClass($model, $key);
 
-        if(! $enumCollection instanceof Collection){
+        if (! $enumCollection instanceof Collection) {
             $enumCollection = collect(Arr::wrap($enumCollection));
         }
-        return $enumCollection->map(function ($value) use ($enumClass, $enumCollection) {
 
+        return $enumCollection->map(function ($value) use ($enumClass) {
             $enum = EnumCollection::tryGetEnumFromValue($value, $enumClass);
 
             if ($enum) {
@@ -72,7 +73,6 @@ class EnumCollections implements CastsAttributes
             }
 
             return null;
-
         })->filter()->values()->toJson();
     }
 
@@ -95,5 +95,4 @@ class EnumCollections implements CastsAttributes
 
         return $model->enumCollections[$key];
     }
-
 }
