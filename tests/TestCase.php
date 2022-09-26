@@ -25,20 +25,18 @@ class TestCase extends Orchestra
 
     public function getEnvironmentSetUp($app)
     {
-        config()->set('database.default', 'testing');
-        config()->set('database.connections.testing', [
-            'driver' => 'sqlite',
-            'database' => ':memory:',
-        ]);
+
     }
 
     protected function setUpDatabase()
     {
-        Schema::create('test_models', function (Blueprint $table) {
-            $table->increments('id');
-            $table->json('visibilities')->nullable();
-            $table->text('colors')->nullable();
-            $table->text('sizes')->nullable();
-        });
+        if (!Schema::hasTable('test_models')) {
+            Schema::create('test_models', function (Blueprint $table) {
+                $table->increments('id');
+                $table->json('visibilities')->nullable();
+                $table->text('colors')->nullable();
+                $table->text('sizes')->nullable();
+            });
+        }
     }
 }

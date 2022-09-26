@@ -38,7 +38,11 @@ class EnumCollection extends Collection
         }
 
         if (is_subclass_of($enumClass, BackedEnum::class)) {
-            return $enumClass::tryFrom(intval($value)) ?? $enumClass::tryFrom($value);
+            if (is_string($enumClass::cases()[0]->value)) {
+                return $enumClass::tryFrom($value);
+            } else {
+                return $enumClass::tryFrom(intval($value));
+            }
         }
 
         return null;
