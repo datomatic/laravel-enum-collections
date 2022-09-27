@@ -71,7 +71,7 @@ Each element can be an:
 - enum object instance
 - enum case name string
 - enum case value (only for `BackedEnum`)
-- enum value on string version (only for `IntBackedEnum`) 
+- enum case (string) value (only for `IntBackedEnum`) 
 
 ```php
 enum FieldEnum: int
@@ -95,7 +95,7 @@ The `EnumCollection` extend the [Laravel collection](https://laravel.com/docs/co
 - enum object instance
 - enum case name string
 - enum case value (only for `BackedEnum`)
-- enum value on string version (only for `IntBackedEnum`)
+- enum case (string) value (only for `IntBackedEnum`)
 
 ```php
 
