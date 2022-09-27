@@ -25,12 +25,11 @@ class TestCase extends Orchestra
 
     public function getEnvironmentSetUp($app)
     {
-
     }
 
     protected function setUpDatabase()
     {
-        if (!Schema::hasTable('test_models')) {
+        if (! Schema::hasTable('test_models')) {
             Schema::create('test_models', function (Blueprint $table) {
                 $table->increments('id');
                 $table->json('visibilities')->nullable();
