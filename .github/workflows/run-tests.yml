@@ -1,14 +1,5 @@
 name: run-tests
 
-services:
-  mysql:
-    image: mysql:8
-    env:
-      MYSQL_ALLOW_EMPTY_PASSWORD: yes
-      MYSQL_DATABASE: laravel_enum_collection
-    ports:
-      - 3306
-    options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
 on:
   push:
@@ -18,6 +9,15 @@ on:
 
 jobs:
   test:
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: laravel_enum_collection
+        ports:
+          - 3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
