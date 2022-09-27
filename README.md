@@ -1,3 +1,4 @@
+![Enum Helper-Dark](branding/dark.png#gh-dark-mode-only)![Enum Helper-Light](branding/light.png#gh-light-mode-only)
 # Laravel Enum Collections
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/datomatic/laravel-enum-collections.svg?style=flat-square)](https://packagist.org/packages/datomatic/laravel-enum-collections)
