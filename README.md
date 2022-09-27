@@ -19,7 +19,8 @@ composer require datomatic/laravel-enum-collections
 
 ## Set up
 
-Before you can use this package you must setup the eloquent Model.
+Before you can use this package you must setup the eloquent Model.  
+Compatible with `PureEnum`, `BackedEnum` and [`datomatic/laravel-enum-helper`](https://github.com/datomatic/laravel-enum-helper) package.
 
 ### 1. Database Migration 
 ```php

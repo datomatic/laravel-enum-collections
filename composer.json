@@ -58,11 +58,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Datomatic\\EnumCollection\\EnumCollectionServiceProvider"
-            ],
-            "aliases": {
-                "EnumCollection": "Datomatic\\EnumCollection\\Facades\\EnumCollection"
-            }
+                "Datomatic\\EnumCollections\\EnumCollectionServiceProvider"
+            ]
         }
     },
     "minimum-stability": "dev",
