@@ -16,7 +16,7 @@ class EnumCollections implements CastsAttributes
     /**
      * @param  Model  $model
      * @param  string  $key
-     * @param $value
+     * @param  string $value
      * @param  array  $attributes
      * @return EnumCollection|mixed
      *
