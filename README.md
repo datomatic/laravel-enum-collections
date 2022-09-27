@@ -32,10 +32,10 @@ Schema::table('table', function (Blueprint $table) {
 
 To set up your model you must:
 - add a custom cast `EnumCollections::class`
-- add a `$enumCollections` with the fields and relative enum class
-- add an optional `HasEnumCollections` trait to made query on enum collections fields
+- add an `$enumCollections` array containing the fields and relative enum classes
+- add an optional `HasEnumCollections` trait to make query on enum collections fields
 
-You can also set more fields if you need.
+You can also set more than one field if you need.
 
 ```php
 
@@ -110,7 +110,7 @@ $model->field_name->contains('PRIVATE'); // true
 ```
 
 ### HasEnumCollections trait
-If you include also the `HasEnumCollections` into the model you can query the models with new where functions `whereEnumCollectionContains` and `orWhereEnumCollectionContains`.
+If you include also the `HasEnumCollections` into the model you can query the models with the new where functions `whereEnumCollectionContains` and `orWhereEnumCollectionContains`.
 
 ```php
 TestModel::whereEnumCollectionContains('field_name', FieldEnum::PRIVATE)->get()
