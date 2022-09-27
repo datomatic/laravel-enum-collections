@@ -25,6 +25,27 @@ class TestCase extends Orchestra
 
     public function getEnvironmentSetUp($app)
     {
+        config()->set('database.default', 'testing');
+        config()->set('database.connections.testing', [
+            'driver' => 'sqlite',
+            'database' => 'database.sqlite',
+        ]);
+
+        \DB::connection()->getPdo()->sqliteCreateFunction('JSON_CONTAINS', function ($json, $val, $path = null) {
+            $array = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+
+            if (empty($array)) {
+                $array = [];
+            }
+
+            $val = trim($val, '"');
+
+            if ($path) {
+                return $array[$path] == $val;
+            }
+
+            return in_array($val, $array, true);
+        });
     }
 
     protected function setUpDatabase()

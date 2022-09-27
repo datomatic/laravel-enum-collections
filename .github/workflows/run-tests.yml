@@ -1,5 +1,15 @@
 name: run-tests
 
+services:
+  mysql:
+    image: mysql:8
+    env:
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      MYSQL_DATABASE: laravel_enum_collection
+    ports:
+      - 3306
+    options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
 on:
   push:
     branches: [main]
@@ -45,3 +55,5 @@ jobs:
 
       - name: Execute tests
         run: vendor/bin/pest
+        env:
+          DB_PORT: ${{ job.services.mysql.ports[3306] }}
