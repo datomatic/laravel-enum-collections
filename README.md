@@ -7,7 +7,8 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/datomatic/laravel-enum-collections/Fix%20PHP%20code%20style%20issues?label=code%20style&color=5FE8B3&style=for-the-badge)](https://github.com/datomatic/laravel-enum-collections/actions/workflows/fix-php-code-style-issues.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/datomatic/laravel-enum-collections.svg?style=for-the-badge)](https://packagist.org/packages/datomatic/laravel-enum-collections)
 
-Save a collection of Enums in an Eloquent field and interact with it.
+Save a collection of Enums in an Eloquent field and interact with it.  
+Compatible with `PureEnum`, `BackedEnum` and [`datomatic/laravel-enum-helper`](https://github.com/datomatic/laravel-enum-helper) package.
 
 ## Installation
 
@@ -19,8 +20,7 @@ composer require datomatic/laravel-enum-collections
 
 ## Set up
 
-Before you can use this package you must setup the eloquent Model.  
-Compatible with `PureEnum`, `BackedEnum` and [`datomatic/laravel-enum-helper`](https://github.com/datomatic/laravel-enum-helper) package.
+Before you can use this package you must setup the eloquent Model.
 
 ### 1. Database Migration 
 ```php
