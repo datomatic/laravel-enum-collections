@@ -15,9 +15,7 @@ class EnumCollections implements CastsAttributes
 {
     /**
      * @param  Model  $model
-     * @param  string  $key
      * @param  string  $value
-     * @param  array  $attributes
      * @return EnumCollection|mixed
      *
      * @throws Exception
@@ -48,9 +46,7 @@ class EnumCollections implements CastsAttributes
      * Prepare the given value for storage.
      *
      * @param  Model  $model
-     * @param  string  $key
      * @param  EnumCollection|array|string|int|UnitEnum|null  $enumCollection
-     * @param  array  $attributes
      * @return string|false
      */
     public function set($model, string $key, $enumCollection, array $attributes)
@@ -77,10 +73,6 @@ class EnumCollections implements CastsAttributes
     }
 
     /**
-     * @param  Model  $model
-     * @param  string  $key
-     * @return string
-     *
      * @throws Exception
      */
     private function getEnumCollectionClass(Model $model, string $key): string
