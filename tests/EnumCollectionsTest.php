@@ -120,12 +120,12 @@ it('will can query model with enum collection', function () {
 
     expect(
         TestModel::whereEnumCollectionContains('colors', PureEnum::BLACK)
-        ->whereEnumCollectionContains('colors', PureEnum::BLUE)->count()
+            ->whereEnumCollectionContains('colors', PureEnum::BLUE)->count()
     )->toEqual(1);
 
     expect(
         TestModel::whereEnumCollectionContains('colors', PureEnum::BLACK)
-        ->whereEnumCollectionContains('colors', PureEnum::BLUE)->count()
+            ->whereEnumCollectionContains('colors', PureEnum::BLUE)->count()
     )->toEqual(1);
 
     expect(
