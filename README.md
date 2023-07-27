@@ -50,7 +50,7 @@ class TestModel extends Model
     
     protected $casts = [
         'field_name' => EnumCollections::class,
-    }
+    ];
     
     public array $enumCollections = [
         'field_name' => FieldEnum::class,
