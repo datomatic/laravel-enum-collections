@@ -47,7 +47,7 @@ trait HasEnumCollections
             : null;
     }
 
-    private function getValue($value, ?string $key = null, ?string $enumClass = null): mixed
+    private function getValue($value, string $key = null, string $enumClass = null): mixed
     {
         if ($value instanceof UnitEnum) {
             $enumClass ??= $this->getEnumCollectionClass($key);
