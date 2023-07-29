@@ -73,13 +73,15 @@ trait HasEnumCollections
 
     private function getValue($value, string $key): mixed
     {
-        if(is_array($value) || $value instanceof Collection){
+        if (is_array($value) || $value instanceof Collection) {
             $values = [];
-            foreach ($value as $v){
-                $values[]= $this->getSingleValue($v, $key);
+            foreach ($value as $v) {
+                $values[] = $this->getSingleValue($v, $key);
             }
+
             return $values;
         }
+
         return $this->getSingleValue($value, $key);
     }
 

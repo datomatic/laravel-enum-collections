@@ -137,17 +137,17 @@ it('will can query model with enum collection', function () {
     )->toEqual(1);
 
     expect(
-        TestModel::whereEnumCollectionContains('colors', [PureEnum::BLACK,PureEnum::BLUE])->count()
+        TestModel::whereEnumCollectionContains('colors', [PureEnum::BLACK, PureEnum::BLUE])->count()
     )->toEqual(1);
     expect(
-        TestModel::whereEnumCollectionContains('colors', collect([PureEnum::BLACK,PureEnum::BLUE]))->count()
+        TestModel::whereEnumCollectionContains('colors', collect([PureEnum::BLACK, PureEnum::BLUE]))->count()
     )->toEqual(1);
     expect(
-        TestModel::whereEnumCollectionContains('colors', EnumCollection::make([PureEnum::BLACK,PureEnum::BLUE]))->count()
+        TestModel::whereEnumCollectionContains('colors', EnumCollection::make([PureEnum::BLACK, PureEnum::BLUE]))->count()
     )->toEqual(1);
 
     expect(
-        TestModel::whereEnumCollectionContains('colors', ['BLACK','BLUE'])->count()
+        TestModel::whereEnumCollectionContains('colors', ['BLACK', 'BLUE'])->count()
     )->toEqual(1);
 
     expect(
@@ -159,6 +159,5 @@ it('will can query model with enum collection', function () {
         TestModel::whereEnumCollectionContains('colors', 'RED')
             ->orWhereEnumCollectionContains('sizes', StringBackedEnum::SMALL)->count()
     )->toEqual(2);
-
 
 });
