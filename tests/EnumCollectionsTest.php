@@ -117,6 +117,14 @@ it('will can query model with enum collection', function () {
     expect(TestModel::whereEnumCollectionContains('colors', PureEnum::YELLOW)->count())->toEqual(2);
     expect(TestModel::whereEnumCollectionContains('colors', PureEnum::BLACK)->count())->toEqual(1);
     expect(TestModel::whereEnumCollectionContains('colors', PureEnum::RED)->count())->toEqual(0);
+    expect(TestModel::whereEnumCollectionContains('colors', 'RED')->count())->toEqual(0);
+
+    expect(TestModel::whereEnumCollectionContains('sizes', ['S'])->count())->toEqual(2);
+    expect(TestModel::whereEnumCollectionContains('sizes', 'S')->count())->toEqual(2);
+
+    expect(TestModel::whereEnumCollectionContains('visibilities', [IntBackedEnum::PUBLIC])->count())->toEqual(1);
+    expect(TestModel::whereEnumCollectionContains('visibilities', IntBackedEnum::PUBLIC)->count())->toEqual(1);
+    expect(TestModel::whereEnumCollectionContains('visibilities', 2)->count())->toEqual(1);
 
     expect(
         TestModel::whereEnumCollectionContains('colors', PureEnum::BLACK)
@@ -126,14 +134,31 @@ it('will can query model with enum collection', function () {
     expect(
         TestModel::whereEnumCollectionContains('colors', PureEnum::BLACK)
             ->whereEnumCollectionContains('colors', PureEnum::BLUE)->count()
+    )->toEqual(1);
+
+    expect(
+        TestModel::whereEnumCollectionContains('colors', [PureEnum::BLACK,PureEnum::BLUE])->count()
+    )->toEqual(1);
+    expect(
+        TestModel::whereEnumCollectionContains('colors', collect([PureEnum::BLACK,PureEnum::BLUE]))->count()
+    )->toEqual(1);
+    expect(
+        TestModel::whereEnumCollectionContains('colors', EnumCollection::make([PureEnum::BLACK,PureEnum::BLUE]))->count()
+    )->toEqual(1);
+
+    expect(
+        TestModel::whereEnumCollectionContains('colors', ['BLACK','BLUE'])->count()
     )->toEqual(1);
 
     expect(
         TestModel::whereEnumCollectionContains('colors', PureEnum::RED)
             ->orWhereEnumCollectionContains('sizes', StringBackedEnum::SMALL)->count()
     )->toEqual(2);
+
     expect(
-        TestModel::orWhereEnumCollectionContains('colors', PureEnum::RED)
+        TestModel::whereEnumCollectionContains('colors', 'RED')
             ->orWhereEnumCollectionContains('sizes', StringBackedEnum::SMALL)->count()
     )->toEqual(2);
+
+
 });

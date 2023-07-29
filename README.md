@@ -111,13 +111,24 @@ $model->field_name->contains('PRIVATE'); // true
 ```
 
 ### HasEnumCollections trait
-If you include also the `HasEnumCollections` into the model you can query the models with the new where functions `whereEnumCollectionContains` and `orWhereEnumCollectionContains`.
+If you include also the `HasEnumCollections` into the model you can query the models with the new where functions `whereEnumCollectionContains`, `orWhereEnumCollectionContains`, `whereEnumCollectionDoesntContain` and `orWhereEnumCollectionDoesntContain`.
 
 ```php
 TestModel::whereEnumCollectionContains('field_name', FieldEnum::PRIVATE)->get()
+TestModel::whereEnumCollectionDoesntContain('field_name', FieldEnum::PRIVATE)->get()
 
-TestModel::whereEnumCollectionContains('field_name', FieldEnum::PRIVATE)
+TestModel::whereEnumCollectionContains('field_name', 1)
     ->whereEnumCollectionContains('field_name', FieldEnum::PUBLIC)
+    ->get()
+    
+TestModel::whereEnumCollectionContains('field_name', [FieldEnum::PRIVATE,FieldEnum::PUBLIC)
+    ->get()
+TestModel::whereEnumCollectionContains('field_name', collect([FieldEnum::PRIVATE,FieldEnum::PUBLIC))
+    ->get()
+ TestModel::whereEnumCollectionContains('field_name', EnumCollection::make([FieldEnum::PRIVATE,FieldEnum::PUBLIC))
+    ->get()
+    
+TestModel::whereEnumCollectionContains('field_name', [1,2])
     ->get()
 
 TestModel::whereEnumCollectionContains('field_name', FieldEnum::PRIVATE)
