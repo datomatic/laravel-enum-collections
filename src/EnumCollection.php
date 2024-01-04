@@ -5,10 +5,6 @@ namespace Datomatic\EnumCollections;
 use BackedEnum;
 use Illuminate\Support\Collection;
 use UnitEnum;
-
-/**
- * @extends Collection<int,UnitEnum>
- */
 class EnumCollection extends Collection
 {
     public function contains($key, $operator = null, $value = null)
