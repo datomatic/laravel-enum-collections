@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-enum-collections` will be documented in this file.
 
+## v1.1.1 - 2024-01-04
+
+- remove phpdoc on EnumCollections
+
 ## v1.1.0 - 2023-07-29
 
 - add `whereEnumCollectionDoesntContain` and `orWhereEnumCollectionDoesntContain` method on trait
