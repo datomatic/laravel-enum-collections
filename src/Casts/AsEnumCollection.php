@@ -23,7 +23,7 @@ class AsEnumCollection implements Castable
     {
         return new class($arguments) implements CastsAttributes
         {
-            protected $arguments;
+            protected array $arguments;
 
             public function __construct(array $arguments)
             {
