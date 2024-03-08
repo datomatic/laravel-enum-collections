@@ -48,7 +48,7 @@ trait HasEnumCollections
     {
         $casts = $this->getCasts();
 
-        if(isset($casts[$key]) && str($casts[$key])->contains(AsEnumCollection::class)) {
+        if (isset($casts[$key]) && str($casts[$key])->contains(AsEnumCollection::class)) {
             return true;
         }
 
