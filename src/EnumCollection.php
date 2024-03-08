@@ -135,7 +135,7 @@ class EnumCollection extends Collection
 
         if (defined($this->enumClass.'::'.$value)) {
             $enum = constant($this->enumClass.'::'.$value);
-            if($enum instanceof UnitEnum) {
+            if ($enum instanceof UnitEnum) {
                 return $enum;
             }
         }
