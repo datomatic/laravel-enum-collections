@@ -5,7 +5,6 @@ use Datomatic\EnumCollections\Tests\TestSupport\Enums\IntBackedEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\PureEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\StringBackedEnum;
 
-
 test('enumCollection can accept an array of enums', function ($from, array $results) {
     $enumCollection = EnumCollection::from($from);
     $enumCollection2 = EnumCollection::tryFrom($from);
@@ -22,15 +21,14 @@ test('enumCollection can accept an array of enums', function ($from, array $resu
 ]);
 
 test('enumCollection throws an exception if an enum class is not set and an array of values/names is passed', function ($from) {
-    expect(fn() => EnumCollection::from($from))->toThrow(Exception::class);
-    expect(fn() => EnumCollection::tryFrom($from))->toThrow(Exception::class);
+    expect(fn () => EnumCollection::from($from))->toThrow(Exception::class);
+    expect(fn () => EnumCollection::tryFrom($from))->toThrow(Exception::class);
 })->with([
     'enum single' => ['BLACK'],
     'enum array' => [['BLACK', 'GREEN']],
     'string enum array' => [['S', 'M', 'L']],
     'int enum array' => [[1, 2, 3]],
 ]);
-
 
 test('enumCollection can accept an array of enums values and names', function ($from, string $enumClass, array $results) {
     $enumCollection = EnumCollection::of($enumClass)->from($from);
@@ -51,7 +49,7 @@ test('enumCollection can accept an array of enums values and names', function ($
 ]);
 
 test('enumCollection throws an exception if wrong className passed with from method', function ($from, string $enumClass) {
-    expect(fn() => EnumCollection::of($enumClass)->from($from))->toThrow(ValueError::class);
+    expect(fn () => EnumCollection::of($enumClass)->from($from))->toThrow(ValueError::class);
 })->with([
     'enum single' => ['BLACK', StringBackedEnum::class],
     'enum array' => [['BLACK', 'GREEN'], IntBackedEnum::class],
@@ -60,7 +58,7 @@ test('enumCollection throws an exception if wrong className passed with from met
 ]);
 
 test('enumCollection doesnt throws an exception if wrong className passed with tryFrom method', function ($from, string $enumClass) {
-    expect(fn() => EnumCollection::of($enumClass)->tryFrom($from))->not->toThrow(ValueError::class);
+    expect(fn () => EnumCollection::of($enumClass)->tryFrom($from))->not->toThrow(ValueError::class);
 })->with([
     'enum single' => ['BLACK', StringBackedEnum::class],
     'enum array' => [['BLACK', 'GREEN'], IntBackedEnum::class],
@@ -69,7 +67,7 @@ test('enumCollection doesnt throws an exception if wrong className passed with t
 ]);
 
 test('enumCollection throws an exception if wrong value/name passed with from method', function ($from, string $enumClass) {
-    expect(fn() => EnumCollection::of($enumClass)->from($from))->toThrow(ValueError::class);
+    expect(fn () => EnumCollection::of($enumClass)->from($from))->toThrow(ValueError::class);
 })->with([
     'enum single' => ['SS', StringBackedEnum::class],
     'enum array' => [['EFF', '3493400'], IntBackedEnum::class],
@@ -77,9 +75,8 @@ test('enumCollection throws an exception if wrong value/name passed with from me
     'int enum array' => [[33, 2], PureEnum::class],
 ]);
 
-
 test('enumCollection throws an exception if wrong value/name passed with tryFrom method', function ($from, string $enumClass) {
-    expect(fn() => EnumCollection::of($enumClass)->tryFrom($from))->not->toThrow(ValueError::class);
+    expect(fn () => EnumCollection::of($enumClass)->tryFrom($from))->not->toThrow(ValueError::class);
 })->with([
     'enum single' => ['SS', StringBackedEnum::class],
     'enum array' => [['EFF', '3493400'], IntBackedEnum::class],
@@ -116,16 +113,14 @@ test('enumCollection toValues method ', function ($from, ?string $enumClass, arr
     'int enum array4' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PUBLIC], null, [1, 2]],
 ]);
 
-
-
 it('will can check if EnumCollection contains enum', function ($from, $search, $result) {
     $enumCollection = EnumCollection::from($from);
     $enumCollection2 = EnumCollection::tryFrom($from);
 
     expect($enumCollection->contains($search))->toEqual($result);
-    expect($enumCollection->doesntContain($search))->toEqual(!$result);
+    expect($enumCollection->doesntContain($search))->toEqual(! $result);
     expect($enumCollection2->contains($search))->toEqual($result);
-    expect($enumCollection2->doesntContain($search))->toEqual(!$result);
+    expect($enumCollection2->doesntContain($search))->toEqual(! $result);
 })->with([
     'pure enum collection search value' => [[PureEnum::GREEN, PureEnum::BLACK], 'GREEN', true],
     'pure enum collection search invalid value' => [[PureEnum::GREEN, PureEnum::BLACK], 'PURPLE', false],
@@ -152,5 +147,3 @@ it('will can check if EnumCollection contains enum', function ($from, $search, $
     'string enum collection search name' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'EXTRA_LARGE', true],
     'string enum collection search invalid name' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'SMALL', false],
 ]);
-
-

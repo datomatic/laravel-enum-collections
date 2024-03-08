@@ -25,7 +25,7 @@ class EnumCollection extends Collection
     /**
      * Specify the Enum for the cast.
      *
-     * @param ?class-string $class
+     * @param  ?class-string  $class
      */
     public static function of(?string $enumClass): self
     {
@@ -48,7 +48,7 @@ class EnumCollection extends Collection
     /**
      * Specify the Enum for the cast.
      *
-     * @param ?class-string $class
+     * @param  ?class-string  $class
      */
     public function setEnumClass(?string $enumClass): self
     {
@@ -68,7 +68,7 @@ class EnumCollection extends Collection
             return EnumCollection::of($parameters[1] ?? null)->from($parameters[0]);
         }
         if ($method === 'tryFrom') {
-            return EnumCollection::of($parameters[1]?? null)->tryFrom($parameters[0]);
+            return EnumCollection::of($parameters[1] ?? null)->tryFrom($parameters[0]);
         }
     }
 
@@ -76,7 +76,7 @@ class EnumCollection extends Collection
     {
         if ($method === 'tryFrom') {
             $this->items = collect($parameters[0])
-                ->map(fn($value) => $this->tryGetEnumFromValue($value)
+                ->map(fn ($value) => $this->tryGetEnumFromValue($value)
                 )->filter()->values()->all();
 
             return $this;
@@ -87,7 +87,7 @@ class EnumCollection extends Collection
                 ->map(function ($value) {
                     $enum = $this->tryGetEnumFromValue($value);
 
-                    if($enum === null) {
+                    if ($enum === null) {
                         throw new ValueError("Enum {$this->enumClass} does not contain {$value}");
                     }
 
@@ -119,13 +119,14 @@ class EnumCollection extends Collection
 
         if (is_subclass_of($this->enumClass, BackedEnum::class)) {
             if ((new ReflectionEnum($this->enumClass))->getBackingType()->getName() === 'int') {
-                return $this->enumClass::tryFrom((int)$value);
+                return $this->enumClass::tryFrom((int) $value);
             }
-            return $this->enumClass::tryFrom((string)$value);
+
+            return $this->enumClass::tryFrom((string) $value);
         }
 
-        if (defined($this->enumClass . '::' . $value)) {
-            return constant($this->enumClass . '::' . $value);
+        if (defined($this->enumClass.'::'.$value)) {
+            return constant($this->enumClass.'::'.$value);
         }
 
         return null;
@@ -133,7 +134,7 @@ class EnumCollection extends Collection
 
     public function toValues(): array
     {
-        return $this->map(fn($enum) => $this->getStorableEnumValue($enum))->toArray();
+        return $this->map(fn ($enum) => $this->getStorableEnumValue($enum))->toArray();
     }
 
     protected function getStorableEnumValue($enum)

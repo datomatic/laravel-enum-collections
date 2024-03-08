@@ -26,9 +26,8 @@ class TestModel extends Model
     public $timestamps = false;
 
     protected $casts = [
-        'visibilities' => AsEnumCollection::class.":".IntBackedEnum::class,
-        'colors' => AsEnumCollection::class.":".PureEnum::class,
-        'sizes' => AsEnumCollection::class.":".StringBackedEnum::class,
+        'visibilities' => AsEnumCollection::class.':'.IntBackedEnum::class,
+        'colors' => AsEnumCollection::class.':'.PureEnum::class,
+        'sizes' => AsEnumCollection::class.':'.StringBackedEnum::class,
     ];
-
 }
