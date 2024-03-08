@@ -73,6 +73,7 @@ it('will can check if enum collection contains enum', function ($field, $from, $
 
     $model = TestModel::find($this->testModel->id);
     expect($model->$field->contains($search))->toEqual($result);
+    expect($model->$field->doesntContain($search))->toEqual(!$result);
 })->with([
     'pure enum collection search value' => ['colors', [PureEnum::GREEN, PureEnum::BLACK], 'GREEN', true],
     'pure enum collection search invalid value' => ['colors', [PureEnum::GREEN, PureEnum::BLACK], 'PURPLE', false],
