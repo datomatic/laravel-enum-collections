@@ -64,18 +64,26 @@ class EnumCollection extends Collection
 
     public static function __callStatic($method, $parameters)
     {
+        /** @var iterable<UnitEnum|string|int|null>|null|UnitEnum|string|int $data */
+        $data = $parameters[0] ?? null;
+        /** @var ?class-string $enumClass */
+        $enumClass = $parameters[1] ?? null;
+
         if ($method === 'from') {
-            return EnumCollection::of($parameters[1] ?? null)->from($parameters[0]);
+            return EnumCollection::of($enumClass)->from($data);
         }
         if ($method === 'tryFrom') {
-            return EnumCollection::of($parameters[1] ?? null)->tryFrom($parameters[0]);
+            return EnumCollection::of($enumClass)->tryFrom($data);
         }
     }
 
     public function __call($method, $parameters)
     {
+        /** @var null|iterable<UnitEnum|string|int|null>|UnitEnum|string|int $data */
+        $data = $parameters[0] ?? null;
+
         if ($method === 'tryFrom') {
-            $this->items = collect($parameters[0])
+            $this->items = collect($data)
                 ->map(fn ($value) => $this->tryGetEnumFromValue($value)
                 )->filter()->values()->all();
 
@@ -83,7 +91,7 @@ class EnumCollection extends Collection
         }
 
         if ($method === 'from') {
-            $this->items = collect($parameters[0])
+            $this->items = collect($data)
                 ->map(function ($value) {
                     $enum = $this->tryGetEnumFromValue($value);
 
@@ -101,7 +109,7 @@ class EnumCollection extends Collection
     /**
      * @throws Exception
      */
-    public function tryGetEnumFromValue(mixed $value): ?UnitEnum
+    public function tryGetEnumFromValue(UnitEnum|string|int $value): ?UnitEnum
     {
         if ($value instanceof UnitEnum) {
             return $value;
@@ -118,7 +126,7 @@ class EnumCollection extends Collection
         }
 
         if (is_subclass_of($this->enumClass, BackedEnum::class)) {
-            if ((new ReflectionEnum($this->enumClass))->getBackingType()->getName() === 'int') {
+            if ((new ReflectionEnum($this->enumClass))->getBackingType()?->getName() === 'int') {
                 return $this->enumClass::tryFrom((int) $value);
             }
 
@@ -126,7 +134,10 @@ class EnumCollection extends Collection
         }
 
         if (defined($this->enumClass.'::'.$value)) {
-            return constant($this->enumClass.'::'.$value);
+            $enum = constant($this->enumClass.'::'.$value);
+            if($enum instanceof UnitEnum) {
+                return $enum;
+            }
         }
 
         return null;
@@ -134,10 +145,10 @@ class EnumCollection extends Collection
 
     public function toValues(): array
     {
-        return $this->map(fn ($enum) => $this->getStorableEnumValue($enum))->toArray();
+        return $this->map(fn (UnitEnum|string|int $enum) => $this->getStorableEnumValue($enum))->toArray();
     }
 
-    protected function getStorableEnumValue($enum)
+    protected function getStorableEnumValue(UnitEnum|string|int $enum): int|string
     {
         if (is_string($enum) || is_int($enum)) {
             return $enum;
