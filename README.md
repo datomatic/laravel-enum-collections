@@ -7,7 +7,7 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/datomatic/laravel-enum-collections/phpstan.yml?label=code%20style&color=7DDFA8&style=for-the-badge)](https://github.com/datomatic/laravel-enum-collections/actions/workflows/fix-php-code-style-issues.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/datomatic/laravel-enum-collections.svg?style=for-the-badge)](https://packagist.org/packages/datomatic/laravel-enum-collections)
 
-A Laravel Collection extension to store enums with a useful eloquent fields cast.  
+A Laravel Collection extension to store enums with a useful eloquent fields cast and a helper trait.  
 Take your interaction with enums to the next level.  
 Compatible with `PureEnum`, `BackedEnum` and [`datomatic/laravel-enum-helper`](https://github.com/datomatic/laravel-enum-helper) package.
 
@@ -19,9 +19,14 @@ You can install the package via composer:
 composer require datomatic/laravel-enum-collections
 ```
 
+The main parts of the package are: 
+- [`enumCollection`](#enumCollection)
+- [Eloquent model casting](#casting) 
+- [`HasEnumCollections` trait](#HasEnumCollections-trait)
+
 ## EnumCollection
 
-`EnumCollection` is an extension of base [Laravel collection](https://laravel.com/docs/collections) that expand his functionalities and overload the `contains` method to add the compatibility with:
+`EnumCollection` is an extension of base [Laravel collection](https://laravel.com/docs/collections) that expand his functionalities to add the compatibility with:
 - enum object instance
 - enum case name string
 - enum case value (only for `BackedEnum`)
@@ -165,7 +170,7 @@ $model->field_name->doesntContain('PRIVATE'); // false
 $model->field_name->doesntContain(FieldEnum::PROTECTED); // true
 ```
 
-### HasEnumCollections trait
+## HasEnumCollections trait
 If you include also the `HasEnumCollections` into the model you can query the models with the new where functions `whereEnumCollectionContains`, `orWhereEnumCollectionContains`, `whereEnumCollectionDoesntContain` and `orWhereEnumCollectionDoesntContain`.
 
 ```php
