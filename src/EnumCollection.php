@@ -5,15 +5,16 @@ namespace Datomatic\EnumCollections;
 use BackedEnum;
 use Exception;
 use Illuminate\Support\Collection;
+use Illuminate\Contracts\Support\Arrayable;
 use ReflectionEnum;
 use UnitEnum;
 use ValueError;
 
 /**
- * @method static self from(iterable $data, ?string $enumClass = null)
- * @method self tryFrom(iterable $data)
- * @method static self tryFrom(iterable $data, ?string $enumClass = null)
- * @method self from(iterable $data)
+ * @method static self from(Arrayable<int,int|string|UnitEnum|null>|iterable<UnitEnum|string|int|null>|null|UnitEnum|string|int $data, ?string $enumClass = null)
+ * @method self tryFrom(Arrayable<int,int|string|UnitEnum|null>|iterable<UnitEnum|string|int|null>|null|UnitEnum|string|int $data)
+ * @method static self tryFrom(Arrayable<int,int|string|UnitEnum|null>|iterable<UnitEnum|string|int|null>|null|UnitEnum|string|int $data, ?string $enumClass = null)
+ * @method self from(Arrayable<int,int|string|UnitEnum|null>|iterable<UnitEnum|string|int|null>|null|UnitEnum|string|int $data)
  *
  * @extends Collection<int,UnitEnum>
  */
@@ -27,7 +28,7 @@ class EnumCollection extends Collection
     /**
      * Specify the Enum for the cast.
      *
-     * @param  ?class-string  $enumClass
+     * @param  ?class-string $enumClass
      */
     public static function of(?string $enumClass): self
     {
@@ -36,6 +37,10 @@ class EnumCollection extends Collection
 
     public function contains($key, $operator = null, $value = null)
     {
+        if (is_callable($key)) {
+            return parent::contains($key, $operator, $value);
+        }
+
         $firstEnum = $this->first();
         if ($firstEnum) {
             $this->enumClass ??= get_class($firstEnum);
@@ -50,7 +55,7 @@ class EnumCollection extends Collection
     /**
      * Specify the Enum for the cast.
      *
-     * @param  ?class-string  $enumClass
+     * @param  ?class-string $enumClass
      */
     public function setEnumClass(?string $enumClass): self
     {
@@ -66,7 +71,7 @@ class EnumCollection extends Collection
 
     public static function __callStatic($method, $parameters)
     {
-        /** @var iterable<UnitEnum|string|int|null>|null|UnitEnum|string|int $data */
+        /** @var Arrayable<int,int|string|UnitEnum|null>|iterable<UnitEnum|string|int|null>|null|UnitEnum|string|int $data */
         $data = $parameters[0] ?? null;
         /** @var ?class-string $enumClass */
         $enumClass = $parameters[1] ?? null;
@@ -81,12 +86,12 @@ class EnumCollection extends Collection
 
     public function __call($method, $parameters)
     {
-        /** @var null|iterable<int,UnitEnum|string|int|null>|UnitEnum|string|int $data */
+        /** @var Arrayable<int,int|string|UnitEnum|null>|iterable<int, int|string|UnitEnum|null>|null $data */
         $data = $parameters[0] ?? null;
 
         if ($method === 'tryFrom') {
             $this->items = collect($data)
-                ->map(fn ($value) => $this->tryGetEnumFromValue($value)
+                ->map(fn($value) => $this->tryGetEnumFromValue($value)
                 )->filter()->values()->all();
 
             return $this;
@@ -129,14 +134,14 @@ class EnumCollection extends Collection
 
         if (is_subclass_of($this->enumClass, BackedEnum::class)) {
             if ((new ReflectionEnum($this->enumClass))->getBackingType()?->getName() === 'int') {
-                return $this->enumClass::tryFrom((int) $value);
+                return $this->enumClass::tryFrom((int)$value);
             }
 
-            return $this->enumClass::tryFrom((string) $value);
+            return $this->enumClass::tryFrom((string)$value);
         }
 
-        if (defined($this->enumClass.'::'.$value)) {
-            $enum = constant($this->enumClass.'::'.$value);
+        if (defined($this->enumClass . '::' . $value)) {
+            $enum = constant($this->enumClass . '::' . $value);
             if ($enum instanceof UnitEnum) {
                 return $enum;
             }
@@ -147,7 +152,7 @@ class EnumCollection extends Collection
 
     public function toValues(): array
     {
-        return $this->map(fn (UnitEnum|string|int $enum) => $this->getStorableEnumValue($enum))->toArray();
+        return $this->map(fn(UnitEnum|string|int $enum) => $this->getStorableEnumValue($enum))->toArray();
     }
 
     protected function getStorableEnumValue(UnitEnum|string|int $enum): int|string
