@@ -15,16 +15,18 @@ Simply update the Models casts definition from
 ```
 to
 ```php
+    use Datomatic\EnumCollections\Casts\AsLaravelEnumCollection;
+    ...
     //Laravel 9/10
     protected $casts = [
-    'field_name' => AsEnumCollection::class.':'.FieldEnum::class,
+    'field_name' => AsLaravelEnumCollection::class.':'.FieldEnum::class,
     ];
 
     //Laravel 11
     protected function casts(): array
     {
         return [
-            'field_name' => AsEnumCollection::of(FieldEnum::class),
+            'field_name' => AsLaravelEnumCollection::of(FieldEnum::class),
        ];
     }
 ```
