@@ -46,10 +46,10 @@ class AsEnumCollection implements Castable
 
                 return EnumCollection::tryFrom($data, $enumClass);
             }
-            /**
-             * @param  \Illuminate\Contracts\Support\Arrayable<int, UnitEnum>|iterable<int, UnitEnum>|null $value
-             */
 
+            /**
+             * @param  \Illuminate\Contracts\Support\Arrayable<int, UnitEnum>|iterable<int, UnitEnum>|null  $value
+             */
             public function set($model, $key, $value, $attributes)
             {
                 $value = $value !== null
@@ -58,10 +58,10 @@ class AsEnumCollection implements Castable
 
                 return [$key => $value];
             }
-            /**
-             * @param  \Illuminate\Contracts\Support\Arrayable<int, UnitEnum>|iterable<int, UnitEnum>|null $value
-             */
 
+            /**
+             * @param  \Illuminate\Contracts\Support\Arrayable<int, UnitEnum>|iterable<int, UnitEnum>|null  $value
+             */
             public function serialize(mixed $model, string $key, mixed $value, array $attributes): array
             {
                 return (new EnumCollection($value))->toValues();
