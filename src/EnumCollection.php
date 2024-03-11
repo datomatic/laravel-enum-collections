@@ -11,10 +11,12 @@ use UnitEnum;
 use ValueError;
 
 /**
- * @method static self from(Arrayable<int,int|string|UnitEnum|null>|iterable<UnitEnum|string|int|null>|null|UnitEnum|string|int $data, ?string $enumClass = null)
- * @method self tryFrom(Arrayable<int,int|string|UnitEnum|null>|iterable<UnitEnum|string|int|null>|null|UnitEnum|string|int $data)
- * @method static self tryFrom(Arrayable<int,int|string|UnitEnum|null>|iterable<UnitEnum|string|int|null>|null|UnitEnum|string|int $data, ?string $enumClass = null)
- * @method self from(Arrayable<int,int|string|UnitEnum|null>|iterable<UnitEnum|string|int|null>|null|UnitEnum|string|int $data)
+ * @phpstan-type Item UnitEnum|string|int|null
+ *
+ * @method static self from(Arrayable<int,Item>|iterable<int,Item>|Item $data, ?string $enumClass = null)
+ * @method self tryFrom(Arrayable<int,Item>|iterable<int,Item>|Item $data)
+ * @method static self tryFrom(Arrayable<int,Item>|iterable<int,Item>|Item $data, ?string $enumClass = null)
+ * @method self from(Arrayable<int,Item>|iterable<int,Item>|Item $data)
  *
  * @extends Collection<int,UnitEnum>
  */
@@ -71,7 +73,7 @@ class EnumCollection extends Collection
 
     public static function __callStatic($method, $parameters)
     {
-        /** @var Arrayable<int,int|string|UnitEnum|null>|iterable<UnitEnum|string|int|null>|null|UnitEnum|string|int $data */
+        /** @var Arrayable<int,Item>|iterable<int,Item>|Item $data */
         $data = $parameters[0] ?? null;
         /** @var ?class-string $enumClass */
         $enumClass = $parameters[1] ?? null;
@@ -86,7 +88,7 @@ class EnumCollection extends Collection
 
     public function __call($method, $parameters)
     {
-        /** @var Arrayable<int,int|string|UnitEnum|null>|iterable<int, int|string|UnitEnum|null>|null $data */
+        /** @var Arrayable<int,Item>|iterable<int, Item>|null $data */
         $data = $parameters[0] ?? null;
 
         if ($method === 'tryFrom') {
