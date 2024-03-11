@@ -37,7 +37,7 @@ class EnumCollection extends Collection
 
     public function contains($key, $operator = null, $value = null)
     {
-        if (is_callable($key)) {
+        if (!$key instanceof UnitEnum && is_callable($key)) {
             return parent::contains($key, $operator, $value);
         }
 
@@ -121,7 +121,6 @@ class EnumCollection extends Collection
         if ($value instanceof UnitEnum) {
             return $value;
         }
-
         throw_unless($this->enumClass, new Exception('enumClass param is required when not pass an enum as argument'));
 
         if (is_string($value) && method_exists($this->enumClass, 'cases')) {
@@ -134,6 +133,7 @@ class EnumCollection extends Collection
 
         if (is_subclass_of($this->enumClass, BackedEnum::class)) {
             if ((new ReflectionEnum($this->enumClass))->getBackingType()?->getName() === 'int') {
+
                 return $this->enumClass::tryFrom((int) $value);
             }
 
