@@ -2,7 +2,7 @@
 
 ## From v1 to v2
 
-Simply update the Models casts definition from
+Simply update the definition of Model casts from
 
 ```php
     protected $casts = [

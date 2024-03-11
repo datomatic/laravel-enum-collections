@@ -7,7 +7,7 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/datomatic/laravel-enum-collections/phpstan.yml?label=code%20style&color=7DDFA8&style=for-the-badge)](https://github.com/datomatic/laravel-enum-collections/actions/workflows/fix-php-code-style-issues.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/datomatic/laravel-enum-collections.svg?style=for-the-badge)](https://packagist.org/packages/datomatic/laravel-enum-collections)
 
-A Laravel Collection extension to store enums with a useful eloquent fields cast and a helper trait.  
+A [Laravel collection](https://laravel.com/docs/collections) extension to store enums with a useful eloquent field cast and a helper trait.  
 Take your interaction with enums to the next level.  
 Compatible with `PureEnum`, `BackedEnum` and [`datomatic/laravel-enum-helper`](https://github.com/datomatic/laravel-enum-helper) package.
 
@@ -34,7 +34,7 @@ The main parts of the package are:
 
 ### Creating an EnumCollection
 
-You can set enum collection field passing in 4 ways:
+You can make enum collection in 4 ways:
 ```php
 use \Datomatic\EnumCollections\EnumCollection;
 
@@ -86,7 +86,8 @@ EnumCollection::from(['1','2','2'],Enum::class)->toValues(); // [1,2,2]
 
 ## Casting
 
-Before you can use this casting option you must config the eloquent Model.
+You can cast a field to be an `EnumCollection`.
+To use this casting option, you need to set the Eloquent Model properly.
 
 ### 1. Database Migration 
 ```php
@@ -101,7 +102,7 @@ To set up your model you must:
 - add a custom cast `AsLaravelEnumCollection::class` with the enumClass as attribute
 - add an optional `HasEnumCollections` trait to make query on enum collections fields
 
-You can also set more than one field if you need.
+You can also cast more than one field if you need.
 
 ```php
 
@@ -131,7 +132,7 @@ class TestModel extends Model
 ### Set the enum collection field
 
 You can set enum collection field passing a single element, a collection or an array of elements.
-After the setting, the field will become an `EnumCollection`.
+After the field will become an `EnumCollection`.
 
 ```php
 enum FieldEnum: int
@@ -171,7 +172,7 @@ $model->field_name->doesntContain(FieldEnum::PROTECTED); // true
 ```
 
 ## HasEnumCollections trait
-If you include also the `HasEnumCollections` into the model you can query the models with the new where functions `whereEnumCollectionContains`, `orWhereEnumCollectionContains`, `whereEnumCollectionDoesntContain` and `orWhereEnumCollectionDoesntContain`.
+If you include also the `HasEnumCollections` into the model, you can query the models with the new where functions `whereEnumCollectionContains`, `orWhereEnumCollectionContains`, `whereEnumCollectionDoesntContain` and `orWhereEnumCollectionDoesntContain`.
 
 ```php
 TestModel::whereEnumCollectionContains('field_name', FieldEnum::PRIVATE)->get()
