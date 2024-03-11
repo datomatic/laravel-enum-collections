@@ -56,7 +56,7 @@ EnumCollection::from([Enum::CASE1,Enum::CASE2]); // ✅ EnumCollection<Enum>
 EnumCollection::from(collect([Enum::CASE1,Enum::CASE2])); // ✅ EnumCollection<Enum>
 ```
 
-### `Contains' method
+### Contains method
 
 ```php
 use \Datomatic\EnumCollections\EnumCollection;
@@ -72,7 +72,7 @@ $enumCollection->contains('PRIVATE'); // true
 $enumCollection->doesntContain('PRIVATE'); // false
 ```
 
-### `toValues' method
+### toValues method
 `toValues` method serialize the collection content, if the element is a `PureEnum` will be pass the `name` of the case, otherwise the `value`.
 
 ```php
