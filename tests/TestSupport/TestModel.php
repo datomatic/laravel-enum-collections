@@ -2,7 +2,7 @@
 
 namespace Datomatic\EnumCollections\Tests\TestSupport;
 
-use Datomatic\EnumCollections\Casts\AsEnumCollection;
+use Datomatic\EnumCollections\Casts\AsLaravelEnumCollection;
 use Datomatic\EnumCollections\EnumCollection;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\IntBackedEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\PureEnum;
@@ -26,8 +26,8 @@ class TestModel extends Model
     public $timestamps = false;
 
     protected $casts = [
-        'visibilities' => AsEnumCollection::class.':'.IntBackedEnum::class,
-        'colors' => AsEnumCollection::class.':'.PureEnum::class,
-        'sizes' => AsEnumCollection::class.':'.StringBackedEnum::class,
+        'visibilities' => AsLaravelEnumCollection::class.':'.IntBackedEnum::class,
+        'colors' => AsLaravelEnumCollection::class.':'.PureEnum::class,
+        'sizes' => AsLaravelEnumCollection::class.':'.StringBackedEnum::class,
     ];
 }

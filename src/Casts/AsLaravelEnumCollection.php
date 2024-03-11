@@ -9,7 +9,7 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Casts\Json;
 use UnitEnum;
 
-class AsEnumCollection implements Castable
+class AsLaravelEnumCollection implements Castable
 {
     /**
      * Get the caster class to use when casting from / to this cast target.

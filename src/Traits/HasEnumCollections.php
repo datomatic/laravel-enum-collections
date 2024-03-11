@@ -3,7 +3,7 @@
 namespace Datomatic\EnumCollections\Traits;
 
 use BackedEnum;
-use Datomatic\EnumCollections\Casts\AsEnumCollection;
+use Datomatic\EnumCollections\Casts\AsLaravelEnumCollection;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use UnitEnum;
@@ -48,7 +48,7 @@ trait HasEnumCollections
     {
         $casts = $this->getCasts();
 
-        if (isset($casts[$key]) && str($casts[$key])->contains(AsEnumCollection::class)) {
+        if (isset($casts[$key]) && str($casts[$key])->contains(AsLaravelEnumCollection::class)) {
             return true;
         }
 

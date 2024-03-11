@@ -98,14 +98,14 @@ Schema::table('table', function (Blueprint $table) {
 ### 2. Model set up
 
 To set up your model you must:
-- add a custom cast `AsEnumCollections::class` with the enumClass as attribute
+- add a custom cast `AsLaravelEnumCollection::class` with the enumClass as attribute
 - add an optional `HasEnumCollections` trait to make query on enum collections fields
 
 You can also set more than one field if you need.
 
 ```php
 
-use Datomatic\EnumCollections\Casts\AsEnumCollection;
+use Datomatic\EnumCollections\Casts\AsLaravelEnumCollection;
 use Datomatic\EnumCollections\EnumCollection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -115,14 +115,14 @@ class TestModel extends Model
     
     //Laravel 9/10
     protected $casts = [
-        'field_name' => AsEnumCollection::class.':'.FieldEnum::class,
+        'field_name' => AsLaravelEnumCollection::class.':'.FieldEnum::class,
     ];
     
     //Laravel 11
     protected function casts(): array
     {
         return [
-            'field_name' => AsEnumCollection::of(FieldEnum::class),
+            'field_name' => AsLaravelEnumCollection::of(FieldEnum::class),
        ];
     }
 }
