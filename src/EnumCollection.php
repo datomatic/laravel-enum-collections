@@ -11,9 +11,11 @@ use ValueError;
 
 /**
  * @method static self from(iterable $data, ?string $enumClass = null)
+ * @method self tryFrom(iterable $data)
  * @method static self tryFrom(iterable $data, ?string $enumClass = null)
  * @method self from(iterable $data)
- * @method self tryFrom(iterable $data)
+ *
+ * @extends Collection<int,UnitEnum>
  */
 class EnumCollection extends Collection
 {
@@ -25,7 +27,7 @@ class EnumCollection extends Collection
     /**
      * Specify the Enum for the cast.
      *
-     * @param  ?class-string  $class
+     * @param  ?class-string  $enumClass
      */
     public static function of(?string $enumClass): self
     {
@@ -48,7 +50,7 @@ class EnumCollection extends Collection
     /**
      * Specify the Enum for the cast.
      *
-     * @param  ?class-string  $class
+     * @param  ?class-string  $enumClass
      */
     public function setEnumClass(?string $enumClass): self
     {
@@ -79,7 +81,7 @@ class EnumCollection extends Collection
 
     public function __call($method, $parameters)
     {
-        /** @var null|iterable<UnitEnum|string|int|null>|UnitEnum|string|int $data */
+        /** @var null|iterable<int,UnitEnum|string|int|null>|UnitEnum|string|int $data */
         $data = $parameters[0] ?? null;
 
         if ($method === 'tryFrom') {

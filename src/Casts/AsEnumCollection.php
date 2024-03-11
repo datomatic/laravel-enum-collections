@@ -32,7 +32,7 @@ class AsEnumCollection implements Castable
 
             public function get($model, $key, $value, $attributes)
             {
-                if (! isset($attributes[$key]) || is_null($attributes[$key])) {
+                if (! isset($attributes[$key])) {
                     return;
                 }
 
@@ -56,7 +56,7 @@ class AsEnumCollection implements Castable
                 return [$key => $value];
             }
 
-            public function serialize($model, string $key, $value, array $attributes)
+            public function serialize(mixed $model, string $key, mixed $value, array $attributes): array
             {
                 return (new EnumCollection($value))->toValues();
             }
