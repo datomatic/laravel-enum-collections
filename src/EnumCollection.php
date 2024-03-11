@@ -37,7 +37,7 @@ class EnumCollection extends Collection
 
     public function contains($key, $operator = null, $value = null)
     {
-        if (!$key instanceof UnitEnum && is_callable($key)) {
+        if (! $key instanceof UnitEnum && is_callable($key)) {
             return parent::contains($key, $operator, $value);
         }
 
