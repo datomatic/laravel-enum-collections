@@ -2,6 +2,7 @@
 
 ## From v1 to v2
 
+### Model casting
 Simply update the definition of Model casts from
 
 ```php
@@ -30,3 +31,6 @@ to
        ];
     }
 ```
+### EnumCollection
+
+Where you use `new EnumCollection(...)` replace with `EnumCollection::from(...)` or `EnumCollection::tryFrom(...)`.
