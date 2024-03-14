@@ -1,5 +1,6 @@
 .idea
 .phpunit.result.cache
+.phpunit.cache
 build
 composer.lock
 coverage
@@ -8,4 +9,5 @@ phpunit.xml
 phpstan.neon
 testbench.yaml
 vendor
+.env.testing
 node_modules

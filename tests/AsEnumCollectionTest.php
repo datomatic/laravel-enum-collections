@@ -2,6 +2,7 @@
 
 use Datomatic\EnumCollections\EnumCollection;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\IntBackedEnum;
+use Datomatic\EnumCollections\Tests\TestSupport\Enums\LaravelEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\PureEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\StringBackedEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\TestModel;
@@ -46,6 +47,25 @@ it('will return an EnumCollection setting enum collection fields with IntBackedE
     'string value array' => [['1', '2'], [IntBackedEnum::PRIVATE, IntBackedEnum::PUBLIC]],
 ]);
 
+it('will return an EnumCollection setting enum collection fields with LaravelEnum', function ($from, array $results) {
+    $this->testModel->permissions = $from;
+    $this->testModel->save();
+
+    $model = TestModel::find($this->testModel->id);
+
+    expect($model->permissions)->toBeInstanceOf(EnumCollection::class);
+    expect($model->permissions->toArray())->toEqual($results);
+})->with([
+    'enum single' => [LaravelEnum::PRIVATE, [LaravelEnum::PRIVATE]],
+    'string case single' => ['PRIVATE', [LaravelEnum::PRIVATE]],
+    'int value single' => [1, [LaravelEnum::PRIVATE]],
+    'string value single' => ['1', [LaravelEnum::PRIVATE]],
+    'enum array' => [[LaravelEnum::PRIVATE, LaravelEnum::PUBLIC], [LaravelEnum::PRIVATE, LaravelEnum::PUBLIC]],
+    'string case array' => [['PRIVATE', 'PUBLIC'], [LaravelEnum::PRIVATE, LaravelEnum::PUBLIC]],
+    'int value array' => [[1, 2], [LaravelEnum::PRIVATE, LaravelEnum::PUBLIC]],
+    'string value array' => [['1', '2'], [LaravelEnum::PRIVATE, LaravelEnum::PUBLIC]],
+]);
+
 it('will return an EnumCollection setting enum collection fields with StringBackedEnum', function ($from, array $results) {
     $this->testModel->sizes = $from;
     $this->testModel->save();
@@ -73,6 +93,7 @@ it('will can check if enum collection contains enum', function ($field, $from, $
 
     $model = TestModel::find($this->testModel->id);
     expect($model->$field->contains($search))->toEqual($result);
+    expect($model->$field->doesntContain($search))->toEqual(! $result);
 })->with([
     'pure enum collection search value' => ['colors', [PureEnum::GREEN, PureEnum::BLACK], 'GREEN', true],
     'pure enum collection search invalid value' => ['colors', [PureEnum::GREEN, PureEnum::BLACK], 'PURPLE', false],
@@ -91,6 +112,15 @@ it('will can check if enum collection contains enum', function ($field, $from, $
     'int enum collection search name' => ['visibilities', [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], 'PROTECTED', true],
     'int enum collection search invalid name' => ['visibilities', [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], 'PUBLIC', false],
 
+    'int laravel enum collection search value' => ['permissions', [LaravelEnum::PRIVATE, LaravelEnum::PROTECTED], 1, true],
+    'int laravel enum collection search value string' => ['permissions', [LaravelEnum::PRIVATE, LaravelEnum::PROTECTED], '3', true],
+    'int laravel enum collection search invalid value' => ['permissions', [LaravelEnum::PRIVATE, LaravelEnum::PROTECTED], 'A', false],
+    'int laravel enum collection search invalid value2' => ['permissions', [LaravelEnum::PRIVATE, LaravelEnum::PROTECTED], 4, false],
+    'int laravel enum collection search enum' => ['permissions', [LaravelEnum::PRIVATE, LaravelEnum::PROTECTED], LaravelEnum::PROTECTED, true],
+    'int laravel enum collection search invalid enum' => ['permissions', [LaravelEnum::PRIVATE, LaravelEnum::PROTECTED], LaravelEnum::PUBLIC, false],
+    'int laravel enum collection search name' => ['permissions', [LaravelEnum::PRIVATE, LaravelEnum::PROTECTED], 'PROTECTED', true],
+    'int laravel enum collection search invalid name' => ['permissions', [LaravelEnum::PRIVATE, LaravelEnum::PROTECTED], 'PUBLIC', false],
+
     'string enum collection search value' => ['sizes', [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'L', true],
     'string enum collection search invalid value' => ['sizes', [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'LD', false],
     'string enum collection search invalid value int' => ['sizes', [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 4, false],
@@ -105,12 +135,14 @@ it('will can query model with enum collection', function () {
 
     $this->testModel->colors = [PureEnum::YELLOW, PureEnum::GREEN];
     $this->testModel->visibilities = [IntBackedEnum::PUBLIC];
+    $this->testModel->permissions = [IntBackedEnum::PUBLIC];
     $this->testModel->sizes = [StringBackedEnum::SMALL, StringBackedEnum::EXTRA_LARGE, StringBackedEnum::MEDIUM];
     $this->testModel->save();
 
     $this->testModel = new TestModel();
     $this->testModel->colors = [PureEnum::BLACK, PureEnum::BLUE, PureEnum::YELLOW];
     $this->testModel->visibilities = [IntBackedEnum::PROTECTED, IntBackedEnum::PRIVATE];
+    $this->testModel->permissions = [IntBackedEnum::PROTECTED, IntBackedEnum::PRIVATE];
     $this->testModel->sizes = [StringBackedEnum::SMALL, StringBackedEnum::MEDIUM];
     $this->testModel->save();
 
@@ -125,6 +157,10 @@ it('will can query model with enum collection', function () {
     expect(TestModel::whereEnumCollectionContains('visibilities', [IntBackedEnum::PUBLIC])->count())->toEqual(1);
     expect(TestModel::whereEnumCollectionContains('visibilities', IntBackedEnum::PUBLIC)->count())->toEqual(1);
     expect(TestModel::whereEnumCollectionContains('visibilities', 2)->count())->toEqual(1);
+
+    expect(TestModel::whereEnumCollectionContains('permissions', [LaravelEnum::PUBLIC])->count())->toEqual(1);
+    expect(TestModel::whereEnumCollectionContains('permissions', LaravelEnum::PUBLIC)->count())->toEqual(1);
+    expect(TestModel::whereEnumCollectionContains('permissions', 2)->count())->toEqual(1);
 
     expect(
         TestModel::whereEnumCollectionContains('colors', PureEnum::BLACK)

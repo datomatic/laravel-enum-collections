@@ -9,4 +9,6 @@ parameters:
     checkOctaneCompatibility: true
     checkModelProperties: true
     checkMissingIterableValueType: false
+    editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'
+
 

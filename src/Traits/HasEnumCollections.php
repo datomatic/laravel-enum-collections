@@ -3,6 +3,7 @@
 namespace Datomatic\EnumCollections\Traits;
 
 use BackedEnum;
+use Datomatic\EnumCollections\Casts\AsLaravelEnumCollection;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use UnitEnum;
@@ -43,54 +44,44 @@ trait HasEnumCollections
         );
     }
 
-    public function isEnumCollectionsAttribute(string $key): bool
+    public function hasEnumCollectionCast(string $key): bool
     {
-        return in_array($key, $this->getEnumCollectionAttributes());
-    }
+        $casts = $this->getCasts();
 
-    public function getEnumCollectionAttributes(): array
-    {
-        return is_array($this->enumCollections) ? array_keys($this->enumCollections) : [];
-    }
+        if (isset($casts[$key]) && str($casts[$key])->contains(AsLaravelEnumCollection::class)) {
+            return true;
+        }
 
-    public function getEnumCollectionClass(string $key): ?string
-    {
-        return is_array($this->enumCollections)
-            ? $this->enumCollections[$key] ?? null
-            : null;
+        return false;
     }
 
     private function enumCollectionPrepare(Builder $query, string $key, mixed $value, callable $closure): Builder
     {
-        if ($this->isEnumCollectionsAttribute($key)) {
-            $value = $this->getValue($value, $key);
-
-            return $closure($query, $value);
+        if ($this->hasEnumCollectionCast($key)) {
+            return $closure($query, $this->getValue($value));
         }
 
         return $query;
     }
 
-    private function getValue($value, string $key): mixed
+    private function getValue($value): mixed
     {
         if (is_array($value) || $value instanceof Collection) {
             $values = [];
             foreach ($value as $v) {
-                $values[] = $this->getSingleValue($v, $key);
+                $values[] = $this->getSingleValue($v);
             }
 
             return $values;
         }
 
-        return $this->getSingleValue($value, $key);
+        return $this->getSingleValue($value);
     }
 
-    private function getSingleValue($value, string $key): mixed
+    private function getSingleValue($value): mixed
     {
-        $enumClass = $this->getEnumCollectionClass($key);
-
         if ($value instanceof UnitEnum) {
-            $value = (is_subclass_of($enumClass, BackedEnum::class)) ? $value->value : $value->name;
+            $value = ($value instanceof BackedEnum) ? $value->value : $value->name;
         }
 
         return $value;

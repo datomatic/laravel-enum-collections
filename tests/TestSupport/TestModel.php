@@ -2,9 +2,10 @@
 
 namespace Datomatic\EnumCollections\Tests\TestSupport;
 
-use Datomatic\EnumCollections\Casts\EnumCollections;
+use Datomatic\EnumCollections\Casts\AsLaravelEnumCollection;
 use Datomatic\EnumCollections\EnumCollection;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\IntBackedEnum;
+use Datomatic\EnumCollections\Tests\TestSupport\Enums\LaravelEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\PureEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\StringBackedEnum;
 use Datomatic\EnumCollections\Traits\HasEnumCollections;
@@ -12,9 +13,9 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property EnumCollection<IntBackedEnum> $visibilities
+ * @property EnumCollection<LaravelEnum> $permissions
  * @property EnumCollection<PureEnum> $colors
  * @property EnumCollection<StringBackedEnum> $sizes
- * @property array<string,string> $enumCollections
  */
 class TestModel extends Model
 {
@@ -27,14 +28,9 @@ class TestModel extends Model
     public $timestamps = false;
 
     protected $casts = [
-        'visibilities' => EnumCollections::class,
-        'colors' => EnumCollections::class,
-        'sizes' => EnumCollections::class,
-    ];
-
-    public array $enumCollections = [
-        'visibilities' => IntBackedEnum::class,
-        'colors' => PureEnum::class,
-        'sizes' => StringBackedEnum::class,
+        'visibilities' => AsLaravelEnumCollection::class.':'.IntBackedEnum::class,
+        'colors' => AsLaravelEnumCollection::class.':'.PureEnum::class,
+        'sizes' => AsLaravelEnumCollection::class.':'.StringBackedEnum::class,
+        'permissions' => AsLaravelEnumCollection::class.':'.LaravelEnum::class,
     ];
 }

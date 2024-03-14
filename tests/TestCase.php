@@ -33,6 +33,7 @@ class TestCase extends Orchestra
             Schema::create('test_models', function (Blueprint $table) {
                 $table->increments('id');
                 $table->json('visibilities')->nullable();
+                $table->json('permissions')->nullable();
                 $table->json('colors')->nullable();
                 $table->json('sizes')->nullable();
             });
