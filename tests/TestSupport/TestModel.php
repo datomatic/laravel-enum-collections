@@ -33,6 +33,6 @@ class TestModel extends Model
         'colors' => AsLaravelEnumCollection::class.':'.PureEnum::class,
         'sizes' => AsLaravelEnumCollection::class.':'.StringBackedEnum::class,
         'permissions' => AsLaravelEnumCollection::class.':'.LaravelEnum::class,
-        'json' => 'array'
+        'json' => 'array',
     ];
 }

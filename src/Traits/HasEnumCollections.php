@@ -19,7 +19,7 @@ trait HasEnumCollections
     public function scopeWhereContains(Builder $query, string $key, $value): Builder
     {
         return $this->prepareEnumCollectionScopeQuery($query, $key, $value,
-            fn(Builder $query, $value) => $query->whereJsonContains($key, $value)
+            fn (Builder $query, $value) => $query->whereJsonContains($key, $value)
         );
     }
 
@@ -49,7 +49,7 @@ trait HasEnumCollections
         $casts = $this->getCasts();
 
         if (isset($casts[$key]) &&
-            ( $this->isJsonCastable($key) || str($casts[$key])->contains(AsLaravelEnumCollection::class))
+            ($this->isJsonCastable($key) || str($casts[$key])->contains(AsLaravelEnumCollection::class))
         ) {
             return true;
         }
