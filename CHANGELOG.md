@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-enum-collections` will be documented in this file.
 
+## v2.0.1 - 2024-03-14
+
+- rename `whereEnumCollectionContains` to `whereContains`
+- rename `whereEnumCollectionDoesntContain` to `whereDoesntContain`
+- rename `orWhereEnumCollectionContains` to `orWhereContains`
+- rename `orWhereEnumCollectionDoesntContain` to `orWhereDoesntContain`
+- add field array cast compatibility with above methods
+
 ## v2.0.0 - 2024-03-14
 
 Upgrade to v2 (please read [UPGRADE.md](https://github.com/datomatic/laravel-enum-collections/blob/main/UPGRADE.md) file)
@@ -13,6 +21,7 @@ EnumCollection::of(Enum::class)->from($data);
 EnumCollection::of(Enum::class)->tryFrom($data);
 EnumCollection::from($data, Enum::class);
 EnumCollection::tryFrom($data, Enum::class);
+
 
 ```
 - change casting definition in only onle line inside `casts` model property
@@ -30,6 +39,7 @@ protected function casts(): array
         'field_name' => AsLaravelEnumCollection::of(FieldEnum::class),
     ];
 }
+
 
 ```
 - add Laravel 11 support
