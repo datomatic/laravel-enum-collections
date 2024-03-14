@@ -124,7 +124,7 @@ class TestModel extends Model
     {
         return [
             'field_name' => AsLaravelEnumCollection::of(FieldEnum::class),
-       ];
+        ];
     }
 }
 ```
