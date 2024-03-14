@@ -134,6 +134,7 @@ it('will can query model with enum collection', function () {
     \DB::table('test_models')->delete();
 
     $this->testModel->colors = [PureEnum::YELLOW, PureEnum::GREEN];
+    $this->testModel->json = [PureEnum::YELLOW->name, PureEnum::GREEN->name];
     $this->testModel->visibilities = [IntBackedEnum::PUBLIC];
     $this->testModel->permissions = [IntBackedEnum::PUBLIC];
     $this->testModel->sizes = [StringBackedEnum::SMALL, StringBackedEnum::EXTRA_LARGE, StringBackedEnum::MEDIUM];
@@ -141,59 +142,68 @@ it('will can query model with enum collection', function () {
 
     $this->testModel = new TestModel();
     $this->testModel->colors = [PureEnum::BLACK, PureEnum::BLUE, PureEnum::YELLOW];
+    $this->testModel->json = [PureEnum::BLACK->name, PureEnum::BLUE->name, PureEnum::YELLOW->name];
     $this->testModel->visibilities = [IntBackedEnum::PROTECTED, IntBackedEnum::PRIVATE];
     $this->testModel->permissions = [IntBackedEnum::PROTECTED, IntBackedEnum::PRIVATE];
     $this->testModel->sizes = [StringBackedEnum::SMALL, StringBackedEnum::MEDIUM];
     $this->testModel->save();
 
-    expect(TestModel::whereEnumCollectionContains('colors', PureEnum::YELLOW)->count())->toEqual(2);
-    expect(TestModel::whereEnumCollectionContains('colors', PureEnum::BLACK)->count())->toEqual(1);
-    expect(TestModel::whereEnumCollectionContains('colors', PureEnum::RED)->count())->toEqual(0);
-    expect(TestModel::whereEnumCollectionContains('colors', 'RED')->count())->toEqual(0);
+    expect(TestModel::whereContains('colors', PureEnum::YELLOW)->count())->toEqual(2);
+    expect(TestModel::whereContains('colors', PureEnum::BLACK)->count())->toEqual(1);
+    expect(TestModel::whereContains('colors', PureEnum::RED)->count())->toEqual(0);
+    expect(TestModel::whereContains('colors', 'RED')->count())->toEqual(0);
+    expect(TestModel::whereDoesntContain('colors', PureEnum::RED)->count())->toEqual(2);
+    expect(TestModel::whereDoesntContain('colors', 'RED')->count())->toEqual(2);
 
-    expect(TestModel::whereEnumCollectionContains('sizes', ['S'])->count())->toEqual(2);
-    expect(TestModel::whereEnumCollectionContains('sizes', 'S')->count())->toEqual(2);
+    expect(TestModel::whereContains('json', PureEnum::YELLOW)->count())->toEqual(2);
+    expect(TestModel::whereContains('json', PureEnum::BLACK)->count())->toEqual(1);
+    expect(TestModel::whereContains('json', PureEnum::RED)->count())->toEqual(0);
+    expect(TestModel::whereContains('json', 'RED')->count())->toEqual(0);
+    expect(TestModel::whereDoesntContain('json', PureEnum::RED)->count())->toEqual(2);
+    expect(TestModel::whereDoesntContain('json', 'RED')->count())->toEqual(2);
 
-    expect(TestModel::whereEnumCollectionContains('visibilities', [IntBackedEnum::PUBLIC])->count())->toEqual(1);
-    expect(TestModel::whereEnumCollectionContains('visibilities', IntBackedEnum::PUBLIC)->count())->toEqual(1);
-    expect(TestModel::whereEnumCollectionContains('visibilities', 2)->count())->toEqual(1);
+    expect(TestModel::whereContains('sizes', ['S'])->count())->toEqual(2);
+    expect(TestModel::whereContains('sizes', 'S')->count())->toEqual(2);
 
-    expect(TestModel::whereEnumCollectionContains('permissions', [LaravelEnum::PUBLIC])->count())->toEqual(1);
-    expect(TestModel::whereEnumCollectionContains('permissions', LaravelEnum::PUBLIC)->count())->toEqual(1);
-    expect(TestModel::whereEnumCollectionContains('permissions', 2)->count())->toEqual(1);
+    expect(TestModel::whereContains('visibilities', [IntBackedEnum::PUBLIC])->count())->toEqual(1);
+    expect(TestModel::whereContains('visibilities', IntBackedEnum::PUBLIC)->count())->toEqual(1);
+    expect(TestModel::whereContains('visibilities', 2)->count())->toEqual(1);
+
+    expect(TestModel::whereContains('permissions', [LaravelEnum::PUBLIC])->count())->toEqual(1);
+    expect(TestModel::whereContains('permissions', LaravelEnum::PUBLIC)->count())->toEqual(1);
+    expect(TestModel::whereContains('permissions', 2)->count())->toEqual(1);
 
     expect(
-        TestModel::whereEnumCollectionContains('colors', PureEnum::BLACK)
-            ->whereEnumCollectionContains('colors', PureEnum::BLUE)->count()
+        TestModel::whereContains('colors', PureEnum::BLACK)
+            ->whereContains('colors', PureEnum::BLUE)->count()
     )->toEqual(1);
 
     expect(
-        TestModel::whereEnumCollectionContains('colors', PureEnum::BLACK)
-            ->whereEnumCollectionContains('colors', PureEnum::BLUE)->count()
+        TestModel::whereContains('colors', PureEnum::BLACK)
+            ->whereContains('colors', PureEnum::BLUE)->count()
     )->toEqual(1);
 
     expect(
-        TestModel::whereEnumCollectionContains('colors', [PureEnum::BLACK, PureEnum::BLUE])->count()
+        TestModel::whereContains('colors', [PureEnum::BLACK, PureEnum::BLUE])->count()
     )->toEqual(1);
     expect(
-        TestModel::whereEnumCollectionContains('colors', collect([PureEnum::BLACK, PureEnum::BLUE]))->count()
+        TestModel::whereContains('colors', collect([PureEnum::BLACK, PureEnum::BLUE]))->count()
     )->toEqual(1);
     expect(
-        TestModel::whereEnumCollectionContains('colors', EnumCollection::make([PureEnum::BLACK, PureEnum::BLUE]))->count()
-    )->toEqual(1);
-
-    expect(
-        TestModel::whereEnumCollectionContains('colors', ['BLACK', 'BLUE'])->count()
+        TestModel::whereContains('colors', EnumCollection::make([PureEnum::BLACK, PureEnum::BLUE]))->count()
     )->toEqual(1);
 
     expect(
-        TestModel::whereEnumCollectionContains('colors', PureEnum::RED)
-            ->orWhereEnumCollectionContains('sizes', StringBackedEnum::SMALL)->count()
+        TestModel::whereContains('colors', ['BLACK', 'BLUE'])->count()
+    )->toEqual(1);
+
+    expect(
+        TestModel::whereContains('colors', PureEnum::RED)
+            ->orWhereContains('sizes', StringBackedEnum::SMALL)->count()
     )->toEqual(2);
 
     expect(
-        TestModel::whereEnumCollectionContains('colors', 'RED')
-            ->orWhereEnumCollectionContains('sizes', StringBackedEnum::SMALL)->count()
+        TestModel::whereContains('colors', 'RED')
+            ->orWhereContains('sizes', StringBackedEnum::SMALL)->count()
     )->toEqual(2);
-
 });

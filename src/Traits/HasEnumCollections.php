@@ -9,55 +9,57 @@ use Illuminate\Support\Collection;
 use UnitEnum;
 
 /**
- * @method static \Illuminate\Database\Eloquent\Builder|self whereEnumCollectionContains(string $key, $value)
- * @method static \Illuminate\Database\Eloquent\Builder|self orWhereEnumCollectionContains(string $key, $value)
- * @method static \Illuminate\Database\Eloquent\Builder|self whereEnumCollectionDoesntContain(string $key, $value)
- * @method static \Illuminate\Database\Eloquent\Builder|self orWhereEnumCollectionDoesntContain(string $key, $value)
+ * @method static Builder|self whereContains(string $key, $value)
+ * @method static Builder|self orWhereContains(string $key, $value)
+ * @method static Builder|self whereDoesntContain(string $key, $value)
+ * @method static Builder|self orWhereDoesntContain(string $key, $value)
  */
 trait HasEnumCollections
 {
-    public function scopeWhereEnumCollectionContains(Builder $query, string $key, $value): Builder
+    public function scopeWhereContains(Builder $query, string $key, $value): Builder
     {
-        return $this->enumCollectionPrepare($query, $key, $value,
-            fn (Builder $query, $value) => $query->whereJsonContains($key, $value)
+        return $this->prepareEnumCollectionScopeQuery($query, $key, $value,
+            fn(Builder $query, $value) => $query->whereJsonContains($key, $value)
         );
     }
 
-    public function scopeOrWhereEnumCollectionContains(Builder $query, string $key, $value): Builder
+    public function scopeOrWhereContains(Builder $query, string $key, $value): Builder
     {
-        return $this->enumCollectionPrepare($query, $key, $value,
+        return $this->prepareEnumCollectionScopeQuery($query, $key, $value,
             fn (Builder $query, $value) => $query->orWhereJsonContains($key, $value)
         );
     }
 
-    public function scopeWhereEnumCollectionDoesntContain(Builder $query, string $key, $value): Builder
+    public function scopeWhereDoesntContain(Builder $query, string $key, $value): Builder
     {
-        return $this->enumCollectionPrepare($query, $key, $value,
+        return $this->prepareEnumCollectionScopeQuery($query, $key, $value,
             fn (Builder $query, $value) => $query->whereJsonDoesntContain($key, $value)
         );
     }
 
-    public function scopeOrWhereEnumCollectionDoesntContain(Builder $query, string $key, $value): Builder
+    public function scopeOrWhereDoesntContain(Builder $query, string $key, $value): Builder
     {
-        return $this->enumCollectionPrepare($query, $key, $value,
+        return $this->prepareEnumCollectionScopeQuery($query, $key, $value,
             fn (Builder $query, $value) => $query->orWhereJsonDoesntContain($key, $value)
         );
     }
 
-    public function hasEnumCollectionCast(string $key): bool
+    public function hasEnumCollectionOrJsonCast(string $key): bool
     {
         $casts = $this->getCasts();
 
-        if (isset($casts[$key]) && str($casts[$key])->contains(AsLaravelEnumCollection::class)) {
+        if (isset($casts[$key]) &&
+            ( $this->isJsonCastable($key) || str($casts[$key])->contains(AsLaravelEnumCollection::class))
+        ) {
             return true;
         }
 
         return false;
     }
 
-    private function enumCollectionPrepare(Builder $query, string $key, mixed $value, callable $closure): Builder
+    private function prepareEnumCollectionScopeQuery(Builder $query, string $key, mixed $value, callable $closure): Builder
     {
-        if ($this->hasEnumCollectionCast($key)) {
+        if ($this->hasEnumCollectionOrJsonCast($key)) {
             return $closure($query, $this->getValue($value));
         }
 

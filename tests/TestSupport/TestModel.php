@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property EnumCollection<LaravelEnum> $permissions
  * @property EnumCollection<PureEnum> $colors
  * @property EnumCollection<StringBackedEnum> $sizes
+ * @property array $json
  */
 class TestModel extends Model
 {
@@ -32,5 +33,6 @@ class TestModel extends Model
         'colors' => AsLaravelEnumCollection::class.':'.PureEnum::class,
         'sizes' => AsLaravelEnumCollection::class.':'.StringBackedEnum::class,
         'permissions' => AsLaravelEnumCollection::class.':'.LaravelEnum::class,
+        'json' => 'array'
     ];
 }

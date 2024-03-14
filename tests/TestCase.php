@@ -36,6 +36,7 @@ class TestCase extends Orchestra
                 $table->json('permissions')->nullable();
                 $table->json('colors')->nullable();
                 $table->json('sizes')->nullable();
+                $table->json('json')->nullable();
             });
         }
     }

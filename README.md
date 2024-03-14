@@ -172,28 +172,28 @@ $model->field_name->doesntContain(FieldEnum::PROTECTED); // true
 ```
 
 ## HasEnumCollections trait
-If you include also the `HasEnumCollections` into the model, you can query the models with the new where functions `whereEnumCollectionContains`, `orWhereEnumCollectionContains`, `whereEnumCollectionDoesntContain` and `orWhereEnumCollectionDoesntContain`.
+If you include also the `HasEnumCollections` into the model, you can query the models with the new where functions `whereContains`, `orWhereContains`, `whereDoesntContain` and `orWhereDoesntContain`.
 
 ```php
-TestModel::whereEnumCollectionContains('field_name', FieldEnum::PRIVATE)->get()
-TestModel::whereEnumCollectionDoesntContain('field_name', FieldEnum::PRIVATE)->get()
+TestModel::whereContains('field_name', FieldEnum::PRIVATE)->get()
+TestModel::whereDoesntContain('field_name', FieldEnum::PRIVATE)->get()
 
-TestModel::whereEnumCollectionContains('field_name', 1)
-    ->whereEnumCollectionContains('field_name', FieldEnum::PUBLIC)
+TestModel::whereContains('field_name', 1)
+    ->whereContains('field_name', FieldEnum::PUBLIC)
     ->get()
     
-TestModel::whereEnumCollectionContains('field_name', [FieldEnum::PRIVATE,FieldEnum::PUBLIC)
+TestModel::whereContains('field_name', [FieldEnum::PRIVATE,FieldEnum::PUBLIC)
     ->get()
-TestModel::whereEnumCollectionContains('field_name', collect([FieldEnum::PRIVATE,FieldEnum::PUBLIC))
+TestModel::whereContains('field_name', collect([FieldEnum::PRIVATE,FieldEnum::PUBLIC))
     ->get()
- TestModel::whereEnumCollectionContains('field_name', EnumCollection::make([FieldEnum::PRIVATE,FieldEnum::PUBLIC))
+ TestModel::whereContains('field_name', EnumCollection::make([FieldEnum::PRIVATE,FieldEnum::PUBLIC))
     ->get()
     
-TestModel::whereEnumCollectionContains('field_name', [1,2])
+TestModel::whereContains('field_name', [1,2])
     ->get()
 
-TestModel::whereEnumCollectionContains('field_name', FieldEnum::PRIVATE)
-    ->orWhereEnumCollectionContains('field_name', FieldEnum::PUBLIC)
+TestModel::whereContains('field_name', FieldEnum::PRIVATE)
+    ->orWhereContains('field_name', FieldEnum::PUBLIC)
     ->get()
 ```
 ## Testing

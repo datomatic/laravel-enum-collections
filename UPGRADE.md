@@ -34,3 +34,11 @@ to
 ### EnumCollection
 
 Where you use `new EnumCollection(...)` replace with `EnumCollection::from(...)` or `EnumCollection::tryFrom(...)`.
+
+
+### HasEnumCollection trait
+
+- rename `whereEnumCollectionContains` to `whereContains`
+- rename `whereEnumCollectionDoesntContain` to `whereDoesntContain`
+- rename `orWhereEnumCollectionContains` to `orWhereContains`
+- rename `orWhereEnumCollectionDoesntContain` to `orWhereDoesntContain`
