@@ -147,3 +147,20 @@ it('will can check if EnumCollection contains enum', function ($from, $search, $
     'string enum collection search name' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'EXTRA_LARGE', true],
     'string enum collection search invalid name' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'SMALL', false],
 ]);
+
+it('forwards call to underlying collection', function () {
+    $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK]);
+    expect($collection->count())->toEqual(2);
+    expect($collection->contains('GREEN'))->toEqual(true);
+    expect($collection->contains('PURPLE'))->toEqual(false);
+});
+
+it('throws on call to non existent method', function () {
+    $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK]);
+    $collection->foo();
+})->throws(BadMethodCallException::class);
+
+it('throws on call to non existent static method', function () {
+    $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK]);
+    $collection::foo();
+})->throws(BadMethodCallException::class);
