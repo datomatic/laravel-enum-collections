@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-enum-collections` will be documented in this file.
 
+## v2.0.2 - 2024-04-10
+
+- fix: adding forwarding unhandled __call/__callStatic to EnumCollection parent
+
 ## v2.0.1 - 2024-03-14
 
 - rename `whereEnumCollectionContains` to `whereContains`
@@ -23,6 +27,7 @@ EnumCollection::from($data, Enum::class);
 EnumCollection::tryFrom($data, Enum::class);
 
 
+
 ```
 - change casting definition in only onle line inside `casts` model property
 
@@ -39,6 +44,7 @@ protected function casts(): array
         'field_name' => AsLaravelEnumCollection::of(FieldEnum::class),
     ];
 }
+
 
 
 ```
