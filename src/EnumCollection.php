@@ -84,6 +84,8 @@ class EnumCollection extends Collection
         if ($method === 'tryFrom') {
             return EnumCollection::of($enumClass)->tryFrom($data);
         }
+
+        return parent::__callStatic($method, $parameters);
     }
 
     public function __call($method, $parameters)
@@ -113,6 +115,8 @@ class EnumCollection extends Collection
 
             return $this;
         }
+
+        return parent::__call($method, $parameters);
     }
 
     /**
