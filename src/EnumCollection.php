@@ -14,9 +14,9 @@ use ValueError;
  * @phpstan-type Item UnitEnum|string|int|null
  *
  * @method static self from(Arrayable<int,Item>|iterable<int,Item>|Item $data, ?string $enumClass = null)
- * @method self tryFrom(Arrayable<int,Item>|iterable<int,Item>|Item $data)
- * @method static self tryFrom(Arrayable<int,Item>|iterable<int,Item>|Item $data, ?string $enumClass = null)
  * @method self from(Arrayable<int,Item>|iterable<int,Item>|Item $data)
+ * @method static self tryFrom(Arrayable<int,Item>|iterable<int,Item>|Item $data, ?string $enumClass = null)
+ * @method self tryFrom(Arrayable<int,Item>|iterable<int,Item>|Item $data)
  *
  * @extends Collection<int,UnitEnum>
  */
@@ -93,14 +93,6 @@ class EnumCollection extends Collection
         /** @var Arrayable<int,Item>|iterable<int, Item>|null $data */
         $data = $parameters[0] ?? null;
 
-        if ($method === 'tryFrom') {
-            $this->items = collect($data)
-                ->map(fn ($value) => $this->tryGetEnumFromValue($value)
-                )->filter()->values()->all();
-
-            return $this;
-        }
-
         if ($method === 'from') {
             $this->items = collect($data)
                 ->map(function ($value) {
@@ -112,6 +104,14 @@ class EnumCollection extends Collection
 
                     return $enum;
                 })->all();
+
+            return $this;
+        }
+
+        if ($method === 'tryFrom') {
+            $this->items = collect($data)
+                ->map(fn ($value) => $this->tryGetEnumFromValue($value)
+                )->filter()->values()->all();
 
             return $this;
         }
