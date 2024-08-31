@@ -34,7 +34,7 @@ class EnumCollection extends Collection
      */
     public static function of(?string $enumClass): self
     {
-        return (new self())->setEnumClass($enumClass);
+        return (new self)->setEnumClass($enumClass);
     }
 
     public function contains($key, $operator = null, $value = null)

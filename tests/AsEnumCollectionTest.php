@@ -8,7 +8,7 @@ use Datomatic\EnumCollections\Tests\TestSupport\Enums\StringBackedEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\TestModel;
 
 beforeEach(function () {
-    $this->testModel = new TestModel();
+    $this->testModel = new TestModel;
 });
 
 it('will return an EnumCollection setting enum collection fields with pure enum', function ($from, array $results) {
@@ -140,7 +140,7 @@ it('will can query model with enum collection', function () {
     $this->testModel->sizes = [StringBackedEnum::SMALL, StringBackedEnum::EXTRA_LARGE, StringBackedEnum::MEDIUM];
     $this->testModel->save();
 
-    $this->testModel = new TestModel();
+    $this->testModel = new TestModel;
     $this->testModel->colors = [PureEnum::BLACK, PureEnum::BLUE, PureEnum::YELLOW];
     $this->testModel->json = [PureEnum::BLACK->name, PureEnum::BLUE->name, PureEnum::YELLOW->name];
     $this->testModel->visibilities = [IntBackedEnum::PROTECTED, IntBackedEnum::PRIVATE];
