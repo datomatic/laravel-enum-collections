@@ -141,7 +141,6 @@ class EnumCollection extends Collection
 
     /**
      * @param  TValue  $value
-     * @return ?UnitEnum
      *
      * @throws Exception
      */
