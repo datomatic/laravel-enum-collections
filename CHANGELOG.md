@@ -2,6 +2,11 @@
 
 All notable changes to `laravel-enum-collections` will be documented in this file.
 
+## v2.0.3 - 2024-10-03
+
+- fix phpDoc
+- type refactor
+
 ## v2.0.2 - 2024-04-10
 
 - fix: adding forwarding unhandled __call/__callStatic to EnumCollection parent
@@ -28,6 +33,7 @@ EnumCollection::tryFrom($data, Enum::class);
 
 
 
+
 ```
 - change casting definition in only onle line inside `casts` model property
 
@@ -44,6 +50,7 @@ protected function casts(): array
         'field_name' => AsLaravelEnumCollection::of(FieldEnum::class),
     ];
 }
+
 
 
 
