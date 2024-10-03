@@ -44,7 +44,7 @@ class AsLaravelEnumCollection implements Castable
 
                 $enumClass = $this->arguments[0];
 
-                return EnumCollection::tryFrom($data, $enumClass);
+                return EnumCollection::of($enumClass)->tryFrom($data);
             }
 
             /**
