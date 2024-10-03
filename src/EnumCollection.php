@@ -51,7 +51,7 @@ class EnumCollection extends Collection
         $firstEnum = $this->first();
         if ($firstEnum && is_object($firstEnum)) {
             $this->enumClass ??= get_class($firstEnum);
-            if ($key instanceof UnitEnum || is_string($key) || is_int($key)) {
+            if ($key instanceof UnitEnum) {
                 $enum = $this->tryGetEnumFromValue($key);
 
                 return in_array($enum, $this->items);
