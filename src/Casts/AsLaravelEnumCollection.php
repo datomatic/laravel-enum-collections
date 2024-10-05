@@ -9,22 +9,31 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Casts\Json;
 use UnitEnum;
 
+/**
+ * @template TValue of UnitEnum
+ * @template TKey of array-key
+ */
 class AsLaravelEnumCollection implements Castable
 {
     /**
      * Get the caster class to use when casting from / to this cast target.
      *
-     * @template TEnum of UnitEnum|BackedEnum
      *
-     * @param  array{class-string<TEnum>}  $arguments
-     * @return \Illuminate\Contracts\Database\Eloquent\CastsAttributes<\Illuminate\Support\Collection<array-key, TEnum>, iterable<TEnum>>
+     * @param  array{class-string<TValue>}  $arguments
+     * @return \Illuminate\Contracts\Database\Eloquent\CastsAttributes<\Illuminate\Support\Collection<array-key, TValue>, iterable<TValue>>
      */
     public static function castUsing(array $arguments)
     {
         return new class($arguments) implements CastsAttributes
         {
+            /**
+             * @var array<int, string>
+             */
             protected array $arguments;
 
+            /**
+             * @param array<int, string>  $arguments
+             */
             public function __construct(array $arguments)
             {
                 $this->arguments = $arguments;
@@ -42,41 +51,41 @@ class AsLaravelEnumCollection implements Castable
                     return;
                 }
 
+                /** @var class-string<TValue>|null $enumClass */
                 $enumClass = $this->arguments[0];
 
                 return EnumCollection::of($enumClass)->tryFrom($data);
             }
 
             /**
-             * @param  \Illuminate\Contracts\Support\Arrayable<int, UnitEnum>|iterable<int, UnitEnum>|null  $value
+             * @param  \Illuminate\Contracts\Support\Arrayable<int, int|string|TValue>|iterable<int, int|string|TValue>|int|string|null  $value
              */
             public function set($model, $key, $value, $attributes)
             {
+                /** @var class-string<TValue>|null $enumClass */
+                $enumClass = $this->arguments[0];
+
                 $value = $value !== null
-                    ? Json::encode((new EnumCollection($value))->toValues())
+                    ? Json::encode(EnumCollection::of($enumClass)->tryFrom($value)->toValues())
                     : null;
 
                 return [$key => $value];
             }
 
             /**
-             * @param  \Illuminate\Contracts\Support\Arrayable<int, UnitEnum>|iterable<int, UnitEnum>|null  $value
+             * @param  \Illuminate\Contracts\Support\Arrayable<int, int|string|TValue>|iterable<int, int|string|TValue>|int|string|null  $value
+             * @param  array<int,string> $attributes
+             *
+             * @return array<TKey, int|string>
              */
             public function serialize(mixed $model, string $key, mixed $value, array $attributes): array
             {
-                return (new EnumCollection($value))->toValues();
+
+                /** @var class-string<TValue>|null $enumClass */
+                $enumClass = $this->arguments[0];
+
+                return (new EnumCollection($value, $enumClass))->toValues();
             }
         };
-    }
-
-    /**
-     * Specify the Enum for the cast.
-     *
-     * @param  class-string  $class
-     * @return string
-     */
-    public static function of($class)
-    {
-        return static::class.':'.$class;
     }
 }

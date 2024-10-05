@@ -17,4 +17,16 @@ enum PureEnum
     case GREEN;
 
     case BLUE;
+
+    public function next()
+    {
+        return match ($this) {
+            PureEnum::YELLOW => PureEnum::WHITE,
+            PureEnum::WHITE => PureEnum::BLACK,
+            PureEnum::BLACK => PureEnum::RED,
+            PureEnum::RED => PureEnum::GREEN,
+            PureEnum::GREEN => PureEnum::BLUE,
+            PureEnum::BLUE => PureEnum::YELLOW,
+        };
+    }
 }

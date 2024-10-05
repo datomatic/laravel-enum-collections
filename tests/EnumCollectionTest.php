@@ -1,6 +1,8 @@
 <?php
 
 use Datomatic\EnumCollections\EnumCollection;
+use Datomatic\EnumCollections\Exceptions\MissingEnumClass;
+use Datomatic\EnumCollections\Exceptions\ValueError;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\IntBackedEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\PureEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\StringBackedEnum;
@@ -8,11 +10,14 @@ use Datomatic\EnumCollections\Tests\TestSupport\Enums\StringBackedEnum;
 test('enumCollection can accept an array of enums', function ($from, array $results) {
     $enumCollection = EnumCollection::from($from);
     $enumCollection2 = EnumCollection::tryFrom($from);
+    $enumCollection3 = new EnumCollection($from);
 
     expect($enumCollection)->toBeInstanceOf(EnumCollection::class);
     expect($enumCollection->toArray())->toEqual($results);
     expect($enumCollection2)->toBeInstanceOf(EnumCollection::class);
     expect($enumCollection2->toArray())->toEqual($results);
+    expect($enumCollection3)->toBeInstanceOf(EnumCollection::class);
+    expect($enumCollection3->toArray())->toEqual($results);
 })->with([
     'enum single' => [PureEnum::BLACK, [PureEnum::BLACK]],
     'enum array' => [[PureEnum::BLACK, PureEnum::GREEN], [PureEnum::BLACK, PureEnum::GREEN]],
@@ -21,8 +26,9 @@ test('enumCollection can accept an array of enums', function ($from, array $resu
 ]);
 
 test('enumCollection throws an exception if an enum class is not set and an array of values/names is passed', function ($from) {
-    expect(fn () => EnumCollection::from($from))->toThrow(Exception::class);
-    expect(fn () => EnumCollection::tryFrom($from))->toThrow(Exception::class);
+    expect(fn () => EnumCollection::from($from))->toThrow(MissingEnumClass::class);
+    expect(fn () => EnumCollection::tryFrom($from))->toThrow(MissingEnumClass::class);
+    expect(fn () => new EnumCollection($from))->toThrow(MissingEnumClass::class);
 })->with([
     'enum single' => ['BLACK'],
     'enum array' => [['BLACK', 'GREEN']],
@@ -33,11 +39,16 @@ test('enumCollection throws an exception if an enum class is not set and an arra
 test('enumCollection can accept an array of enums values and names', function ($from, string $enumClass, array $results) {
     $enumCollection = EnumCollection::of($enumClass)->from($from);
     $enumCollection2 = EnumCollection::of($enumClass)->tryFrom($from);
+    $enumCollection3 = new EnumCollection($from, $enumClass);
 
     expect($enumCollection)->toBeInstanceOf(EnumCollection::class);
     expect($enumCollection->toArray())->toEqual($results);
+
     expect($enumCollection2)->toBeInstanceOf(EnumCollection::class);
     expect($enumCollection2->toArray())->toEqual($results);
+
+    expect($enumCollection3)->toBeInstanceOf(EnumCollection::class);
+    expect($enumCollection3->toArray())->toEqual($results);
 })->with([
     'enum single' => ['BLACK', PureEnum::class, [PureEnum::BLACK]],
     'enum array' => [['BLACK', 'GREEN'], PureEnum::class, [PureEnum::BLACK, PureEnum::GREEN]],
@@ -50,6 +61,7 @@ test('enumCollection can accept an array of enums values and names', function ($
 
 test('enumCollection throws an exception if wrong className passed with from method', function ($from, string $enumClass) {
     expect(fn () => EnumCollection::of($enumClass)->from($from))->toThrow(ValueError::class);
+    expect(fn () => new EnumCollection($from, $enumClass))->toThrow(ValueError::class);
 })->with([
     'enum single' => ['BLACK', StringBackedEnum::class],
     'enum array' => [['BLACK', 'GREEN'], IntBackedEnum::class],
@@ -68,6 +80,7 @@ test('enumCollection doesnt throws an exception if wrong className passed with t
 
 test('enumCollection throws an exception if wrong value/name passed with from method', function ($from, string $enumClass) {
     expect(fn () => EnumCollection::of($enumClass)->from($from))->toThrow(ValueError::class);
+    expect(fn () => new EnumCollection($from, $enumClass))->toThrow(ValueError::class);
 })->with([
     'enum single' => ['SS', StringBackedEnum::class],
     'enum array' => [['EFF', '3493400'], IntBackedEnum::class],
@@ -84,9 +97,10 @@ test('enumCollection throws an exception if wrong value/name passed with tryFrom
     'int enum array' => [[33, 2], PureEnum::class],
 ]);
 
-it('can enumCollection get enumClass ', function (?string $enumClass) {
+it('can enumCollection get enumClass', function (?string $enumClass) {
     expect(EnumCollection::of($enumClass)->getEnumClass())->toEqual($enumClass);
     expect((new EnumCollection)->setEnumClass($enumClass)->getEnumClass())->toEqual($enumClass);
+    expect((new EnumCollection([], $enumClass))->getEnumClass())->toEqual($enumClass);
 })->with([
     'null' => [null],
     'base enum' => [PureEnum::class],
@@ -99,6 +113,7 @@ test('enumCollection toValues method ', function ($from, ?string $enumClass, arr
     expect(EnumCollection::of($enumClass)->from($from)->toValues())->toEqual($results);
     expect(EnumCollection::tryFrom($from, $enumClass)->toValues())->toEqual($results);
     expect(EnumCollection::of($enumClass)->tryFrom($from)->toValues())->toEqual($results);
+    expect((new EnumCollection($from, $enumClass))->toValues())->toEqual($results);
 })->with([
     'enum single' => ['BLACK', PureEnum::class, ['BLACK']],
     'enum single2' => [PureEnum::BLACK, null, ['BLACK']],
@@ -116,11 +131,16 @@ test('enumCollection toValues method ', function ($from, ?string $enumClass, arr
 it('will can check if EnumCollection contains enum', function ($from, $search, $result) {
     $enumCollection = EnumCollection::from($from);
     $enumCollection2 = EnumCollection::tryFrom($from);
+    $enumCollection3 = new EnumCollection($from);
 
     expect($enumCollection->contains($search))->toEqual($result);
     expect($enumCollection->doesntContain($search))->toEqual(! $result);
+
     expect($enumCollection2->contains($search))->toEqual($result);
     expect($enumCollection2->doesntContain($search))->toEqual(! $result);
+
+    expect($enumCollection3->contains($search))->toEqual($result);
+    expect($enumCollection3->doesntContain($search))->toEqual(! $result);
 })->with([
     'pure enum collection search value' => [[PureEnum::GREEN, PureEnum::BLACK], 'GREEN', true],
     'pure enum collection search invalid value' => [[PureEnum::GREEN, PureEnum::BLACK], 'PURPLE', false],
@@ -148,11 +168,160 @@ it('will can check if EnumCollection contains enum', function ($from, $search, $
     'string enum collection search invalid name' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'SMALL', false],
 ]);
 
+it('can use contains method', function () {
+    $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK]);
+    $collection2 = EnumCollection::tryFrom([PureEnum::GREEN, PureEnum::BLACK]);
+    $collection3 = new EnumCollection([PureEnum::GREEN, PureEnum::BLACK]);
+
+    expect($collection->contains('GREEN'))->toBeTrue();
+    expect($collection->contains('PURPLE'))->toBeFalse();
+    expect($collection->contains(fn ($enum) => $enum === PureEnum::GREEN))->toBeTrue();
+    expect($collection->contains(fn ($enum) => $enum->name === 'PURPLE'))->toBeFalse();
+
+    expect($collection2->contains('GREEN'))->toBeTrue();
+    expect($collection2->contains('PURPLE'))->toBeFalse();
+    expect($collection2->contains(fn ($enum) => $enum === PureEnum::GREEN))->toBeTrue();
+    expect($collection2->contains(fn ($enum) => $enum->name === 'PURPLE'))->toBeFalse();
+
+    expect($collection3->contains('GREEN'))->toBeTrue();
+    expect($collection3->contains('PURPLE'))->toBeFalse();
+    expect($collection3->contains(fn ($enum) => $enum === PureEnum::GREEN))->toBeTrue();
+    expect($collection3->contains(fn ($enum) => $enum->name === 'PURPLE'))->toBeFalse();
+
+});
+
+it('can use first method', function () {
+    $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK]);
+    $collection2 = EnumCollection::tryFrom([PureEnum::GREEN, PureEnum::BLACK]);
+    $collection3 = new EnumCollection([PureEnum::GREEN, PureEnum::BLACK]);
+
+    expect($collection->first())->toBe(PureEnum::GREEN);
+    expect($collection->first(fn ($enum) => $enum->name === 'PURPLE'))->toBeNull();
+    expect($collection->first(fn ($enum) => $enum->name === 'BLACK'))->toBe(PureEnum::BLACK);
+
+    expect($collection2->first())->toBe(PureEnum::GREEN);
+    expect($collection2->first(fn ($enum) => $enum->name === 'PURPLE'))->toBeNull();
+    expect($collection2->first(fn ($enum) => $enum->name === 'BLACK'))->toBe(PureEnum::BLACK);
+
+    expect($collection3->first())->toBe(PureEnum::GREEN);
+    expect($collection3->first(fn ($enum) => $enum->name === 'PURPLE'))->toBeNull();
+    expect($collection3->first(fn ($enum) => $enum->name === 'BLACK'))->toBe(PureEnum::BLACK);
+});
+
+it('can use map method', function () {
+    $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK]);
+    $collection2 = EnumCollection::tryFrom([PureEnum::GREEN, PureEnum::BLACK]);
+    $collection3 = new EnumCollection([PureEnum::GREEN, PureEnum::BLACK]);
+
+    expect($collection->map(fn ($enum) => $enum->name)->toArray())->toBe(['GREEN', 'BLACK']);
+    expect($collection2->map(fn ($enum) => $enum->name)->toArray())->toBe(['GREEN', 'BLACK']);
+    expect($collection3->map(fn ($enum) => $enum->name)->toArray())->toBe(['GREEN', 'BLACK']);
+});
+
+it('can use enumsMap method', function () {
+    $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK]);
+    $collection2 = EnumCollection::tryFrom([PureEnum::GREEN, PureEnum::BLACK]);
+    $collection3 = new EnumCollection([PureEnum::GREEN, PureEnum::BLACK]);
+
+    expect($collection->enumsMap(fn ($enum) => $enum->name)->toArray())->toBe([PureEnum::GREEN, PureEnum::BLACK]);
+    expect($collection->enumsMap(fn ($enum) => $enum->next())->toArray())->toBe([PureEnum::BLUE, PureEnum::RED]);
+
+    expect($collection2->enumsMap(fn ($enum) => $enum->name)->toArray())->toBe([PureEnum::GREEN, PureEnum::BLACK]);
+    expect($collection2->enumsMap(fn ($enum) => $enum->next())->toArray())->toBe([PureEnum::BLUE, PureEnum::RED]);
+
+    expect($collection3->enumsMap(fn ($enum) => $enum->name)->toArray())->toBe([PureEnum::GREEN, PureEnum::BLACK]);
+    expect($collection3->enumsMap(fn ($enum) => $enum->next())->toArray())->toBe([PureEnum::BLUE, PureEnum::RED]);
+});
+
+it('can use map get', function () {
+    $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK]);
+    $collection2 = EnumCollection::tryFrom([PureEnum::GREEN, PureEnum::BLACK]);
+    $collection3 = new EnumCollection([PureEnum::GREEN, PureEnum::BLACK]);
+
+    expect($collection->map->next()->toArray())->toBe([PureEnum::BLUE, PureEnum::RED]);
+    expect($collection->map->name->toArray())->toBe(['GREEN', 'BLACK']);
+
+    expect($collection2->map->next()->toArray())->toBe([PureEnum::BLUE, PureEnum::RED]);
+    expect($collection2->map->name->toArray())->toBe(['GREEN', 'BLACK']);
+
+    expect($collection3->map->next()->toArray())->toBe([PureEnum::BLUE, PureEnum::RED]);
+    expect($collection3->map->name->toArray())->toBe(['GREEN', 'BLACK']);
+});
+
+it('can use diff method', function () {
+    $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED]);
+    $collection2 = EnumCollection::tryFrom([PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED]);
+    $collection3 = new EnumCollection([PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED]);
+
+    expect($collection->diff([PureEnum::BLACK])->values()->toArray())->toBe([PureEnum::GREEN, PureEnum::RED]);
+    expect($collection->diff([PureEnum::BLACK, PureEnum::RED])->toValues())->toBe(['GREEN']);
+
+    expect($collection2->diff([PureEnum::BLACK])->values()->toArray())->toBe([PureEnum::GREEN, PureEnum::RED]);
+    expect($collection2->diff([PureEnum::BLACK, PureEnum::RED])->toValues())->toBe(['GREEN']);
+
+    expect($collection3->diff([PureEnum::BLACK])->values()->toArray())->toBe([PureEnum::GREEN, PureEnum::RED]);
+    expect($collection3->diff([PureEnum::BLACK, PureEnum::RED])->toValues())->toBe(['GREEN']);
+});
+
+it('can use diffUsing method', function () {
+    $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED]);
+    $collection2 = EnumCollection::tryFrom([PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED]);
+    $collection3 = new EnumCollection([PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED]);
+
+    $fun = fn ($item1, $item2) => $item1->name === $item2->name ? 0 : -1;
+
+    expect($collection->diffUsing([PureEnum::BLACK], $fun)->values()->toArray())->toBe([PureEnum::GREEN, PureEnum::RED]);
+    expect($collection->diffUsing([PureEnum::BLACK, PureEnum::RED], $fun)->toValues())->toBe(['GREEN']);
+
+    expect($collection2->diffUsing([PureEnum::BLACK], $fun)->values()->toArray())->toBe([PureEnum::GREEN, PureEnum::RED]);
+    expect($collection2->diffUsing([PureEnum::BLACK, PureEnum::RED], $fun)->toValues())->toBe(['GREEN']);
+
+    expect($collection3->diffUsing([PureEnum::BLACK], $fun)->values()->toArray())->toBe([PureEnum::GREEN, PureEnum::RED]);
+    expect($collection3->diffUsing([PureEnum::BLACK, PureEnum::RED], $fun)->toValues())->toBe(['GREEN']);
+});
+
+it('can use diffAssoc method', function () {
+    $collection = EnumCollection::from([2 => PureEnum::GREEN, 3 => PureEnum::BLACK, 4 => PureEnum::RED]);
+
+    expect($collection->diffAssoc([3 => PureEnum::BLACK])->toArray())->toBe([2 => PureEnum::GREEN, 4 => PureEnum::RED]);
+});
+
+it('can use diffAssocUsing method', function () {
+    $collection = EnumCollection::from([2 => PureEnum::GREEN, 3 => PureEnum::BLACK, 4 => PureEnum::RED]);
+
+    $fun = fn ($item1, $item2) => $item1 <=> $item2;
+    expect($collection->diffAssocUsing([3 => PureEnum::BLACK], $fun)->toArray())->toBe([2 => PureEnum::GREEN, 4 => PureEnum::RED]);
+});
+
+it('can use diffKeys method', function () {
+    $collection = EnumCollection::from([2 => PureEnum::GREEN, 3 => PureEnum::BLACK, 4 => PureEnum::RED]);
+
+    expect($collection->diffKeys([3 => PureEnum::BLACK])->toArray())->toBe([2 => PureEnum::GREEN, 4 => PureEnum::RED]);
+});
+
+it('can use diffKeysUsing method', function () {
+    $collection = EnumCollection::from([2 => PureEnum::GREEN, 3 => PureEnum::BLACK, 4 => PureEnum::RED]);
+
+    $fun = fn ($item1, $item2) => $item1 <=> $item2;
+    expect($collection->diffKeysUsing([3 => PureEnum::BLACK], $fun)->toArray())->toBe([2 => PureEnum::GREEN, 4 => PureEnum::RED]);
+});
+
+it('can use duplicates method', function () {
+    $collection = EnumCollection::from([1 => PureEnum::GREEN, 2 => PureEnum::GREEN, 3 => PureEnum::BLACK, 4 => PureEnum::RED, 5 => PureEnum::RED]);
+
+    expect($collection->duplicates()->toArray())->toBe([2 => PureEnum::GREEN, 5 => PureEnum::RED]);
+});
+
 it('forwards call to underlying collection', function () {
     $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK]);
+    $collection2 = EnumCollection::tryFrom([PureEnum::GREEN, PureEnum::BLACK]);
+    $collection3 = new EnumCollection([PureEnum::GREEN, PureEnum::BLACK]);
+
     expect($collection->count())->toEqual(2);
-    expect($collection->contains('GREEN'))->toEqual(true);
-    expect($collection->contains('PURPLE'))->toEqual(false);
+
+    expect($collection2->count())->toEqual(2);
+
+    expect($collection3->count())->toEqual(2);
 });
 
 it('throws on call to non existent method', function () {
