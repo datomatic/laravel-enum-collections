@@ -2,7 +2,6 @@
 
 namespace Datomatic\EnumCollections\Casts;
 
-use BackedEnum;
 use Datomatic\EnumCollections\EnumCollection;
 use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
@@ -32,7 +31,7 @@ class AsLaravelEnumCollection implements Castable
             protected array $arguments;
 
             /**
-             * @param array<int, string>  $arguments
+             * @param  array<int, string>  $arguments
              */
             public function __construct(array $arguments)
             {
@@ -74,8 +73,7 @@ class AsLaravelEnumCollection implements Castable
 
             /**
              * @param  \Illuminate\Contracts\Support\Arrayable<int, int|string|TValue>|iterable<int, int|string|TValue>|int|string|null  $value
-             * @param  array<int,string> $attributes
-             *
+             * @param  array<int,string>  $attributes
              * @return array<TKey, int|string>
              */
             public function serialize(mixed $model, string $key, mixed $value, array $attributes): array

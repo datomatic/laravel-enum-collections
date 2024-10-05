@@ -25,7 +25,6 @@ use UnitEnum;
 final class EnumCollection extends Collection
 {
     /**
-     *
      * @param  Arrayable<TKey,TValue|int|string>|iterable<TKey,TValue|int|string>|TValue|int|string|null  $items
      * @param  class-string<TValue>|null  $enumClass
      */
@@ -37,7 +36,7 @@ final class EnumCollection extends Collection
 
         $items = Arr::wrap($items);
 
-        if (!$this->enumClass) {
+        if (! $this->enumClass) {
             $item = array_values($items)[0] ?? null;
             if ($item instanceof UnitEnum) {
                 $this->enumClass = get_class($item); //@phpstan-ignore-line
@@ -94,7 +93,6 @@ final class EnumCollection extends Collection
     /**
      * @param  string  $method
      * @param  array<int, Arrayable<TKey,TValue|int|string>|iterable<TKey,TValue|int|string>|TValue|int|string|class-string|null>  $parameters
-     *
      * @return EnumCollection|mixed
      */
     public static function __callStatic($method, $parameters)
@@ -114,17 +112,17 @@ final class EnumCollection extends Collection
                 try {
                     return (new EnumCollection(collect(Arr::wrap($data))->first()))->tryFrom($data);
                 } catch (ValueError $e) {
-                    return new self();
+                    return new self;
                 }
             }
         }
+
         return parent::__callStatic($method, $parameters);
     }
 
     /**
      * @param  string  $method
      * @param  array<int, Arrayable<TKey,TValue|int|string>|iterable<TKey,TValue|int|string>|TValue|int|string|class-string|null>  $parameters
-     *
      * @return EnumCollection|mixed
      */
     public function __call($method, $parameters)
@@ -156,6 +154,7 @@ final class EnumCollection extends Collection
                     $this->items[$key] = $enum;
                 }
             }
+
             return $this;
         }
 
@@ -164,8 +163,7 @@ final class EnumCollection extends Collection
 
     /**
      * @param  TValue|int|string|null  $value
-     *
-     * @return  TValue|null
+     * @return TValue|null
      *
      * @throws Exception
      */
@@ -199,9 +197,9 @@ final class EnumCollection extends Collection
             } else {
                 $value = strval($value);
             }
+
             return $this->enumClass::tryFrom($value);
         }
-
 
         return null;
     }
@@ -230,7 +228,6 @@ final class EnumCollection extends Collection
      * Results array of items from Collection or Arrayable.
      *
      * @param  Arrayable<TKey,TValue|int|string>|iterable<TKey,TValue|int|string>|TValue|int|string|null  $items
-     *
      * @return array<TKey, TValue>
      */
     protected function getArrayableItems($items): array
@@ -257,7 +254,7 @@ final class EnumCollection extends Collection
      */
     public function contains($key, $operator = null, $value = null): bool
     {
-        if (!$key instanceof UnitEnum && is_callable($key)) {
+        if (! $key instanceof UnitEnum && is_callable($key)) {
             return parent::contains($key);
         }
 
@@ -304,12 +301,11 @@ final class EnumCollection extends Collection
      * Get the items in the collection that are not present in the given items.
      *
      * @param  Arrayable<TKey,TValue|int|string>|iterable<TKey,TValue|int|string>|TValue|int|string|null  $items
-     *
      * @return static
      */
     public function diff($items)
     {
-        return new static(items: array_diff($this->toValues(), $this->getArrayableItemsValues($items)),
+        return new self(items: array_diff($this->toValues(), $this->getArrayableItemsValues($items)),
             enumClass: $this->enumClass);
     }
 
@@ -323,7 +319,7 @@ final class EnumCollection extends Collection
     public function diffUsing($items, callable $callback)
     {
         // @phpstan-ignore-next-line
-        return new static(items: array_udiff($this->items, $this->getArrayableItems($items), $callback),
+        return new self(items: array_udiff($this->items, $this->getArrayableItems($items), $callback),
             enumClass: $this->enumClass);
     }
 
@@ -336,7 +332,7 @@ final class EnumCollection extends Collection
     public function diffAssoc($items)
     {
         // @phpstan-ignore-next-line
-        return new static(items: array_diff_assoc($this->toValues(), $this->getArrayableItemsValues($items)),
+        return new self(items: array_diff_assoc($this->toValues(), $this->getArrayableItemsValues($items)),
             enumClass: $this->enumClass);
     }
 
@@ -350,7 +346,7 @@ final class EnumCollection extends Collection
     public function diffAssocUsing($items, callable $callback)
     {
         // @phpstan-ignore-next-line
-        return new static(items: array_diff_uassoc($this->toValues(), $this->getArrayableItemsValues($items),
+        return new self(items: array_diff_uassoc($this->toValues(), $this->getArrayableItemsValues($items),
             $callback), enumClass: $this->enumClass); //@phpstan-ignore-line
     }
 
@@ -363,7 +359,7 @@ final class EnumCollection extends Collection
     public function diffKeys($items)
     {
         // @phpstan-ignore-next-line
-        return new static(items: array_diff_key($this->items, $this->getArrayableItems($items)),
+        return new self(items: array_diff_key($this->items, $this->getArrayableItems($items)),
             enumClass: $this->enumClass);
     }
 
@@ -377,7 +373,7 @@ final class EnumCollection extends Collection
     public function diffKeysUsing($items, callable $callback)
     {
         // @phpstan-ignore-next-line
-        return new static(items: array_diff_ukey($this->items, $this->getArrayableItems($items), $callback),
+        return new self(items: array_diff_ukey($this->items, $this->getArrayableItems($items), $callback),
             enumClass: $this->enumClass);
     }
 }
