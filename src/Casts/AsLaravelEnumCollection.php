@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Datomatic\EnumCollections\Casts;
 
 use Datomatic\EnumCollections\EnumCollection;
 use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Casts\Json;
 use UnitEnum;
 
@@ -57,22 +60,25 @@ class AsLaravelEnumCollection implements Castable
             }
 
             /**
-             * @param  \Illuminate\Contracts\Support\Arrayable<int, int|string|TValue>|iterable<int, int|string|TValue>|int|string|null  $value
+             * @param  Arrayable<int, int|string|TValue>|iterable<int, int|string|TValue>|int|string|null|EnumCollection  $value
              */
             public function set($model, $key, $value, $attributes)
             {
                 /** @var class-string<TValue>|null $enumClass */
                 $enumClass = $this->arguments[0];
+                if ($value instanceof EnumCollection) {
+                    $values = $value->toValues();
+                } else {
+                    $values = EnumCollection::of($enumClass)->tryFrom($value)->toValues();
+                }
 
-                $value = $value !== null
-                    ? Json::encode(EnumCollection::of($enumClass)->tryFrom($value)->toValues())
-                    : null;
+                $value = $value !== null ? Json::encode($values) : null;
 
                 return [$key => $value];
             }
 
             /**
-             * @param  \Illuminate\Contracts\Support\Arrayable<int, int|string|TValue>|iterable<int, int|string|TValue>|int|string|null  $value
+             * @param  Arrayable<int, int|string|TValue>|iterable<int, int|string|TValue>|int|string|null  $value
              * @param  array<int,string>  $attributes
              * @return array<TKey, int|string>
              */

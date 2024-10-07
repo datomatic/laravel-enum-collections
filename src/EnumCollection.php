@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Datomatic\EnumCollections;
 
 use BackedEnum;
@@ -34,7 +36,7 @@ final class EnumCollection extends Collection
             return;
         }
 
-        $items = Arr::wrap($items);
+        $items = $this->privateFlatten(Arr::wrap($items));
 
         if (! $this->enumClass) {
             $item = array_values($items)[0] ?? null;
@@ -92,6 +94,20 @@ final class EnumCollection extends Collection
         return $this->enumClass;
     }
 
+    private function privateFlatten(array $array): array
+    {
+        $return = [];
+        array_walk_recursive($array, function (mixed $a, int|string $key) use (&$return) {
+            if (! isset($return[$key])) {
+                $return[$key] = $a;
+            } else {
+                $return[] = $a;
+            }
+        });
+
+        return $return;
+    }
+
     /**
      * @param  string  $method
      * @param  array<int, Arrayable<TKey,TValue|int|string>|iterable<TKey,TValue|int|string>|TValue|int|string|class-string|null>  $parameters
@@ -131,10 +147,11 @@ final class EnumCollection extends Collection
     {
         /** @var Arrayable<TKey,TValue|int|string>|iterable<TKey,TValue|int|string>|TValue|int|string|null $data */
         $data = $parameters[0] ?? null;
+        $data = $this->privateFlatten(Arr::wrap($data));
 
         if ($method === 'from') {
             $this->items = [];
-            foreach (Arr::wrap($data) as $key => $value) {
+            foreach ($data as $key => $value) {
                 $enum = $this->tryGetEnumFromValue($value);
 
                 if ($enum === null) {
@@ -149,7 +166,7 @@ final class EnumCollection extends Collection
 
         if ($method === 'tryFrom') {
             $this->items = [];
-            foreach (Arr::wrap($data) as $key => $value) {
+            foreach ($data as $key => $value) {
                 $enum = $this->tryGetEnumFromValue($value);
 
                 if ($enum) {
@@ -164,13 +181,17 @@ final class EnumCollection extends Collection
     }
 
     /**
-     * @param  TValue|int|string|null  $value
+     * @param  TValue|int|string|null|array  $value
      * @return TValue|null
      *
      * @throws Exception
      */
-    public function tryGetEnumFromValue(UnitEnum|int|string|null $value): ?UnitEnum
+    public function tryGetEnumFromValue(UnitEnum|int|string|null|array $value): ?UnitEnum
     {
+        if (is_array($value)) {
+            return null;
+        }
+
         if ($value instanceof UnitEnum || $value === null) {
             return $value;
         }

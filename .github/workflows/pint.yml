@@ -1,9 +1,9 @@
-name: Fix PHP code style issues
+name: PHP Linting
 
 on: [push]
 
 jobs:
-  php-code-styling:
+  phplint:
     runs-on: ubuntu-latest
 
     steps:
@@ -12,8 +12,13 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Fix PHP code style issues
+      - name: "laravel-pint"
         uses: aglipanci/laravel-pint-action@2.4
+        with:
+          verboseMode: true
+          testMode: true
+          configPath: "pint.json"
+          onlyDirty: true
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5

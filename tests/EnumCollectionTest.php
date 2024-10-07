@@ -1,11 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 use Datomatic\EnumCollections\EnumCollection;
 use Datomatic\EnumCollections\Exceptions\MissingEnumClass;
 use Datomatic\EnumCollections\Exceptions\ValueError;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\IntBackedEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\PureEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\StringBackedEnum;
+
+test('enumCollection can accept only one level array', function ($from, string $class, int $results) {
+    $enumCollection = EnumCollection::of($class)->from($from);
+    $enumCollection2 = EnumCollection::of($class)->tryFrom($from);
+    $enumCollection3 = new EnumCollection($from, $class);
+
+    expect($enumCollection->count())->toBe($results);
+    expect($enumCollection2->count())->toBe($results);
+    expect($enumCollection3->count())->toBe($results);
+})->with([
+    'enum multidimensional array' => [[3 => [PureEnum::BLACK, PureEnum::RED], PureEnum::GREEN], PureEnum::class, 3],
+]);
 
 test('enumCollection can accept an array of enums', function ($from, array $results) {
     $enumCollection = EnumCollection::from($from);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Datomatic\EnumCollections;
 
 use Spatie\LaravelPackageTools\Package;

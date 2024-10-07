@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use Datomatic\EnumCollections\EnumCollection;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\IntBackedEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\LaravelEnum;
@@ -73,7 +75,6 @@ it('will return an EnumCollection setting enum collection fields with StringBack
     $model = TestModel::find($this->testModel->id);
 
     expect($model->sizes)->toBeInstanceOf(EnumCollection::class);
-
     expect($model->sizes->values()->toArray())->toEqual($results);
 })->with([
     'enum single' => [StringBackedEnum::SMALL, [StringBackedEnum::SMALL]],
