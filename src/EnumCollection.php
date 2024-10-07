@@ -51,12 +51,15 @@ final class EnumCollection extends Collection
             new Exceptions\MissingEnumClass('enumClass param is required when not pass an enum as argument'));
 
         foreach ($items as $key => $value) {
-            $items[$key] = $this->tryGetEnumFromValue($value);
+            $enum = $this->tryGetEnumFromValue($value);
 
-            if ($items[$key] === null) {
+            if ($enum === null) {
+                /** @var  int|string|null  $value */
                 throw new Exceptions\ValueError("Enum {$this->enumClass} does not contain {$value}");
             }
+            $items[$key] = $enum;
         }
+        /** @var array<TKey,TValue> $items */
         $this->items = $items;
     }
 
@@ -94,6 +97,10 @@ final class EnumCollection extends Collection
         return $this->enumClass;
     }
 
+    /**
+     * @param  array<TKey,TValue|int|string|null|array<TKey,TValue|int|string|null>>  $array
+     * @return array<TKey,TValue|int|string|null>
+     */
     private function privateFlatten(array $array): array
     {
         $return = [];
@@ -105,6 +112,7 @@ final class EnumCollection extends Collection
             }
         });
 
+        /** @var array<TKey,TValue|int|string|null> $return */
         return $return;
     }
 
@@ -155,6 +163,7 @@ final class EnumCollection extends Collection
                 $enum = $this->tryGetEnumFromValue($value);
 
                 if ($enum === null) {
+                    /** @var  int|string|null  $value */
                     throw new Exceptions\ValueError("Enum {$this->enumClass} does not contain {$value}");
                 }
 
@@ -181,17 +190,13 @@ final class EnumCollection extends Collection
     }
 
     /**
-     * @param  TValue|int|string|null|array  $value
+     * @param  TValue|int|string|null  $value
      * @return TValue|null
      *
      * @throws Exception
      */
-    public function tryGetEnumFromValue(UnitEnum|int|string|null|array $value): ?UnitEnum
+    public function tryGetEnumFromValue(UnitEnum|int|string|null $value): ?UnitEnum
     {
-        if (is_array($value)) {
-            return null;
-        }
-
         if ($value instanceof UnitEnum || $value === null) {
             return $value;
         }
