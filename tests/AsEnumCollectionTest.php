@@ -74,7 +74,7 @@ it('will return an EnumCollection setting enum collection fields with StringBack
 
     expect($model->sizes)->toBeInstanceOf(EnumCollection::class);
 
-    expect($model->sizes->toArray())->toEqual($results);
+    expect($model->sizes->values()->toArray())->toEqual($results);
 })->with([
     'enum single' => [StringBackedEnum::SMALL, [StringBackedEnum::SMALL]],
     'string case single' => ['SMALL', [StringBackedEnum::SMALL]],

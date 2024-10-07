@@ -39,7 +39,9 @@ final class EnumCollection extends Collection
         if (! $this->enumClass) {
             $item = array_values($items)[0] ?? null;
             if ($item instanceof UnitEnum) {
-                $this->enumClass = get_class($item); //@phpstan-ignore-line
+                /** @var class-string<TValue> $class */
+                $class =  get_class($item);
+                $this->enumClass = $class;
             }
         }
 
@@ -187,7 +189,8 @@ final class EnumCollection extends Collection
         if (defined($this->enumClass.'::'.$value)) {
             $enum = constant($this->enumClass.'::'.$value);
             if ($enum instanceof UnitEnum) {
-                return $enum; //@phpstan-ignore-line
+                /** @var TValue $enum */
+                return $enum;
             }
         }
 
@@ -250,6 +253,10 @@ final class EnumCollection extends Collection
     }
 
     /**
+     * @param TValue|int|string $key
+     * @param mixed $operator
+     * @param mixed $value
+     *
      * @throws Exception
      */
     public function contains($key, $operator = null, $value = null): bool
@@ -258,19 +265,29 @@ final class EnumCollection extends Collection
             return parent::contains($key);
         }
 
-        $firstEnum = $this->first();
-        if ($firstEnum && is_object($firstEnum)) {
-            $this->enumClass ??= get_class($firstEnum);
-            $enum = $this->tryGetEnumFromValue($key); //@phpstan-ignore-line
+        $enum = $this->tryGetEnumFromValue($key);
 
-            if ($enum === null) {
-                return false;
-            }
-
-            return in_array($enum, $this->items);
+        if ($enum === null) {
+            return false;
         }
 
-        return false;
+        return in_array($enum, $this->items);
+}
+
+    /**
+     * @param TValue $key
+     * @param mixed $operator
+     * @param mixed $value
+     * @return bool
+     * @throws Exception
+     */
+    public function containsStrict($key, $operator = null, $value = null): bool
+    {
+        if (! $key instanceof UnitEnum) {
+            throw new Exceptions\ValueError('Value must be an instance of UnitEnum');
+        }
+
+        return $this->contains($key, $operator, $value);
     }
 
     /**
@@ -312,13 +329,13 @@ final class EnumCollection extends Collection
     /**
      * Get the items in the collection that are not present in the given items, using the callback.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TValue>|iterable<array-key, TValue>|TValue|int|string|null  $items
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
      * @param  callable(TValue, TValue): int  $callback
      * @return static
      */
     public function diffUsing($items, callable $callback)
     {
-        // @phpstan-ignore-next-line
+        /** @var callable(mixed, mixed): int  $callback */
         return new self(items: array_udiff($this->items, $this->getArrayableItems($items), $callback),
             enumClass: $this->enumClass);
     }
@@ -326,12 +343,11 @@ final class EnumCollection extends Collection
     /**
      * Get the items in the collection whose keys and values are not present in the given items.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
      * @return static
      */
     public function diffAssoc($items)
     {
-        // @phpstan-ignore-next-line
         return new self(items: array_diff_assoc($this->toValues(), $this->getArrayableItemsValues($items)),
             enumClass: $this->enumClass);
     }
@@ -339,26 +355,25 @@ final class EnumCollection extends Collection
     /**
      * Get the items in the collection whose keys and values are not present in the given items, using the callback.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
      * @param  callable(TKey, TKey): int  $callback
      * @return static
      */
     public function diffAssocUsing($items, callable $callback)
     {
-        // @phpstan-ignore-next-line
+        /** @var callable(mixed, mixed): int  $callback */
         return new self(items: array_diff_uassoc($this->toValues(), $this->getArrayableItemsValues($items),
-            $callback), enumClass: $this->enumClass); //@phpstan-ignore-line
+            $callback), enumClass: $this->enumClass);
     }
 
     /**
      * Get the items in the collection whose keys are not present in the given items.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
      * @return static
      */
     public function diffKeys($items)
     {
-        // @phpstan-ignore-next-line
         return new self(items: array_diff_key($this->items, $this->getArrayableItems($items)),
             enumClass: $this->enumClass);
     }
@@ -366,13 +381,13 @@ final class EnumCollection extends Collection
     /**
      * Get the items in the collection whose keys are not present in the given items, using the callback.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
      * @param  callable(TKey, TKey): int  $callback
      * @return static
      */
     public function diffKeysUsing($items, callable $callback)
     {
-        // @phpstan-ignore-next-line
+        /** @var callable(mixed, mixed): int  $callback */
         return new self(items: array_diff_ukey($this->items, $this->getArrayableItems($items), $callback),
             enumClass: $this->enumClass);
     }
