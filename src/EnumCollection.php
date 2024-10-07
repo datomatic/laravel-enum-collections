@@ -40,7 +40,7 @@ final class EnumCollection extends Collection
             $item = array_values($items)[0] ?? null;
             if ($item instanceof UnitEnum) {
                 /** @var class-string<TValue> $class */
-                $class =  get_class($item);
+                $class = get_class($item);
                 $this->enumClass = $class;
             }
         }
@@ -253,9 +253,9 @@ final class EnumCollection extends Collection
     }
 
     /**
-     * @param TValue|int|string $key
-     * @param mixed $operator
-     * @param mixed $value
+     * @param  TValue|int|string  $key
+     * @param  mixed  $operator
+     * @param  mixed  $value
      *
      * @throws Exception
      */
@@ -272,13 +272,13 @@ final class EnumCollection extends Collection
         }
 
         return in_array($enum, $this->items);
-}
+    }
 
     /**
-     * @param TValue $key
-     * @param mixed $operator
-     * @param mixed $value
-     * @return bool
+     * @param  TValue  $key
+     * @param  mixed  $operator
+     * @param  mixed  $value
+     *
      * @throws Exception
      */
     public function containsStrict($key, $operator = null, $value = null): bool
