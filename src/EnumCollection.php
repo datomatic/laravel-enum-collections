@@ -317,6 +317,39 @@ final class EnumCollection extends Collection
     }
 
     /**
+     * @param  TValue|int|string|array<TValue|int|string>  $values
+     *
+     * @throws Exception
+     */
+    public function containsAny(mixed $values): bool
+    {
+        /** @var array<int,TValue> $values */
+        $values = array_values(Arr::whereNotNull(Arr::map(Arr::wrap($values),
+            fn($value) => $this->tryGetEnumFromValue($value))
+        ));
+
+        foreach ($this->items as $enum) {
+            if (in_array($enum, $values)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+
+    /**
+     * @param  TValue|int|string|array<TValue|int|string>  $values
+     *
+     * @throws Exception
+     */
+    public function doesntContainAny(mixed $values): bool
+    {
+        return !$this->containsAny($values);
+    }
+
+
+    /**
      * @param  TValue  $key
      * @param  mixed  $operator
      * @param  mixed  $value

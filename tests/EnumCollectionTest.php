@@ -217,8 +217,104 @@ it('can use contains method', function () {
     expect($collection3->contains('PURPLE'))->toBeFalse();
     expect($collection3->contains(fn ($enum) => $enum === PureEnum::GREEN))->toBeTrue();
     expect($collection3->contains(fn ($enum) => $enum->name === 'PURPLE'))->toBeFalse();
-
 });
+
+it('will can check if EnumCollection containsAny enum', function ($from, $search, $result) {
+    $enumCollection = EnumCollection::from($from);
+    $enumCollection2 = EnumCollection::tryFrom($from);
+    $enumCollection3 = new EnumCollection($from);
+
+    expect($enumCollection->containsAny($search))->toEqual($result);
+    expect($enumCollection->doesntContainAny($search))->toEqual(! $result);
+
+    expect($enumCollection2->containsAny($search))->toEqual($result);
+    expect($enumCollection2->doesntContainAny($search))->toEqual(! $result);
+
+    expect($enumCollection3->containsAny($search))->toEqual($result);
+    expect($enumCollection3->doesntContainAny($search))->toEqual(! $result);
+})->with([
+    'pure enum collection search value' => [[PureEnum::GREEN, PureEnum::BLACK], 'GREEN', true],
+    'pure enum collection search value2' => [[PureEnum::GREEN, PureEnum::BLACK], ['GREEN'], true],
+    'pure enum collection search value3' => [[PureEnum::GREEN, PureEnum::BLACK], ['GREEN', 'RED'], true],
+    'pure enum collection search invalid value' => [[PureEnum::GREEN, PureEnum::BLACK], 'PURPLE', false],
+    'pure enum collection search invalid value2' => [[PureEnum::GREEN, PureEnum::BLACK], ['PURPLE'], false],
+    'pure enum collection search invalid value3' => [[PureEnum::GREEN, PureEnum::BLACK], ['PURPLE','RED'], false],
+    'pure enum collection search invalid value int' => [[PureEnum::GREEN, PureEnum::BLACK], 1, false],
+    'pure enum collection search invalid value int2' => [[PureEnum::GREEN, PureEnum::BLACK], [1], false],
+    'pure enum collection search invalid value int3' => [[PureEnum::GREEN, PureEnum::BLACK], [1,2], false],
+    'pure enum collection search enum' => [[PureEnum::GREEN, PureEnum::BLACK], PureEnum::BLACK, true],
+    'pure enum collection search enum2' => [[PureEnum::GREEN, PureEnum::BLACK], [PureEnum::BLACK], true],
+    'pure enum collection search enum3' => [[PureEnum::GREEN, PureEnum::BLACK], [PureEnum::BLACK,PureEnum::BLUE], true],
+    'pure enum collection search invalid enum' => [[PureEnum::GREEN, PureEnum::BLACK], PureEnum::YELLOW, false],
+    'pure enum collection search invalid enum2' => [[PureEnum::GREEN, PureEnum::BLACK], [PureEnum::YELLOW], false],
+    'pure enum collection search invalid enum3' => [[PureEnum::GREEN, PureEnum::BLACK], [PureEnum::YELLOW,PureEnum::BLUE], false],
+    'pure enum collection search name' => [[PureEnum::GREEN, PureEnum::BLACK], 'BLACK', true],
+    'pure enum collection search name2' => [[PureEnum::GREEN, PureEnum::BLACK], ['BLACK'], true],
+    'pure enum collection search name3' => [[PureEnum::GREEN, PureEnum::BLACK], ['BLACK','BLUE'], true],
+    'pure enum collection search invalid name' => [[PureEnum::GREEN, PureEnum::BLACK], 'YELLOW', false],
+    'pure enum collection search invalid name2' => [[PureEnum::GREEN, PureEnum::BLACK], ['YELLOW'], false],
+    'pure enum collection search invalid name3' => [[PureEnum::GREEN, PureEnum::BLACK], ['YELLOW','BLUE'], false],
+
+    'int enum collection search value' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], 1, true],
+    'int enum collection search value2' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], [1], true],
+    'int enum collection search value3' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], [1, 2], true],
+
+    'int enum collection search value string' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], '3', true],
+    'int enum collection search value string2' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['3'], true],
+    'int enum collection search value string3' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['3', '4'], true],
+
+    'int enum collection search invalid value' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], 'A', false],
+    'int enum collection search invalid value2' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['A'], false],
+    'int enum collection search invalid value3' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['A', 'B'], false],
+
+    'int enum collection search invalid value2' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], 4, false],
+    'int enum collection search invalid value22' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], [4], false],
+    'int enum collection search invalid value23' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], [4, 5], false],
+
+    'int enum collection search enum' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], IntBackedEnum::PROTECTED, true],
+    'int enum collection search enum2' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], [IntBackedEnum::PROTECTED], true],
+    'int enum collection search enum3' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], [IntBackedEnum::PROTECTED, IntBackedEnum::PUBLIC], true],
+
+    'int enum collection search invalid enum' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], IntBackedEnum::PUBLIC, false],
+    'int enum collection search invalid enum2' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], [IntBackedEnum::PUBLIC], false],
+    'int enum collection search invalid enum3' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], [IntBackedEnum::PUBLIC, IntBackedEnum::PUBLIC], false],
+
+    'int enum collection search name' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], 'PROTECTED', true],
+    'int enum collection search name2' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['PROTECTED'], true],
+    'int enum collection search name3' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['PROTECTED', 'PRIVATE'], true],
+
+    'int enum collection search invalid name' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], 'PUBLIC', false],
+    'int enum collection search invalid name2' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['PUBLIC'], false],
+    'int enum collection search invalid name3' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['PUBLIC', 'SEMI'], false],
+
+    'string enum collection search value' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'L', true],
+    'string enum collection search value2' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['L'], true],
+    'string enum collection search value3' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['L', 'M'], true],
+
+    'string enum collection search invalid value' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'LD', false],
+    'string enum collection search invalid value2' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['LD'], false],
+    'string enum collection search invalid value3' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['LD', 'MD'], false],
+
+    'string enum collection search invalid value int' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 4, false],
+    'string enum collection search invalid value int2' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], [4], false],
+    'string enum collection search invalid value int3' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], [4, 5], false],
+
+    'string enum collection search enum' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], StringBackedEnum::EXTRA_LARGE, true],
+    'string enum collection search enum2' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], [StringBackedEnum::EXTRA_LARGE], true],
+    'string enum collection search enum3' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], [StringBackedEnum::EXTRA_LARGE, StringBackedEnum::LARGE], true],
+
+    'string enum collection search invalid enum' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], StringBackedEnum::SMALL, false],
+    'string enum collection search invalid enum2' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], [StringBackedEnum::SMALL], false],
+    'string enum collection search invalid enum3' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], [StringBackedEnum::SMALL, StringBackedEnum::MEDIUM], false],
+
+    'string enum collection search name' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'EXTRA_LARGE', true],
+    'string enum collection search name2' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['EXTRA_LARGE'], true],
+    'string enum collection search name3' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['EXTRA_LARGE','LARGE'], true],
+
+    'string enum collection search invalid name' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'SMALL', false],
+    'string enum collection search invalid name2' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['SMALL'], false],
+    'string enum collection search invalid name3' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['SMALL','MEDIUM'], false],
+]);
 
 it('can use first method', function () {
     $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK]);
