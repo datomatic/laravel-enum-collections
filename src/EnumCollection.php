@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Enumerable;
 use ReflectionEnum;
 use UnitEnum;
 
@@ -465,5 +466,39 @@ final class EnumCollection extends Collection
         /** @var callable(mixed, mixed): int $callback */
         return new self(items: array_diff_ukey($this->items, $this->getArrayableItems($items), $callback),
             enumClass: $this->enumClass);
+    }
+
+    /**
+     * Get all items except for those with the specified keys.
+     *
+     * @param  \Illuminate\Support\Enumerable<array-key, TKey>|array<array-key, TKey>|string  $keys
+     * @return static
+     */
+    public function except(mixed $keys)
+    {
+        if ($keys instanceof Enumerable) {
+            $keys = $keys->all();
+        } elseif (!is_array($keys)) {
+            $keys = func_get_args();
+        }
+
+        /** @var array<int,int|string>  $keys */
+        return new static(items: Arr::except($this->items, $keys), enumClass: $this->enumClass);
+    }
+
+
+    /**
+     * Run a filter over each of the items.
+     *
+     * @param  (callable(TValue, TKey): bool)|null  $callback
+     * @return static
+     */
+    public function filter(?callable $callback = null)
+    {
+        if ($callback) {
+            return new static(Arr::where($this->items, $callback), enumClass: $this->enumClass);
+        }
+
+        return new static(array_filter($this->items), enumClass: $this->enumClass);
     }
 }

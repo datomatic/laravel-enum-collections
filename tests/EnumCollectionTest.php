@@ -438,6 +438,19 @@ it('can use duplicates method', function () {
     expect($collection->duplicates()->toArray())->toBe([2 => PureEnum::GREEN, 5 => PureEnum::RED]);
 });
 
+it('can use except method', function () {
+    $collection = EnumCollection::from([1 => PureEnum::GREEN, 2 => PureEnum::GREEN, 3 => PureEnum::BLACK, 4 => PureEnum::RED, 5 => PureEnum::RED]);
+
+    expect($collection->except([3,4])->toArray())->toBe([1 => PureEnum::GREEN,2 => PureEnum::GREEN, 5 => PureEnum::RED]);
+});
+
+it('can use filter method', function () {
+    $collection = EnumCollection::from([1 => PureEnum::GREEN, 2 => PureEnum::GREEN, 3 => PureEnum::BLACK, 4 => PureEnum::RED, 5 => PureEnum::RED]);
+
+    $fun = fn($enum) => strlen($enum->name) < 4;
+    expect($collection->filter($fun)->toArray())->toBe([ 4 => PureEnum::RED, 5 => PureEnum::RED]);
+});
+
 it('forwards call to underlying collection', function () {
     $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK]);
     $collection2 = EnumCollection::tryFrom([PureEnum::GREEN, PureEnum::BLACK]);
