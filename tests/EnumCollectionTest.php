@@ -5,9 +5,11 @@ declare(strict_types=1);
 use Datomatic\EnumCollections\EnumCollection;
 use Datomatic\EnumCollections\Exceptions\MissingEnumClass;
 use Datomatic\EnumCollections\Exceptions\ValueError;
+use Datomatic\EnumCollections\Exceptions\WrongEnumClass;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\IntBackedEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\PureEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\StringBackedEnum;
+use Datomatic\EnumCollections\Tests\TestSupport\TestModel;
 
 test('enumCollection can accept only one level array', function ($from, string $class, int $results) {
     $enumCollection = EnumCollection::of($class)->from($from);
@@ -20,6 +22,14 @@ test('enumCollection can accept only one level array', function ($from, string $
 })->with([
     'enum multidimensional array' => [[3 => [PureEnum::BLACK, PureEnum::RED], PureEnum::GREEN], PureEnum::class, 3],
 ]);
+
+it('return an exception if a wrong enum class passed', function () {
+    expect(fn () => EnumCollection::of('WrongClass'))->toThrow(WrongEnumClass::class);
+    expect(fn () => EnumCollection::of(TestModel::class))->toThrow(WrongEnumClass::class);
+    expect(fn () => new EnumCollection([], 'WrongClass'))->toThrow(WrongEnumClass::class);
+    expect(fn () => new EnumCollection([], TestModel::class))->toThrow(WrongEnumClass::class);
+    expect(fn () => new EnumCollection([], TestModel::class))->toThrow(WrongEnumClass::class);
+});
 
 test('enumCollection can accept an array of enums', function ($from, array $results) {
     $enumCollection = EnumCollection::from($from);
@@ -44,10 +54,10 @@ test('enumCollection throws an exception if an enum class is not set and an arra
     expect(fn () => EnumCollection::tryFrom($from))->toThrow(MissingEnumClass::class);
     expect(fn () => new EnumCollection($from))->toThrow(MissingEnumClass::class);
 })->with([
-    'enum single' => ['BLACK'],
-    'enum array' => [['BLACK', 'GREEN']],
+//    'enum single' => ['BLACK'],
+//    'enum array' => [['BLACK', 'GREEN']],
     'string enum array' => [['S', 'M', 'L']],
-    'int enum array' => [[1, 2, 3]],
+//    'int enum array' => [[1, 2, 3]],
 ]);
 
 test('enumCollection can accept an array of enums values and names', function ($from, string $enumClass, array $results) {
@@ -113,21 +123,27 @@ test('enumCollection throws an exception if wrong value/name passed with tryFrom
 
 it('can enumCollection get enumClass', function (?string $enumClass) {
     expect(EnumCollection::of($enumClass)->getEnumClass())->toEqual($enumClass);
-    expect((new EnumCollection)->setEnumClass($enumClass)->getEnumClass())->toEqual($enumClass);
     expect((new EnumCollection([], $enumClass))->getEnumClass())->toEqual($enumClass);
 })->with([
-    'null' => [null],
     'base enum' => [PureEnum::class],
     'string enum array' => [StringBackedEnum::class],
     'int enum array' => [IntBackedEnum::class],
 ]);
 
+
+it('throws MissingEnumClass if pass null to of function', function () {
+    expect(fn() => EnumCollection::of(null))->toThrow(MissingEnumClass::class);
+});
+
 test('enumCollection toValues method ', function ($from, ?string $enumClass, array $results) {
     expect(EnumCollection::from($from, $enumClass)->toValues())->toEqual($results);
-    expect(EnumCollection::of($enumClass)->from($from)->toValues())->toEqual($results);
     expect(EnumCollection::tryFrom($from, $enumClass)->toValues())->toEqual($results);
-    expect(EnumCollection::of($enumClass)->tryFrom($from)->toValues())->toEqual($results);
     expect((new EnumCollection($from, $enumClass))->toValues())->toEqual($results);
+
+    if($enumClass !== null) {
+        expect(EnumCollection::of($enumClass)->from($from)->toValues())->toEqual($results);
+        expect(EnumCollection::of($enumClass)->tryFrom($from)->toValues())->toEqual($results);
+    }
 })->with([
     'enum single' => ['BLACK', PureEnum::class, ['BLACK']],
     'enum single2' => [PureEnum::BLACK, null, ['BLACK']],

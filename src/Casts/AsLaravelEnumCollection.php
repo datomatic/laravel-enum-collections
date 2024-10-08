@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Datomatic\EnumCollections\Casts;
 
 use Datomatic\EnumCollections\EnumCollection;
+use Datomatic\EnumCollections\Exceptions\MissingEnumClass;
+use Datomatic\EnumCollections\Exceptions\WrongEnumClass;
 use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Contracts\Support\Arrayable;
@@ -53,10 +55,11 @@ class AsLaravelEnumCollection implements Castable
                     return;
                 }
 
-                /** @var class-string<TValue>|null $enumClass */
-                $enumClass = $this->arguments[0];
+                $enumClass = $this->getClassEnum();
+                $unique = $this->getUnique();
 
-                return EnumCollection::of($enumClass)->tryFrom($data);
+                return EnumCollection::of($enumClass)->tryFrom($data)
+                    ->when($unique, fn (EnumCollection $col) => $col->unique()->values());
             }
 
             /**
@@ -64,13 +67,18 @@ class AsLaravelEnumCollection implements Castable
              */
             public function set($model, $key, $value, $attributes)
             {
-                /** @var class-string<TValue>|null $enumClass */
-                $enumClass = $this->arguments[0];
+                $enumClass = $this->getClassEnum();
+                $unique = $this->getUnique();
+
                 if ($value instanceof EnumCollection) {
-                    $values = $value->toValues();
+                    $values = $value;
                 } else {
-                    $values = EnumCollection::of($enumClass)->tryFrom($value)->toValues();
+                    $values = EnumCollection::of($enumClass)->tryFrom($value);
                 }
+
+                $values = $values
+                    ->when($unique, fn (EnumCollection $col) => $col->unique()->values())
+                    ->toValues();
 
                 $value = $value !== null ? Json::encode($values) : null;
 
@@ -84,11 +92,36 @@ class AsLaravelEnumCollection implements Castable
              */
             public function serialize(mixed $model, string $key, mixed $value, array $attributes): array
             {
+                $enumClass = $this->getClassEnum();
+                $unique = $this->getUnique();
 
-                /** @var class-string<TValue>|null $enumClass */
+                return EnumCollection::of($enumClass)->tryFrom($value)
+                    ->when($unique, fn (EnumCollection $col) => $col->unique()->values())
+                    ->toValues();
+            }
+
+            /**
+             * @return class-string<TValue>
+             */
+            public function getClassEnum(): string
+            {
                 $enumClass = $this->arguments[0];
 
-                return (new EnumCollection($value, $enumClass))->toValues();
+                if (! $enumClass) {
+                    throw new MissingEnumClass('Missing enum class on AsLaravelEnumCollection cast definition');
+                }
+
+                if (! enum_exists($enumClass)) {
+                    throw new WrongEnumClass('enumClass '.$enumClass.' does not exist');
+                }
+
+                /** @var class-string<TValue> $enumClass */
+                return $enumClass;
+            }
+
+            public function getUnique(): bool
+            {
+                return isset($this->arguments[1]) ? filter_var($this->arguments[1], FILTER_VALIDATE_BOOLEAN) : false;
             }
         };
     }

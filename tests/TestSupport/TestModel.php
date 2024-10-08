@@ -31,9 +31,9 @@ class TestModel extends Model
     public $timestamps = false;
 
     protected $casts = [
-        'visibilities' => AsLaravelEnumCollection::class.':'.IntBackedEnum::class,
-        'colors' => AsLaravelEnumCollection::class.':'.PureEnum::class,
-        'sizes' => AsLaravelEnumCollection::class.':'.StringBackedEnum::class,
+        'visibilities' => AsLaravelEnumCollection::class.':'.IntBackedEnum::class.',true',
+        'colors' => AsLaravelEnumCollection::class.':'.PureEnum::class.',1',
+        'sizes' => AsLaravelEnumCollection::class.':'.StringBackedEnum::class.',false',
         'permissions' => AsLaravelEnumCollection::class.':'.LaravelEnum::class,
         'json' => 'array',
     ];

@@ -26,35 +26,42 @@ use UnitEnum;
  */
 final class EnumCollection extends Collection
 {
+    protected EnumType $enumType;
+
+    /** @var class-string<TValue> $enumClass */
+    protected string $enumClass;
+
     /**
      * @param  Arrayable<TKey,TValue|int|string>|iterable<TKey,TValue|int|string>|TValue|int|string|null  $items
      * @param  class-string<TValue>|null  $enumClass
      */
-    public function __construct(mixed $items = [], protected ?string $enumClass = null)
+    public function __construct(mixed $items = [], ?string $enumClass = null)
     {
+        if ($enumClass) {
+            $this->setEnumClass($enumClass);
+        }
+
         if ($items === []) {
             return;
         }
 
         $items = $this->privateFlatten(Arr::wrap($items));
 
-        if (! $this->enumClass) {
+        if (!$enumClass) {
             $item = array_values($items)[0] ?? null;
             if ($item instanceof UnitEnum) {
-                /** @var class-string<TValue> $class */
-                $class = get_class($item);
-                $this->enumClass = $class;
+                $this->setEnumClass(get_class($item));
             }
         }
 
-        throw_unless($this->enumClass,
+        throw_unless(isset($this->enumClass),
             new Exceptions\MissingEnumClass('enumClass param is required when not pass an enum as argument'));
 
         foreach ($items as $key => $value) {
             $enum = $this->tryGetEnumFromValue($value);
 
             if ($enum === null) {
-                /** @var  int|string|null  $value */
+                /** @var int|string|null $value */
                 throw new Exceptions\ValueError("Enum {$this->enumClass} does not contain {$value}");
             }
             $items[$key] = $enum;
@@ -71,6 +78,8 @@ final class EnumCollection extends Collection
      */
     public static function of(?string $enumClass): self
     {
+        throw_unless($enumClass,
+            new Exceptions\MissingEnumClass('enumClass param is required'));
         return new self(items: [], enumClass: $enumClass);
     }
 
@@ -78,21 +87,37 @@ final class EnumCollection extends Collection
      * Specify the Enum class for the cast.
      *
      * @param  ?class-string<TValue>  $enumClass
-     * @return self<TKey,TValue>
      */
-    public function setEnumClass(?string $enumClass): self
+    protected function setEnumClass(?string $enumClass): void
     {
+        if (!$enumClass) {
+            throw new Exceptions\MissingEnumClass('enumClass param is required when not pass an enum as argument');
+        }
+
+        if (!enum_exists($enumClass)) {
+            throw new Exceptions\WrongEnumClass('enumClass '.$enumClass.' does not exist');
+        }
+
         $this->enumClass = $enumClass;
 
-        return $this;
+        $reflection = new ReflectionEnum($enumClass);
+        if ($reflectionType = $reflection->getBackingType()) {
+            if ($reflectionType->getName() === 'int') {
+                $this->enumType = EnumType::INT_BACKED_ENUM;
+            } else {
+                $this->enumType = EnumType::STRING_BACKED_ENUM;
+            }
+        } else {
+            $this->enumType = EnumType::UNIT_ENUM;
+        }
     }
 
     /**
      * Get the Enum class.
      *
-     * @return ?class-string
+     * @return class-string<TValue>
      */
-    public function getEnumClass(): ?string
+    public function getEnumClass(): string
     {
         return $this->enumClass;
     }
@@ -105,7 +130,7 @@ final class EnumCollection extends Collection
     {
         $return = [];
         array_walk_recursive($array, function (mixed $a, int|string $key) use (&$return) {
-            if (! isset($return[$key])) {
+            if (!isset($return[$key])) {
                 $return[$key] = $a;
             } else {
                 $return[] = $a;
@@ -163,7 +188,7 @@ final class EnumCollection extends Collection
                 $enum = $this->tryGetEnumFromValue($value);
 
                 if ($enum === null) {
-                    /** @var  int|string|null  $value */
+                    /** @var int|string|null $value */
                     throw new Exceptions\ValueError("Enum {$this->enumClass} does not contain {$value}");
                 }
 
@@ -204,7 +229,7 @@ final class EnumCollection extends Collection
         throw_unless($this->enumClass,
             new Exceptions\MissingEnumClass('enumClass param is required when not pass an enum as argument'));
 
-        if (is_string($value) && method_exists($this->enumClass, 'cases')) {
+        if (is_string($value)) {
             foreach ($this->enumClass::cases() as $case) {
                 if ($case->name === $value) {
                     return $case;
@@ -212,22 +237,13 @@ final class EnumCollection extends Collection
             }
         }
 
-        if (defined($this->enumClass.'::'.$value)) {
-            $enum = constant($this->enumClass.'::'.$value);
-            if ($enum instanceof UnitEnum) {
-                /** @var TValue $enum */
-                return $enum;
-            }
-        }
+        if ($this->enumType !== EnumType::UNIT_ENUM) {
+            $value = match ($this->enumType) {
+                EnumType::INT_BACKED_ENUM => intval($value),
+                EnumType::STRING_BACKED_ENUM => strval($value),
+            };
 
-        if (is_subclass_of($this->enumClass, BackedEnum::class)) {
-            if ((new ReflectionEnum($this->enumClass))->getBackingType()?->getName() === 'int') {
-                $value = intval($value);
-            } else {
-                $value = strval($value);
-            }
-
-            return $this->enumClass::tryFrom($value);
+            return $this->enumClass::tryFrom($value); // @phpstan-ignore-line
         }
 
         return null;
@@ -287,7 +303,7 @@ final class EnumCollection extends Collection
      */
     public function contains($key, $operator = null, $value = null): bool
     {
-        if (! $key instanceof UnitEnum && is_callable($key)) {
+        if (!$key instanceof UnitEnum && is_callable($key)) {
             return parent::contains($key);
         }
 
@@ -309,7 +325,7 @@ final class EnumCollection extends Collection
      */
     public function containsStrict($key, $operator = null, $value = null): bool
     {
-        if (! $key instanceof UnitEnum) {
+        if (!$key instanceof UnitEnum) {
             throw new Exceptions\ValueError('Value must be an instance of UnitEnum');
         }
 
@@ -361,7 +377,7 @@ final class EnumCollection extends Collection
      */
     public function diffUsing($items, callable $callback)
     {
-        /** @var callable(mixed, mixed): int  $callback */
+        /** @var callable(mixed, mixed): int $callback */
         return new self(items: array_udiff($this->items, $this->getArrayableItems($items), $callback),
             enumClass: $this->enumClass);
     }
@@ -387,7 +403,7 @@ final class EnumCollection extends Collection
      */
     public function diffAssocUsing($items, callable $callback)
     {
-        /** @var callable(mixed, mixed): int  $callback */
+        /** @var callable(mixed, mixed): int $callback */
         return new self(items: array_diff_uassoc($this->toValues(), $this->getArrayableItemsValues($items),
             $callback), enumClass: $this->enumClass);
     }
@@ -413,7 +429,7 @@ final class EnumCollection extends Collection
      */
     public function diffKeysUsing($items, callable $callback)
     {
-        /** @var callable(mixed, mixed): int  $callback */
+        /** @var callable(mixed, mixed): int $callback */
         return new self(items: array_diff_ukey($this->items, $this->getArrayableItems($items), $callback),
             enumClass: $this->enumClass);
     }
