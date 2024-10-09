@@ -451,6 +451,12 @@ it('can use filter method', function () {
     expect($collection->filter($fun)->toArray())->toBe([ 4 => PureEnum::RED, 5 => PureEnum::RED]);
 });
 
+it('can use flatten method', function () {
+    $collection = EnumCollection::from([1 => PureEnum::GREEN, 2 => [PureEnum::GREEN, PureEnum::BLACK], 5 => PureEnum::RED]);
+
+    expect($collection->flatten(1)->toArray())->toBe([PureEnum::GREEN, PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED]);
+});
+
 it('forwards call to underlying collection', function () {
     $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK]);
     $collection2 = EnumCollection::tryFrom([PureEnum::GREEN, PureEnum::BLACK]);

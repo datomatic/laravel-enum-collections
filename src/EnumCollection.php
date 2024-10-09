@@ -496,9 +496,21 @@ final class EnumCollection extends Collection
     public function filter(?callable $callback = null)
     {
         if ($callback) {
-            return new static(Arr::where($this->items, $callback), enumClass: $this->enumClass);
+            return new static(items: Arr::where($this->items, $callback), enumClass: $this->enumClass);
         }
 
-        return new static(array_filter($this->items), enumClass: $this->enumClass);
+        return new static(items: array_filter($this->items), enumClass: $this->enumClass);
     }
+
+    /**
+     * Get a flattened array of the items in the collection.
+     *
+     * @param  int  $depth
+     * @return static<int, TValue>
+     */
+    public function flatten($depth = 1)
+    {
+        return new static(items: Arr::flatten($this->items, $depth), enumClass: $this->enumClass);
+    }
+
 }
