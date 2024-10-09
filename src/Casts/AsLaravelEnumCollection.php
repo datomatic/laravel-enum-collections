@@ -125,4 +125,15 @@ class AsLaravelEnumCollection implements Castable
             }
         };
     }
+
+    /**
+     * Specify the enum-class for the cast.
+     *
+     * @param  class-string  $class
+     * @return string
+     */
+    public static function of(string $class, bool $unique = false)
+    {
+        return static::class.':'.$class.','.($unique ? 'true' : 'false');
+    }
 }

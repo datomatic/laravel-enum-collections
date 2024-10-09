@@ -34,7 +34,7 @@ The main parts of the package are:
 
 ### Creating an EnumCollection
 
-You can make enum collection in 4 ways:
+You can create an enum collection in four different ways:
 ```php
 use \Datomatic\EnumCollections\EnumCollection;
 
@@ -43,10 +43,10 @@ EnumCollection::of(Enum::class)->tryFrom($data);
 EnumCollection::from($data, Enum::class);
 EnumCollection::tryFrom($data, Enum::class);
 ```
-`from` method throw an `ValueError` Exception if an element in `$data` is wrong, instead `tryFrom` skips bad data without raise exceptions.  
-`$data` can be a single element or a `collection`, `array`,... of elements.
+The `from` method throws a `ValueError` exception if an element in `$data` is incorrect, whereas `tryFrom` skips invalid data without raising exceptions.  
+`$data` can be a single element or a `collection`, `array`, or other iterable of elements.
 
-If `$data` contains only Enum elements you can also omit the `EnumClass` (the collection take the EnumClass of the first element).
+If `$data` contains only Enum elements, you can omit the `EnumClass` (the collection will take the EnumClass of the first element).
 ```php
 EnumCollection::from(Enum::CASE1); // ✅ EnumCollection<Enum::CASE1>
 EnumCollection::from('CASE1', Enum::class); // ✅ EnumCollection<Enum::CASE1>
@@ -73,7 +73,7 @@ $enumCollection->doesntContain('PRIVATE'); // false
 ```
 
 ### toValues method
-`toValues` method serialize the collection content, if the element is a `PureEnum` will be pass the `name` of the case, otherwise the `value`.
+The `toValues` method serializes the collection content. If the element is a `PureEnum`, it will return the `name` of the case; otherwise, it will return the `value`.
 
 ```php
 use \Datomatic\EnumCollections\EnumCollection;
@@ -86,8 +86,7 @@ EnumCollection::from(['1','2','2'],Enum::class)->toValues(); // [1,2,2]
 
 ## Casting
 
-You can cast a field to be an `EnumCollection`.
-To use this casting option, you need to set the Eloquent Model properly.
+You can cast a field to an `EnumCollection`. To use this casting option, you need to configure the Eloquent Model properly.
 
 ### 1. Database Migration 
 ```php
@@ -96,13 +95,13 @@ Schema::table('table', function (Blueprint $table) {
 });
 ```
 
-### 2. Model set up
+### 2. Model Setup
 
-To set up your model you must:
-- add a custom cast `AsLaravelEnumCollection::class` with the enumClass as attribute
-- add an optional `HasEnumCollections` trait to make query on enum collections fields
+To set up your model, you must:
+- Add a custom cast `AsLaravelEnumCollection::class` with the enum class as an attribute.
+- Optionally, add the `HasEnumCollections` trait to enable querying on enum collection fields.
 
-You can also cast more than one field if you need.
+You can cast multiple fields if needed.
 
 ```php
 
@@ -128,6 +127,63 @@ class TestModel extends Model
     }
 }
 ```
+### Unique Modifier on Casting
+
+When casting an enum collection field with the `unique` modifier, the collection will automatically filter out any duplicate values. This ensures that only unique values are stored in the model.
+
+To use the `unique` modifier, you can set up your model as follows:
+
+```php
+use Datomatic\EnumCollections\Casts\AsLaravelEnumCollection;
+use Datomatic\EnumCollections\EnumCollection;
+use Illuminate\Database\Eloquent\Model;
+
+class TestModel extends Model
+{
+    use HasEnumCollections;
+    
+    // Laravel 9/10
+    protected $casts = [
+        'field_name' => AsLaravelEnumCollection::class.':'.FieldEnum::class.'true',
+    ];
+    
+    // Laravel 11
+    protected function casts(): array
+    {
+        return [
+            'field_name' => AsLaravelEnumCollection::of(FieldEnum::class, true),
+        ];
+    }
+}
+```
+
+### Example Usage
+
+When you set the enum collection field with repeated values, the duplicates will be removed:
+
+```php
+$model = new TestModel();
+$model->field_name = [FieldEnum::PRIVATE, FieldEnum::PUBLIC, FieldEnum::PRIVATE]; // ✅ EnumCollection<FieldEnum::PRIVATE, FieldEnum::PUBLIC>
+$model->field_name = collect([FieldEnum::PRIVATE, FieldEnum::PUBLIC, FieldEnum::PRIVATE]); // ✅ EnumCollection<FieldEnum::PRIVATE, FieldEnum::PUBLIC>
+```
+
+### Database Saved Data
+
+The serialized enum collection saved in the database will contain only unique values, ensuring data integrity and preventing redundancy.
+
+### Interacting with Unique EnumCollection
+
+You can interact with the `field_name` like a normal `EnumCollection`, but it will always contain unique values:
+
+```php
+$model = new TestModel();
+$model->field_name = [FieldEnum::PRIVATE, FieldEnum::PUBLIC, FieldEnum::PRIVATE];
+
+$model->field_name->contains(FieldEnum::PRIVATE); // true
+$model->field_name->contains(FieldEnum::PROTECTED); // false
+$model->field_name->toValues(); // [1, 2]
+```
+
 
 ### Set the enum collection field
 

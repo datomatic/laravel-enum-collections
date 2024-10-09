@@ -8,7 +8,7 @@ use Datomatic\EnumCollections\Tests\TestSupport\Enums\LaravelEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\PureEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\StringBackedEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\TestModel;
-use Illuminate\Database\Eloquent\Model;
+use Datomatic\EnumCollections\Tests\TestSupport\TestModel11;
 
 beforeEach(function () {
     $this->testModel = new TestModel;
@@ -231,10 +231,21 @@ it('stores unique values for backed enums', function () {
 });
 
 it('stores unique values for backed enums, even with mixed enums and values', function () {
-    $this->testModel->visibilities = ["1", 2, IntBackedEnum::PUBLIC];
+    $this->testModel->visibilities = ['1', 2, IntBackedEnum::PUBLIC];
     $this->testModel->save();
 
     $model = TestModel::find($this->testModel->id);
+
+    expect($model->visibilities)->toBeInstanceOf(EnumCollection::class);
+    expect($model->visibilities->toArray())->toEqual([IntBackedEnum::PRIVATE, IntBackedEnum::PUBLIC]);
+});
+
+it('works with laravel ^11 syntax as well', function () {
+    $model = new TestModel11();
+    $model->visibilities = ['1', 2, IntBackedEnum::PUBLIC];
+    $model->save();
+
+    $model = TestModel11::find($model->id);
 
     expect($model->visibilities)->toBeInstanceOf(EnumCollection::class);
     expect($model->visibilities->toArray())->toEqual([IntBackedEnum::PRIVATE, IntBackedEnum::PUBLIC]);
