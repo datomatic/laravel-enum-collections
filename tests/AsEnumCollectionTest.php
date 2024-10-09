@@ -8,6 +8,7 @@ use Datomatic\EnumCollections\Tests\TestSupport\Enums\LaravelEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\PureEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\StringBackedEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\TestModel;
+use Illuminate\Database\Eloquent\Model;
 
 beforeEach(function () {
     $this->testModel = new TestModel;
@@ -207,4 +208,34 @@ it('will can query model with enum collection', function () {
         TestModel::whereContains('colors', 'RED')
             ->orWhereContains('sizes', StringBackedEnum::SMALL)->count()
     )->toEqual(2);
+});
+
+it('will return unique values when casting as unique and storing repeated values in the model', function () {
+    $this->testModel->colors = [PureEnum::YELLOW, PureEnum::YELLOW, PureEnum::YELLOW];
+    $this->testModel->save();
+
+    $model = TestModel::find($this->testModel->id);
+
+    expect($model->colors)->toBeInstanceOf(EnumCollection::class);
+    expect($model->colors->toArray())->toEqual([PureEnum::YELLOW]);
+});
+
+it('stores unique values for backed enums', function () {
+    $this->testModel->visibilities = [IntBackedEnum::PRIVATE, IntBackedEnum::PRIVATE, IntBackedEnum::PRIVATE];
+    $this->testModel->save();
+
+    $model = TestModel::find($this->testModel->id);
+
+    expect($model->visibilities)->toBeInstanceOf(EnumCollection::class);
+    expect($model->visibilities->toArray())->toEqual([IntBackedEnum::PRIVATE]);
+});
+
+it('stores unique values for backed enums, even with mixed enums and values', function () {
+    $this->testModel->visibilities = ["1", 2, IntBackedEnum::PUBLIC];
+    $this->testModel->save();
+
+    $model = TestModel::find($this->testModel->id);
+
+    expect($model->visibilities)->toBeInstanceOf(EnumCollection::class);
+    expect($model->visibilities->toArray())->toEqual([IntBackedEnum::PRIVATE, IntBackedEnum::PUBLIC]);
 });
