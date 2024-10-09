@@ -227,9 +227,6 @@ final class EnumCollection extends Collection
             return $value;
         }
 
-        throw_unless($this->enumClass,
-            new Exceptions\MissingEnumClass('enumClass param is required when not pass an enum as argument'));
-
         if (is_string($value)) {
             foreach ($this->enumClass::cases() as $case) {
                 if ($case->name === $value) {
