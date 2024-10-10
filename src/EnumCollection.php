@@ -38,6 +38,14 @@ final class EnumCollection extends Collection
      */
     public function __construct(mixed $items = [], ?string $enumClass = null)
     {
+        if($items instanceof Arrayable) {
+            if($items instanceof EnumCollection) {
+                $enumClass = $items->getEnumClass();
+            }
+
+            $items = $items->toArray();
+        }
+
         if ($enumClass) {
             $this->setEnumClass($enumClass);
         }

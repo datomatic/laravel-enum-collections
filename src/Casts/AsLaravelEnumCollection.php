@@ -93,10 +93,15 @@ class AsLaravelEnumCollection implements Castable
             public function serialize(mixed $model, string $key, mixed $value, array $attributes): array
             {
                 $enumClass = $this->getClassEnum();
-                $unique = $this->getUnique();
 
-                return EnumCollection::of($enumClass)->tryFrom($value)
-                    ->when($unique, fn (EnumCollection $col) => $col->unique()->values())
+                if ($value instanceof EnumCollection) {
+                    $values = $value;
+                } else {
+                    $values = EnumCollection::of($enumClass)->tryFrom($value);
+                }
+
+                return $values
+                    ->when($this->getUnique(), fn (EnumCollection $col) => $col->unique()->values())
                     ->toValues();
             }
 

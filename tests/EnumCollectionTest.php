@@ -11,6 +11,15 @@ use Datomatic\EnumCollections\Tests\TestSupport\Enums\PureEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\StringBackedEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\TestModel;
 
+
+test('enumCollection can accept an EnumCollection on constructor', function () {
+    $enumCollection = new EnumCollection([PureEnum::BLACK, PureEnum::RED]);
+    $enumCollection2 = new EnumCollection($enumCollection);
+
+    expect($enumCollection2->getEnumClass())->toBe(PureEnum::class);
+    expect($enumCollection2->toArray())->toBe([PureEnum::BLACK, PureEnum::RED]);
+});
+
 test('enumCollection can accept only one level array', function ($from, string $class, int $results) {
     $enumCollection = EnumCollection::of($class)->from($from);
     $enumCollection2 = EnumCollection::of($class)->tryFrom($from);
