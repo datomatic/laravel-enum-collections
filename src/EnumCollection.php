@@ -40,6 +40,7 @@ final class EnumCollection extends Collection
     {
         if($items instanceof Arrayable) {
             if($items instanceof EnumCollection) {
+                /** @var class-string<TValue> $enumClass */
                 $enumClass = $items->getEnumClass();
             }
 
