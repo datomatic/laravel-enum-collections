@@ -466,6 +466,12 @@ it('can use flatten method', function () {
     expect($collection->flatten(1)->toArray())->toBe([PureEnum::GREEN, PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED]);
 });
 
+it('can use intersect method', function () {
+    $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED]);
+
+    expect($collection->intersect([PureEnum::GREEN, PureEnum::WHITE])->toArray())->toBe([PureEnum::GREEN]);
+});
+
 it('forwards call to underlying collection', function () {
     $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK]);
     $collection2 = EnumCollection::tryFrom([PureEnum::GREEN, PureEnum::BLACK]);

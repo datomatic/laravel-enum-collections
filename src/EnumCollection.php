@@ -519,4 +519,14 @@ final class EnumCollection extends Collection
         return new static(items: Arr::flatten($this->items, $depth), enumClass: $this->enumClass);
     }
 
+    /**
+     * Intersect the collection with the given items.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @return static
+     */
+    public function intersect($items)
+    {
+        return new static(items: array_intersect($this->toValues(), $this->getArrayableItemsValues($items)), enumClass: $this->enumClass);
+    }
 }
