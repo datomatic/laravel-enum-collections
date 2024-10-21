@@ -291,7 +291,7 @@ final class EnumCollection extends Collection
         return $array;
     }
 
-    protected function getParentArrayableItems($items): array
+    protected function getCollectionArrayableItems($items): array
     {
         return parent::getArrayableItems($items);
     }
@@ -531,7 +531,7 @@ final class EnumCollection extends Collection
      */
     public function forget($keys)
     {
-        foreach ($this->getParentArrayableItems($keys) as $key) {
+        foreach ($this->getCollectionArrayableItems($keys) as $key) {
             $this->offsetUnset($key);
         }
 
