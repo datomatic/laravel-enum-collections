@@ -29,7 +29,7 @@ final class EnumCollection extends Collection
 {
     protected EnumType $enumType;
 
-    /** @var class-string<TValue> $enumClass */
+    /** @var class-string<TValue> */
     protected string $enumClass;
 
     /**
@@ -38,8 +38,8 @@ final class EnumCollection extends Collection
      */
     public function __construct(mixed $items = [], ?string $enumClass = null)
     {
-        if($items instanceof Arrayable) {
-            if($items instanceof EnumCollection) {
+        if ($items instanceof Arrayable) {
+            if ($items instanceof EnumCollection) {
                 /** @var class-string<TValue> $enumClass */
                 $enumClass = $items->getEnumClass();
             }
@@ -57,7 +57,7 @@ final class EnumCollection extends Collection
 
         $items = $this->privateFlatten(Arr::wrap($items));
 
-        if (!$enumClass) {
+        if (! $enumClass) {
             $item = array_values($items)[0] ?? null;
             if ($item instanceof UnitEnum) {
                 $this->setEnumClass(get_class($item));
@@ -90,6 +90,7 @@ final class EnumCollection extends Collection
     {
         throw_unless($enumClass,
             new Exceptions\MissingEnumClass('enumClass param is required'));
+
         return new self(items: [], enumClass: $enumClass);
     }
 
@@ -100,11 +101,11 @@ final class EnumCollection extends Collection
      */
     protected function setEnumClass(?string $enumClass): void
     {
-        if (!$enumClass) {
+        if (! $enumClass) {
             throw new Exceptions\MissingEnumClass('enumClass param is required when not pass an enum as argument');
         }
 
-        if (!enum_exists($enumClass)) {
+        if (! enum_exists($enumClass)) {
             throw new Exceptions\WrongEnumClass('enumClass '.$enumClass.' does not exist');
         }
 
@@ -140,7 +141,7 @@ final class EnumCollection extends Collection
     {
         $return = [];
         array_walk_recursive($array, function (mixed $a, int|string $key) use (&$return) {
-            if (!isset($return[$key])) {
+            if (! isset($return[$key])) {
                 $return[$key] = $a;
             } else {
                 $return[] = $a;
@@ -290,6 +291,11 @@ final class EnumCollection extends Collection
         return $array;
     }
 
+    protected function getParentArrayableItems($items): array
+    {
+        return parent::getArrayableItems($items);
+    }
+
     /**
      * Results array of items from Collection or Arrayable.
      *
@@ -310,7 +316,7 @@ final class EnumCollection extends Collection
      */
     public function contains($key, $operator = null, $value = null): bool
     {
-        if (!$key instanceof UnitEnum && is_callable($key)) {
+        if (! $key instanceof UnitEnum && is_callable($key)) {
             return parent::contains($key);
         }
 
@@ -332,7 +338,7 @@ final class EnumCollection extends Collection
     {
         /** @var array<int,TValue> $values */
         $values = array_values(Arr::whereNotNull(Arr::map(Arr::wrap($values),
-            fn($value) => $this->tryGetEnumFromValue($value))
+            fn ($value) => $this->tryGetEnumFromValue($value))
         ));
 
         foreach ($this->items as $enum) {
@@ -344,7 +350,6 @@ final class EnumCollection extends Collection
         return false;
     }
 
-
     /**
      * @param  TValue|int|string|array<TValue|int|string>  $values
      *
@@ -352,9 +357,8 @@ final class EnumCollection extends Collection
      */
     public function doesntContainAny(mixed $values): bool
     {
-        return !$this->containsAny($values);
+        return ! $this->containsAny($values);
     }
-
 
     /**
      * @param  TValue  $key
@@ -365,7 +369,7 @@ final class EnumCollection extends Collection
      */
     public function containsStrict($key, $operator = null, $value = null): bool
     {
-        if (!$key instanceof UnitEnum) {
+        if (! $key instanceof UnitEnum) {
             throw new Exceptions\ValueError('Value must be an instance of UnitEnum');
         }
 
@@ -484,14 +488,13 @@ final class EnumCollection extends Collection
     {
         if ($keys instanceof Enumerable) {
             $keys = $keys->all();
-        } elseif (!is_array($keys)) {
+        } elseif (! is_array($keys)) {
             $keys = func_get_args();
         }
 
-        /** @var array<int,int|string>  $keys */
-        return new static(items: Arr::except($this->items, $keys), enumClass: $this->enumClass);
+        /** @var array<int,int|string> $keys */
+        return new self(items: Arr::except($this->items, $keys), enumClass: $this->enumClass);
     }
-
 
     /**
      * Run a filter over each of the items.
@@ -502,10 +505,10 @@ final class EnumCollection extends Collection
     public function filter(?callable $callback = null)
     {
         if ($callback) {
-            return new static(items: Arr::where($this->items, $callback), enumClass: $this->enumClass);
+            return new self(items: Arr::where($this->items, $callback), enumClass: $this->enumClass);
         }
 
-        return new static(items: array_filter($this->items), enumClass: $this->enumClass);
+        return new self(items: array_filter($this->items), enumClass: $this->enumClass);
     }
 
     /**
@@ -516,7 +519,23 @@ final class EnumCollection extends Collection
      */
     public function flatten($depth = 1)
     {
-        return new static(items: Arr::flatten($this->items, $depth), enumClass: $this->enumClass);
+        return new self(items: Arr::flatten($this->items, $depth), enumClass: $this->enumClass);
+    }
+
+    /**
+     * Remove an item from the collection by key.
+     *
+     * \Illuminate\Contracts\Support\Arrayable<array-key, TValue>|iterable<array-key, TKey>|TKey  $keys
+     *
+     * @return $this
+     */
+    public function forget($keys)
+    {
+        foreach ($this->getParentArrayableItems($keys) as $key) {
+            $this->offsetUnset($key);
+        }
+
+        return $this;
     }
 
     /**
@@ -527,6 +546,6 @@ final class EnumCollection extends Collection
      */
     public function intersect($items)
     {
-        return new static(items: array_intersect($this->toValues(), $this->getArrayableItemsValues($items)), enumClass: $this->enumClass);
+        return new self(items: array_intersect($this->toValues(), $this->getArrayableItemsValues($items)), enumClass: $this->enumClass);
     }
 }

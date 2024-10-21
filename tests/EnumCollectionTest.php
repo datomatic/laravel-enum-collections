@@ -11,7 +11,6 @@ use Datomatic\EnumCollections\Tests\TestSupport\Enums\PureEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\StringBackedEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\TestModel;
 
-
 test('enumCollection can accept an EnumCollection on constructor', function () {
     $enumCollection = new EnumCollection([PureEnum::BLACK, PureEnum::RED]);
     $enumCollection2 = new EnumCollection($enumCollection);
@@ -63,10 +62,10 @@ test('enumCollection throws an exception if an enum class is not set and an arra
     expect(fn () => EnumCollection::tryFrom($from))->toThrow(MissingEnumClass::class);
     expect(fn () => new EnumCollection($from))->toThrow(MissingEnumClass::class);
 })->with([
-//    'enum single' => ['BLACK'],
-//    'enum array' => [['BLACK', 'GREEN']],
+    //    'enum single' => ['BLACK'],
+    //    'enum array' => [['BLACK', 'GREEN']],
     'string enum array' => [['S', 'M', 'L']],
-//    'int enum array' => [[1, 2, 3]],
+    //    'int enum array' => [[1, 2, 3]],
 ]);
 
 test('enumCollection can accept an array of enums values and names', function ($from, string $enumClass, array $results) {
@@ -139,9 +138,8 @@ it('can enumCollection get enumClass', function (?string $enumClass) {
     'int enum array' => [IntBackedEnum::class],
 ]);
 
-
 it('throws MissingEnumClass if pass null to of function', function () {
-    expect(fn() => EnumCollection::of(null))->toThrow(MissingEnumClass::class);
+    expect(fn () => EnumCollection::of(null))->toThrow(MissingEnumClass::class);
 });
 
 test('enumCollection toValues method ', function ($from, ?string $enumClass, array $results) {
@@ -149,7 +147,7 @@ test('enumCollection toValues method ', function ($from, ?string $enumClass, arr
     expect(EnumCollection::tryFrom($from, $enumClass)->toValues())->toEqual($results);
     expect((new EnumCollection($from, $enumClass))->toValues())->toEqual($results);
 
-    if($enumClass !== null) {
+    if ($enumClass !== null) {
         expect(EnumCollection::of($enumClass)->from($from)->toValues())->toEqual($results);
         expect(EnumCollection::of($enumClass)->tryFrom($from)->toValues())->toEqual($results);
     }
@@ -247,22 +245,22 @@ it('will can check if EnumCollection containsAny enum', function ($from, $search
     'pure enum collection search value3' => [[PureEnum::GREEN, PureEnum::BLACK], ['GREEN', 'RED'], true],
     'pure enum collection search invalid value' => [[PureEnum::GREEN, PureEnum::BLACK], 'PURPLE', false],
     'pure enum collection search invalid value2' => [[PureEnum::GREEN, PureEnum::BLACK], ['PURPLE'], false],
-    'pure enum collection search invalid value3' => [[PureEnum::GREEN, PureEnum::BLACK], ['PURPLE','RED'], false],
+    'pure enum collection search invalid value3' => [[PureEnum::GREEN, PureEnum::BLACK], ['PURPLE', 'RED'], false],
     'pure enum collection search invalid value int' => [[PureEnum::GREEN, PureEnum::BLACK], 1, false],
     'pure enum collection search invalid value int2' => [[PureEnum::GREEN, PureEnum::BLACK], [1], false],
-    'pure enum collection search invalid value int3' => [[PureEnum::GREEN, PureEnum::BLACK], [1,2], false],
+    'pure enum collection search invalid value int3' => [[PureEnum::GREEN, PureEnum::BLACK], [1, 2], false],
     'pure enum collection search enum' => [[PureEnum::GREEN, PureEnum::BLACK], PureEnum::BLACK, true],
     'pure enum collection search enum2' => [[PureEnum::GREEN, PureEnum::BLACK], [PureEnum::BLACK], true],
-    'pure enum collection search enum3' => [[PureEnum::GREEN, PureEnum::BLACK], [PureEnum::BLACK,PureEnum::BLUE], true],
+    'pure enum collection search enum3' => [[PureEnum::GREEN, PureEnum::BLACK], [PureEnum::BLACK, PureEnum::BLUE], true],
     'pure enum collection search invalid enum' => [[PureEnum::GREEN, PureEnum::BLACK], PureEnum::YELLOW, false],
     'pure enum collection search invalid enum2' => [[PureEnum::GREEN, PureEnum::BLACK], [PureEnum::YELLOW], false],
-    'pure enum collection search invalid enum3' => [[PureEnum::GREEN, PureEnum::BLACK], [PureEnum::YELLOW,PureEnum::BLUE], false],
+    'pure enum collection search invalid enum3' => [[PureEnum::GREEN, PureEnum::BLACK], [PureEnum::YELLOW, PureEnum::BLUE], false],
     'pure enum collection search name' => [[PureEnum::GREEN, PureEnum::BLACK], 'BLACK', true],
     'pure enum collection search name2' => [[PureEnum::GREEN, PureEnum::BLACK], ['BLACK'], true],
-    'pure enum collection search name3' => [[PureEnum::GREEN, PureEnum::BLACK], ['BLACK','BLUE'], true],
+    'pure enum collection search name3' => [[PureEnum::GREEN, PureEnum::BLACK], ['BLACK', 'BLUE'], true],
     'pure enum collection search invalid name' => [[PureEnum::GREEN, PureEnum::BLACK], 'YELLOW', false],
     'pure enum collection search invalid name2' => [[PureEnum::GREEN, PureEnum::BLACK], ['YELLOW'], false],
-    'pure enum collection search invalid name3' => [[PureEnum::GREEN, PureEnum::BLACK], ['YELLOW','BLUE'], false],
+    'pure enum collection search invalid name3' => [[PureEnum::GREEN, PureEnum::BLACK], ['YELLOW', 'BLUE'], false],
 
     'int enum collection search value' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], 1, true],
     'int enum collection search value2' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], [1], true],
@@ -318,11 +316,11 @@ it('will can check if EnumCollection containsAny enum', function ($from, $search
 
     'string enum collection search name' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'EXTRA_LARGE', true],
     'string enum collection search name2' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['EXTRA_LARGE'], true],
-    'string enum collection search name3' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['EXTRA_LARGE','LARGE'], true],
+    'string enum collection search name3' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['EXTRA_LARGE', 'LARGE'], true],
 
     'string enum collection search invalid name' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'SMALL', false],
     'string enum collection search invalid name2' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['SMALL'], false],
-    'string enum collection search invalid name3' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['SMALL','MEDIUM'], false],
+    'string enum collection search invalid name3' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['SMALL', 'MEDIUM'], false],
 ]);
 
 it('can use first method', function () {
@@ -450,14 +448,14 @@ it('can use duplicates method', function () {
 it('can use except method', function () {
     $collection = EnumCollection::from([1 => PureEnum::GREEN, 2 => PureEnum::GREEN, 3 => PureEnum::BLACK, 4 => PureEnum::RED, 5 => PureEnum::RED]);
 
-    expect($collection->except([3,4])->toArray())->toBe([1 => PureEnum::GREEN,2 => PureEnum::GREEN, 5 => PureEnum::RED]);
+    expect($collection->except([3, 4])->toArray())->toBe([1 => PureEnum::GREEN, 2 => PureEnum::GREEN, 5 => PureEnum::RED]);
 });
 
 it('can use filter method', function () {
     $collection = EnumCollection::from([1 => PureEnum::GREEN, 2 => PureEnum::GREEN, 3 => PureEnum::BLACK, 4 => PureEnum::RED, 5 => PureEnum::RED]);
 
-    $fun = fn($enum) => strlen($enum->name) < 4;
-    expect($collection->filter($fun)->toArray())->toBe([ 4 => PureEnum::RED, 5 => PureEnum::RED]);
+    $fun = fn ($enum) => strlen($enum->name) < 4;
+    expect($collection->filter($fun)->toArray())->toBe([4 => PureEnum::RED, 5 => PureEnum::RED]);
 });
 
 it('can use flatten method', function () {
@@ -470,6 +468,12 @@ it('can use intersect method', function () {
     $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED]);
 
     expect($collection->intersect([PureEnum::GREEN, PureEnum::WHITE])->toArray())->toBe([PureEnum::GREEN]);
+});
+
+it('can use forget method', function () {
+    $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED]);
+
+    expect($collection->forget(0)->toArray())->toBe([1 => PureEnum::BLACK, 2 => PureEnum::RED]);
 });
 
 it('forwards call to underlying collection', function () {

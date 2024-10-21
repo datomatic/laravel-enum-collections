@@ -241,7 +241,7 @@ it('stores unique values for backed enums, even with mixed enums and values', fu
 });
 
 it('works with laravel ^11 syntax as well', function () {
-    $model = new TestModel11();
+    $model = new TestModel11;
     $model->visibilities = ['1', 2, IntBackedEnum::PUBLIC];
     $model->save();
 

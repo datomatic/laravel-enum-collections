@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property EnumCollection<PureEnum> $colors
  * @property EnumCollection<StringBackedEnum> $sizes
  * @property array $json
- * 
+ *
  * basically used just to test the AsLaravelEnumCollection cast with laravel ^11.0 syntax
  */
 class TestModel11 extends Model
