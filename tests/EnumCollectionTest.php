@@ -476,6 +476,13 @@ it('can use forget method', function () {
     expect($collection->forget(0)->toArray())->toBe([1 => PureEnum::BLACK, 2 => PureEnum::RED]);
 });
 
+it('can use merge method', function () {
+    $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED]);
+    $collection2 = EnumCollection::from([PureEnum::WHITE, PureEnum::RED]);
+
+    expect($collection->merge($collection2)->toArray())->toBe([PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED, PureEnum::WHITE, PureEnum::RED]);
+});
+
 it('forwards call to underlying collection', function () {
     $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK]);
     $collection2 = EnumCollection::tryFrom([PureEnum::GREEN, PureEnum::BLACK]);

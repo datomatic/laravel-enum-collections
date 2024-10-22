@@ -548,4 +548,15 @@ final class EnumCollection extends Collection
     {
         return new self(items: array_intersect($this->toValues(), $this->getArrayableItemsValues($items)), enumClass: $this->enumClass);
     }
+
+    /**
+     * Merge the collection with the given items.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @return static
+     */
+    public function merge($items)
+    {
+        return new static(array_merge($this->toValues(), $this->getArrayableItemsValues($items)), enumClass: $this->enumClass);
+    }
 }
