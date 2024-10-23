@@ -481,6 +481,7 @@ it('can use merge method', function () {
     $collection2 = EnumCollection::from([PureEnum::WHITE, PureEnum::RED]);
 
     expect($collection->merge($collection2)->toArray())->toBe([PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED, PureEnum::WHITE, PureEnum::RED]);
+    expect($collection->merge($collection2)->unique()->toArray())->toBe([PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED, PureEnum::WHITE]);
 });
 
 it('forwards call to underlying collection', function () {

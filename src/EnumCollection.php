@@ -557,6 +557,6 @@ final class EnumCollection extends Collection
      */
     public function merge($items)
     {
-        return new static(array_merge($this->toValues(), $this->getArrayableItemsValues($items)), enumClass: $this->enumClass);
+        return new self(array_merge($this->toValues(), $this->getArrayableItemsValues($items)), enumClass: $this->enumClass);
     }
 }

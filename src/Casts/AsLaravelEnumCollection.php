@@ -45,14 +45,16 @@ class AsLaravelEnumCollection implements Castable
 
             public function get($model, $key, $value, $attributes)
             {
+                $enumClass = $this->getClassEnum();
+
                 if (! isset($attributes[$key])) {
-                    return;
+                    return EnumCollection::of($enumClass);
                 }
 
                 $data = Json::decode($attributes[$key]);
 
                 if (! is_array($data)) {
-                    return;
+                    return EnumCollection::of($enumClass);
                 }
 
                 $enumClass = $this->getClassEnum();

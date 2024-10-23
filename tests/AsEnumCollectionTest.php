@@ -250,3 +250,25 @@ it('works with laravel ^11 syntax as well', function () {
     expect($model->visibilities)->toBeInstanceOf(EnumCollection::class);
     expect($model->visibilities->toArray())->toEqual([IntBackedEnum::PRIVATE, IntBackedEnum::PUBLIC]);
 });
+
+it('return empty collection if empty array on db', function () {
+    $model = new TestModel11;
+    $model->visibilities = [];
+    $model->save();
+
+    $model = TestModel11::find($model->id);
+
+    expect($model->visibilities)->toBeInstanceOf(EnumCollection::class);
+    expect($model->visibilities->toArray())->toEqual([]);
+});
+
+it('return empty collection if null on db', function () {
+    $model = new TestModel11;
+    $model->visibilities = null;
+    $model->save();
+
+    $model = TestModel11::find($model->id);
+
+    expect($model->visibilities)->toBeInstanceOf(EnumCollection::class);
+    expect($model->visibilities->toArray())->toEqual([]);
+});
