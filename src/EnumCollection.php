@@ -71,13 +71,7 @@ final class EnumCollection extends Collection
         );
 
         foreach ($items as $key => $value) {
-            $enum = $this->tryGetEnumFromValue($value);
-
-            if ($enum === null) {
-                /** @var int|string|null $value */
-                throw new Exceptions\ValueError("Enum {$this->enumClass} does not contain {$value}");
-            }
-            $items[$key] = $enum;
+            $items[$key] = $this->getEnumFromValue($value);;
         }
         /** @var array<TKey,TValue> $items */
         $this->items = $items;
@@ -95,7 +89,6 @@ final class EnumCollection extends Collection
      */
     public static function make($items = [], ?string $enumClass = null)
     {
-        // TODO: from my pov, this should just throw if no enum class is provided
         return new self($items, $enumClass);
     }
 
@@ -107,10 +100,8 @@ final class EnumCollection extends Collection
      */
     public function offsetSet($key, $value): void
     {
-        $val = $this->tryGetEnumFromValue($value);
-        if (is_null($val)) {
-            throw new ValueError($value.' can\'t be converted into an instance of '.$this->enumClass);
-        }
+        $value = $this->getEnumFromValue($value);
+
         if (is_null($key)) {
             $this->items[] = $value;
         } else {
@@ -236,14 +227,7 @@ final class EnumCollection extends Collection
         if ($method === 'from') {
             $this->items = [];
             foreach ($data as $key => $value) {
-                $enum = $this->tryGetEnumFromValue($value);
-
-                if ($enum === null) {
-                    /** @var int|string|null $value */
-                    throw new Exceptions\ValueError("Enum {$this->enumClass} does not contain {$value}");
-                }
-
-                $this->items[$key] = $enum;
+                $this->items[$key] = $this->getEnumFromValue($value);
             }
 
             return $this;
@@ -295,6 +279,11 @@ final class EnumCollection extends Collection
         }
 
         return null;
+    }
+
+    private function getEnumFromValue(mixed $value)
+    {
+        return $this->tryGetEnumFromValue($value) ?? throw new ValueError("Enum {$this->enumClass} does not contain {$value}");
     }
 
     /**
@@ -800,6 +789,152 @@ final class EnumCollection extends Collection
     {
         return new static($this->items + $this->getArrayableItems($items), enumClass: $this->enumClass);
     }
+    /**
+     * Create a new collection consisting of every n-th element.
+     *
+     * @param  int  $step
+     * @param  int  $offset
+     * @return static
+     */
+    public function nth($step, $offset = 0)
+    {
+        return new static(parent::nth($step, $offset), enumClass: $this->enumClass);
+    }
+
+    /**
+     * Get the items with the specified keys.
+     *
+     * @param  \Illuminate\Support\Enumerable<array-key, TKey>|array<array-key, TKey>|string|null  $keys
+     * @return static
+     */
+    public function only($keys)
+    {
+        return new static(parent::only($keys), enumClass: $this->enumClass);
+    }
+
+    public function select($keys)
+    {
+        throw new MethodNotSupported('select');
+    }
+
+    /**
+     * Get and remove the last N items from the collection.
+     *
+     * @param  int  $count
+     * @return static<int, TValue>|TValue|null
+     */
+    public function pop($count = 1)
+    {
+        $return = parent::pop($count);
+
+        if($return instanceof UnitEnum) {
+            return $return;
+        }
+
+        return new static($return, enumClass: $this->enumClass);
+    }
+
+    /**
+     * Push an item onto the beginning of the collection.
+     *
+     * @param  TValue|int|string  $value
+     * @param  TKey  $key
+     * @return $this
+     */
+    public function prepend($value, $key = null)
+    {
+        $arguments = [...func_get_args()];
+        $arguments[0] = $this->getEnumFromValue($value);
+        $this->items = Arr::prepend($this->items, ...$arguments);
+
+        return $this;
+    }
+
+    /**
+     * Push one or more items onto the end of the collection.
+     *
+     * @param  TValue  ...$values
+     * @return $this
+     */
+    public function push(...$values)
+    {
+        foreach ($values as $value) {
+            $this->items[] = $this->getEnumFromValue($value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Prepend one or more items to the beginning of the collection.
+     *
+     * @param  TValue  ...$values
+     * @return $this
+     */
+    public function unshift(...$values)
+    {
+        foreach ($values as &$value) {
+            $value = $this->getEnumFromValue($value);
+        }
+
+        array_unshift($this->items, ...$values);
+
+        return $this;
+    }
+    /**
+     * Push all of the given items onto the collection.
+     *
+     * @template TConcatKey of array-key
+     * @template TConcatValue
+     *
+     * @param  iterable<TConcatKey, TConcatValue>  $source
+     * @return static<TKey|TConcatKey, TValue|TConcatValue>
+     */
+    public function concat($source)
+    {
+        $result = new static($this, enumClass: $this->enumClass);
+
+        foreach ($source as $item) {
+            $result->push($item);
+        }
+
+        return $result;
+    }
+
+    public function replaceRecursive($items)
+    {
+        throw new MethodNotSupported('replaceRecursive');
+    }
+
+    /**
+     * Search the collection for a given value and return the corresponding key if successful.
+     *
+     * @param  TValue|(callable(TValue,TKey): bool)  $value
+     * @param  bool  $strict
+     * @return TKey|false
+     */
+    public function search($value, $strict = false)
+    {
+        return parent::search($this->tryGetEnumFromValue($value), $strict);
+    }
+
+    /**
+     * Get and remove the first N items from the collection.
+     *
+     * @param  int  $count
+     * @return static<int, TValue>|TValue|null
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function shift($count = 1)
+    {
+        return new static(parent::shift($count), enumClass: $this->enumClass);
+    }
+
+    public function sliding($size = 2, $step = 1)
+    {
+        throw new MethodNotSupported('sliding');
+    }
 
     /**
      * Concatenate values of a given key as a string.
@@ -823,20 +958,6 @@ final class EnumCollection extends Collection
         return new parent(array_keys($this->items));
     }
 
-    // public function select($keys) {}
-
-    /**
-     * Push an item onto the beginning of the collection.
-     *
-     * @param  TValue  $value
-     * @param  TKey  $key
-     * @return $this
-     */
-    public function prepend($value, $key = null)
-    {
-        return new self(Arr::prepend($this->items, ...func_get_args()), $this->enumClass);
-    }
-
 
     /**
      * @return mixed
@@ -846,5 +967,4 @@ final class EnumCollection extends Collection
     {
         throw new MethodNotSupported('empty');
     }
-
 }
