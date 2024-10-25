@@ -647,11 +647,6 @@ it('supports last', function () {
     expect($collection->last())->toBe(StringBackedEnum::LARGE);
 });
 
-it('not supports pluck', function () {
-    $collection = EnumCollection::from([StringBackedEnum::LARGE]);
-    expect(fn() => $collection->pluck('name'))->toThrow(MethodNotSupported::class);
-});
-
 it('supports mapWithKeys', function () {
     $collection = EnumCollection::from([StringBackedEnum::SMALL, StringBackedEnum::MEDIUM, StringBackedEnum::LARGE]);
     expect($collection->mapWithKeys(fn($enum) => [$enum->name => $enum->value])->toArray())->toBe([
@@ -731,9 +726,6 @@ it('supports prepend', function () {
     expect($collection->prepend(PureEnum::BLUE)[0])->toBe(PureEnum::BLUE);
 });
 
-
-// it('TODO: errore union se non presente in enum')
-
 it('supports forget', function () {
     $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED]);
 
@@ -750,6 +742,40 @@ it('supports merge', function () {
     expect($collection->merge($collection2)->unique()->toArray())->toBe([
         PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED, PureEnum::WHITE
     ]);
+});
+
+it('supports multiply', function () {
+    $collection = EnumCollection::from([PureEnum::WHITE, PureEnum::RED]);
+
+    expect($collection->multiply(2)->toArray())->toBe([
+        PureEnum::WHITE, PureEnum::RED, PureEnum::WHITE, PureEnum::RED
+    ]);
+});
+
+it('supports union', function () {
+    $collection = new EnumCollection([
+        'a' => PureEnum::BLACK,
+        'b' => PureEnum::WHITE,
+    ], PureEnum::class);
+    expect($collection->union([
+        'c' => PureEnum::YELLOW,
+        'b' => PureEnum::WHITE,
+    ])->toArray())->toBe([
+        'a' => PureEnum::BLACK,
+        'b' => PureEnum::WHITE,
+        'c' => PureEnum::YELLOW,
+    ]);
+});
+
+
+it('not supports pluck', function () {
+    $collection = EnumCollection::from([StringBackedEnum::LARGE]);
+    expect(fn() => $collection->pluck('name'))->toThrow(MethodNotSupported::class);
+});
+
+it('not supports mergeRecursive', function () {
+    $collection = EnumCollection::from([StringBackedEnum::LARGE]);
+    expect(fn() => $collection->mergeRecursive([]))->toThrow(MethodNotSupported::class);
 });
 
 it('forwards call to underlying collection', function () {

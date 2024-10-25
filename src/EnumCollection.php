@@ -618,7 +618,7 @@ final class EnumCollection extends Collection
     /**
      * Intersect the collection with the given items, using the callback.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TValue>|iterable<array-key, TValue>  $items
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
      * @param  callable(TValue, TValue): int  $callback
      * @return self
      */
@@ -661,7 +661,7 @@ final class EnumCollection extends Collection
     /**
      * Intersect the collection with the given items by key.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
      * @return static
      */
     public function intersectByKeys($items)
@@ -744,6 +744,64 @@ final class EnumCollection extends Collection
     }
 
     /**
+     * Merge the collection with the given items.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @return static
+     */
+    public function merge($items)
+    {
+        return new self(array_merge($this->toValues(), $this->getArrayableItemsValues($items)), enumClass: $this->enumClass);
+    }
+
+    public function mergeRecursive($items)
+    {
+        throw new MethodNotSupported('mergeRecursive');
+    }
+
+
+    /**
+     * Multiply the items in the collection by the multiplier.
+     *
+     * @param  int  $multiplier
+     * @return static
+     */
+    public function multiply(int $multiplier)
+    {
+        $new = new static([],$this->enumClass);
+
+        for ($i = 0; $i < $multiplier; $i++) {
+            $new->push(...$this->items);
+        }
+
+        return $new;
+    }
+
+    /**
+     * Create a collection by using this collection for keys and another for its values.
+     *
+     * @template TCombineValue
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
+     * @return parent<TValue, TCombineValue>
+     */
+    public function combine($values)
+    {
+        return new parent(array_combine($this->toValues(), parent::getArrayableItems($values)));
+    }
+
+    /**
+     * Union the collection with the given items.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
+     * @return static
+     */
+    public function union($items)
+    {
+        return new static($this->items + $this->getArrayableItems($items), enumClass: $this->enumClass);
+    }
+
+    /**
      * Concatenate values of a given key as a string.
      *
      * @param  (callable(TValue, TKey): mixed)|string|null  $value
@@ -763,19 +821,6 @@ final class EnumCollection extends Collection
     public function keys(): Collection
     {
         return new parent(array_keys($this->items));
-    }
-
-    /**
-     * Create a collection by using this collection for keys and another for its values.
-     *
-     * @template TCombineValue
-     *
-     * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TCombineValue>|iterable<array-key, TCombineValue>  $values
-     * @return parent<TValue, TCombineValue>
-     */
-    public function combine($values)
-    {
-        return new parent(array_combine($this->toValues(), parent::getArrayableItems($values)));
     }
 
     // public function select($keys) {}
@@ -802,14 +847,4 @@ final class EnumCollection extends Collection
         throw new MethodNotSupported('empty');
     }
 
-    /**
-     * Merge the collection with the given items.
-     *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
-     * @return static
-     */
-    public function merge($items)
-    {
-        return new self(array_merge($this->toValues(), $this->getArrayableItemsValues($items)), enumClass: $this->enumClass);
-    }
 }
