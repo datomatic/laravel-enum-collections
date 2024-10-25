@@ -310,6 +310,14 @@ final class EnumCollection extends Collection
             }
         );
     }
+    /**
+     * @return array<TKey, int|string>
+     */
+    public function toCollectionValues(): Collection
+    {
+        return new parent($this->toValues());
+    }
+
 
     /**
      * @param  TValue  $enum
@@ -427,7 +435,7 @@ final class EnumCollection extends Collection
      * @template TMapValue
      *
      * @param  callable(TValue, TKey): TMapValue  $callback
-     * @return Collection<TKey, TMapValue>
+     * @return parent<TKey, TMapValue>
      */
     public function map(callable $callback): Collection
     {
@@ -437,10 +445,10 @@ final class EnumCollection extends Collection
     /**
      * Run a map over each of the items.
      *
-     * @param  callable(TValue, TKey): TValue  $callback
+     * @param  callable(TValue, TKey): TValue|int|string  $callback
      * @return self<TKey, TValue>
      */
-    public function enumsMap(callable $callback): self
+    public function mapStrict(callable $callback): self
     {
         return new self(items: Arr::map($this->items, $callback), enumClass: $this->enumClass);
     }
@@ -648,8 +656,91 @@ final class EnumCollection extends Collection
             $this->getArrayableItemsValues($items),
             $callback
         ), enumClass: $this->enumClass);
+    }
 
-        return new self(array_intersect_uassoc($this->items, $this->getArrayableItems($items), $callback));
+    /**
+     * Intersect the collection with the given items by key.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @return static
+     */
+    public function intersectByKeys($items)
+    {
+        return new self(items: array_intersect_key(
+            $this->toValues(), $this->getArrayableItems($items)
+        ), enumClass: $this->enumClass);
+    }
+
+
+    /**
+     * Join all items from the collection using a string. The final items can use a separate glue string.
+     *
+     * @param  string  $glue
+     * @param  string  $finalGlue
+     * @return string
+     */
+    public function join($glue, $finalGlue = '')
+    {
+        return $this->toCollectionValues()->join($glue, $finalGlue);
+    }
+
+
+    /**
+     * @param mixed $value
+     * @param mixed $key
+     * @return mixed
+     * @throws MethodNotSupported
+     */
+    public function pluck($value, $key = null)
+    {
+        throw new MethodNotSupported('pluck');
+    }
+
+    /**
+     * Run a dictionary map over the items.
+     *
+     * The callback should return an associative array with a single key/value pair.
+     *
+     * @template TMapToDictionaryKey of array-key
+     * @template TMapToDictionaryValue
+     *
+     * @param  callable(TValue, TKey): array<TMapToDictionaryKey, TMapToDictionaryValue>  $callback
+     * @return static<TMapToDictionaryKey, array<int, TMapToDictionaryValue>>
+     */
+    public function mapToDictionary(callable $callback): Collection
+    {
+        return $this->toBase()->mapToDictionary($callback);
+    }
+
+    /**
+     * Run an associative map over each of the items.
+     *
+     * The callback should return an associative array with a single key/value pair.
+     *
+     * @template TMapWithKeysKey of array-key
+     * @template TMapWithKeysValue
+     *
+     * @param  callable(TValue, TKey): array<TMapWithKeysKey, TMapWithKeysValue>  $callback
+     * @return parent<TMapWithKeysKey, TMapWithKeysValue>
+     */
+    public function mapWithKeys(callable $callback)
+    {
+        return new parent(Arr::mapWithKeys($this->items, $callback));
+    }
+
+    /**
+     * Run an associative map over each of the items.
+     *
+     * The callback should return an associative array with a single key/value pair.
+     *
+     * @template TMapWithKeysKey of array-key
+     *
+     * @param  callable(TValue, TKey): array<TMapWithKeysKey, TValue|int|string>  $callback
+     * @return static<TMapWithKeysKey, TValue>
+     */
+    public function mapWithKeysStrict(callable $callback)
+    {
+        return new self(Arr::mapWithKeys($this->items, $callback), enumClass: $this->enumClass);
     }
 
     /**
@@ -661,7 +752,7 @@ final class EnumCollection extends Collection
      */
     public function implode($value, $glue = null)
     {
-        return $this->map(fn ($i) => $this->getStorableEnumValue($i))->implode($value, $glue);
+        return $this->toCollectionValues()->implode($value, $glue);
     }
 
     /**
@@ -684,19 +775,10 @@ final class EnumCollection extends Collection
      */
     public function combine($values)
     {
-        // throw new MethodNotSupported('Unsupported method: combine');
         return new parent(array_combine($this->toValues(), parent::getArrayableItems($values)));
     }
 
-    // public function intersectByKeys($items) {}
-
-    public function mapToDictionary(callable $callback): Collection
-    {
-        return $this->toBase()->mapToDictionary($callback);
-    }
-
     // public function select($keys) {}
-    // public function mapWithKeys(callable $callback) {}
 
     /**
      * Push an item onto the beginning of the collection.
@@ -710,28 +792,14 @@ final class EnumCollection extends Collection
         return new self(Arr::prepend($this->items, ...func_get_args()), $this->enumClass);
     }
 
+
     /**
-     * Get one or a specified number of items randomly from the collection.
-     *
-     * @param  (callable(self<TKey, TValue>): int)|int|null  $number
-     * @param  bool  $preserveKeys
-     * @return static<int, TValue>|TValue
-     *
-     * @throws \InvalidArgumentException
+     * @return mixed
+     * @throws MethodNotSupported
      */
-    // public function random($number = null, $preserveKeys = false) {
-    //     return parent::random($number, $preserveKeys);
-    // }
-
-    public function pluck($value, $key = null)
-    {
-        throw new MethodNotSupported('Unsupported method: pluck');
-    }
-
     public static function empty()
     {
-        return new static([], $this->enumClass);
-        throw new MethodNotSupported('Unsupported method: empty');
+        throw new MethodNotSupported('empty');
     }
 
     /**
