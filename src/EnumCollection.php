@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Datomatic\EnumCollections;
 
 use BackedEnum;
+use Datomatic\EnumCollections\Exceptions\MethodNotSupported;
 use Datomatic\EnumCollections\Exceptions\ValueError;
 use Exception;
 use Illuminate\Contracts\Support\Arrayable;
@@ -64,8 +65,10 @@ final class EnumCollection extends Collection
             }
         }
 
-        throw_unless(isset($this->enumClass),
-            new Exceptions\MissingEnumClass('enumClass param is required when not pass an enum as argument'));
+        throw_unless(
+            isset($this->enumClass),
+            new Exceptions\MissingEnumClass('enumClass param is required when not pass an enum as argument')
+        );
 
         foreach ($items as $key => $value) {
             $enum = $this->tryGetEnumFromValue($value);
@@ -81,6 +84,41 @@ final class EnumCollection extends Collection
     }
 
     /**
+     * Create a new collection instance if the value isn't one already.
+     *
+     * @template TMakeKey of array-key
+     * @template TMakeValue
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<TMakeKey, TMakeValue>|iterable<TMakeKey, TMakeValue>|null  $items
+     * @param  class-string<TValue>|null  $enumClass
+     * @return static<TMakeKey, TMakeValue>
+     */
+    public static function make($items = [], ?string $enumClass = null)
+    {
+        // TODO: from my pov, this should just throw if no enum class is provided
+        return new self($items, $enumClass);
+    }
+
+    /**
+     * Set the item at a given offset.
+     *
+     * @param  TKey|null  $key
+     * @param  TValue  $value
+     */
+    public function offsetSet($key, $value): void
+    {
+        $val = $this->tryGetEnumFromValue($value);
+        if (is_null($val)) {
+            throw new ValueError($value.' can\'t be converted into an instance of '.$this->enumClass);
+        }
+        if (is_null($key)) {
+            $this->items[] = $value;
+        } else {
+            $this->items[$key] = $value;
+        }
+    }
+
+    /**
      * Specify the Enum for the cast.
      *
      * @param  ?class-string<TValue>  $enumClass
@@ -88,8 +126,10 @@ final class EnumCollection extends Collection
      */
     public static function of(?string $enumClass): self
     {
-        throw_unless($enumClass,
-            new Exceptions\MissingEnumClass('enumClass param is required'));
+        throw_unless(
+            $enumClass,
+            new Exceptions\MissingEnumClass('enumClass param is required')
+        );
 
         return new self(items: [], enumClass: $enumClass);
     }
@@ -262,10 +302,12 @@ final class EnumCollection extends Collection
      */
     public function toValues(): array
     {
-        return Arr::map($this->items, function (UnitEnum $enum) {
-            /** @var TValue $enum */
-            return $this->getStorableEnumValue($enum);
-        }
+        return Arr::map(
+            $this->items,
+            function (UnitEnum $enum) {
+                /** @var TValue $enum */
+                return $this->getStorableEnumValue($enum);
+            }
         );
     }
 
@@ -337,8 +379,11 @@ final class EnumCollection extends Collection
     public function containsAny(mixed $values): bool
     {
         /** @var array<int,TValue> $values */
-        $values = array_values(Arr::whereNotNull(Arr::map(Arr::wrap($values),
-            fn ($value) => $this->tryGetEnumFromValue($value))
+        $values = array_values(Arr::whereNotNull(
+            Arr::map(
+                Arr::wrap($values),
+                fn ($value) => $this->tryGetEnumFromValue($value)
+            )
         ));
 
         foreach ($this->items as $enum) {
@@ -408,8 +453,10 @@ final class EnumCollection extends Collection
      */
     public function diff($items)
     {
-        return new self(items: array_diff($this->toValues(), $this->getArrayableItemsValues($items)),
-            enumClass: $this->enumClass);
+        return new self(
+            items: array_diff($this->toValues(), $this->getArrayableItemsValues($items)),
+            enumClass: $this->enumClass
+        );
     }
 
     /**
@@ -422,8 +469,10 @@ final class EnumCollection extends Collection
     public function diffUsing($items, callable $callback)
     {
         /** @var callable(mixed, mixed): int $callback */
-        return new self(items: array_udiff($this->items, $this->getArrayableItems($items), $callback),
-            enumClass: $this->enumClass);
+        return new self(
+            items: array_udiff($this->items, $this->getArrayableItems($items), $callback),
+            enumClass: $this->enumClass
+        );
     }
 
     /**
@@ -434,8 +483,10 @@ final class EnumCollection extends Collection
      */
     public function diffAssoc($items)
     {
-        return new self(items: array_diff_assoc($this->toValues(), $this->getArrayableItemsValues($items)),
-            enumClass: $this->enumClass);
+        return new self(
+            items: array_diff_assoc($this->toValues(), $this->getArrayableItemsValues($items)),
+            enumClass: $this->enumClass
+        );
     }
 
     /**
@@ -448,8 +499,11 @@ final class EnumCollection extends Collection
     public function diffAssocUsing($items, callable $callback)
     {
         /** @var callable(mixed, mixed): int $callback */
-        return new self(items: array_diff_uassoc($this->toValues(), $this->getArrayableItemsValues($items),
-            $callback), enumClass: $this->enumClass);
+        return new self(items: array_diff_uassoc(
+            $this->toValues(),
+            $this->getArrayableItemsValues($items),
+            $callback
+        ), enumClass: $this->enumClass);
     }
 
     /**
@@ -460,8 +514,10 @@ final class EnumCollection extends Collection
      */
     public function diffKeys($items)
     {
-        return new self(items: array_diff_key($this->items, $this->getArrayableItems($items)),
-            enumClass: $this->enumClass);
+        return new self(
+            items: array_diff_key($this->items, $this->getArrayableItems($items)),
+            enumClass: $this->enumClass
+        );
     }
 
     /**
@@ -474,8 +530,10 @@ final class EnumCollection extends Collection
     public function diffKeysUsing($items, callable $callback)
     {
         /** @var callable(mixed, mixed): int $callback */
-        return new self(items: array_diff_ukey($this->items, $this->getArrayableItems($items), $callback),
-            enumClass: $this->enumClass);
+        return new self(
+            items: array_diff_ukey($this->items, $this->getArrayableItems($items), $callback),
+            enumClass: $this->enumClass
+        );
     }
 
     /**
@@ -547,6 +605,133 @@ final class EnumCollection extends Collection
     public function intersect($items)
     {
         return new self(items: array_intersect($this->toValues(), $this->getArrayableItemsValues($items)), enumClass: $this->enumClass);
+    }
+
+    /**
+     * Intersect the collection with the given items, using the callback.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TValue>|iterable<array-key, TValue>  $items
+     * @param  callable(TValue, TValue): int  $callback
+     * @return self
+     */
+    public function intersectUsing($items, callable $callback)
+    {
+        return new self(array_uintersect($this->items, $this->getArrayableItems($items), $callback), enumClass: $this->enumClass);
+    }
+
+    /**
+     * Intersect the collection with the given items with additional index check.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @return static
+     */
+    public function intersectAssoc($items)
+    {
+        return new self(
+            items: array_intersect_assoc($this->toValues(), $this->getArrayableItemsValues($items)),
+            enumClass: $this->enumClass
+        );
+    }
+
+    /**
+     * Intersect the collection with the given items with additional index check, using the callback.
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TValue>|iterable<array-key, TValue>  $items
+     * @param  callable(TValue, TValue): int  $callback
+     * @return static
+     */
+    public function intersectAssocUsing($items, callable $callback)
+    {
+        /** @var callable(mixed, mixed): int $callback */
+        return new self(items: array_intersect_uassoc(
+            $this->toValues(),
+            $this->getArrayableItemsValues($items),
+            $callback
+        ), enumClass: $this->enumClass);
+
+        return new self(array_intersect_uassoc($this->items, $this->getArrayableItems($items), $callback));
+    }
+
+    /**
+     * Concatenate values of a given key as a string.
+     *
+     * @param  (callable(TValue, TKey): mixed)|string|null  $value
+     * @param  string|null  $glue
+     * @return string
+     */
+    public function implode($value, $glue = null)
+    {
+        return $this->map(fn ($i) => $this->getStorableEnumValue($i))->implode($value, $glue);
+    }
+
+    /**
+     * Get the keys of the collection items.
+     *
+     * @return static<int, TKey>
+     */
+    public function keys(): Collection
+    {
+        return new parent(array_keys($this->items));
+    }
+
+    /**
+     * Create a collection by using this collection for keys and another for its values.
+     *
+     * @template TCombineValue
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TCombineValue>|iterable<array-key, TCombineValue>  $values
+     * @return parent<TValue, TCombineValue>
+     */
+    public function combine($values)
+    {
+        // throw new MethodNotSupported('Unsupported method: combine');
+        return new parent(array_combine($this->toValues(), parent::getArrayableItems($values)));
+    }
+
+    // public function intersectByKeys($items) {}
+
+    public function mapToDictionary(callable $callback): Collection
+    {
+        return $this->toBase()->mapToDictionary($callback);
+    }
+
+    // public function select($keys) {}
+    // public function mapWithKeys(callable $callback) {}
+
+    /**
+     * Push an item onto the beginning of the collection.
+     *
+     * @param  TValue  $value
+     * @param  TKey  $key
+     * @return $this
+     */
+    public function prepend($value, $key = null)
+    {
+        return new self(Arr::prepend($this->items, ...func_get_args()), $this->enumClass);
+    }
+
+    /**
+     * Get one or a specified number of items randomly from the collection.
+     *
+     * @param  (callable(self<TKey, TValue>): int)|int|null  $number
+     * @param  bool  $preserveKeys
+     * @return static<int, TValue>|TValue
+     *
+     * @throws \InvalidArgumentException
+     */
+    // public function random($number = null, $preserveKeys = false) {
+    //     return parent::random($number, $preserveKeys);
+    // }
+
+    public function pluck($value, $key = null)
+    {
+        throw new MethodNotSupported('Unsupported method: pluck');
+    }
+
+    public static function empty()
+    {
+        return new static([], $this->enumClass);
+        throw new MethodNotSupported('Unsupported method: empty');
     }
 
     /**

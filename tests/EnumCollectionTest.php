@@ -470,6 +470,102 @@ it('can use intersect method', function () {
     expect($collection->intersect([PureEnum::GREEN, PureEnum::WHITE])->toArray())->toBe([PureEnum::GREEN]);
 });
 
+it('supports intersectUsing', function () {
+    $callback = fn ($v1, $v2) => $v1->value <=> $v2->value;
+    $c1 = EnumCollection::from([IntBackedEnum::PROTECTED, IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED]);
+    $c2 = [1, 3, 3, 2, 1];
+
+    expect($c1->intersectUsing($c2, $callback)->toValues())->toBe([3, 1, 3]);
+});
+
+it('supports intersectAssoc', function () {
+    $c1 = EnumCollection::from([StringBackedEnum::SMALL, StringBackedEnum::MEDIUM, StringBackedEnum::LARGE]);
+    $c2 = [StringBackedEnum::LARGE, StringBackedEnum::MEDIUM, StringBackedEnum::SMALL];
+    expect($c1->intersectAssoc($c2)->toArray())->toBe([1 => StringBackedEnum::MEDIUM]);
+});
+
+it('supports implode', function () {
+    $c1 = EnumCollection::from([StringBackedEnum::SMALL, StringBackedEnum::MEDIUM, StringBackedEnum::LARGE]);
+    $sep = '-';
+    expect($c1->implode($sep))->toBe(
+        StringBackedEnum::SMALL->value.$sep.StringBackedEnum::MEDIUM->value.$sep.StringBackedEnum::LARGE->value
+    );
+    $c2 = EnumCollection::from([
+        IntBackedEnum::PRIVATE,
+        IntBackedEnum::PROTECTED,
+    ]);
+    expect($c2->implode(','))->toBe(
+        IntBackedEnum::PRIVATE->value.','.IntBackedEnum::PROTECTED->value
+    );
+
+    $c3 = EnumCollection::from([
+        PureEnum::BLACK,
+        PureEnum::WHITE,
+    ]);
+    expect($c3->implode(','))->toBe(
+        'BLACK'.','.'WHITE'
+    );
+});
+
+it('supports keys', function () {
+    $c1 = EnumCollection::from([StringBackedEnum::SMALL, StringBackedEnum::MEDIUM, StringBackedEnum::LARGE]);
+    expect($c1->keys()->toArray())->toBe([0, 1, 2]);
+});
+
+it('supports join', function () {
+    $c1 = EnumCollection::from([StringBackedEnum::SMALL, StringBackedEnum::MEDIUM, StringBackedEnum::LARGE]);
+    $sep = '-';
+    expect($c1->join($sep))->toBe(
+        StringBackedEnum::SMALL->value.$sep.StringBackedEnum::MEDIUM->value.$sep.StringBackedEnum::LARGE->value
+    );
+
+    $c2 = EnumCollection::from([StringBackedEnum::SMALL]);
+    expect($c2->join($sep))->toBe(
+        StringBackedEnum::SMALL->value
+    );
+});
+
+it('returns a generic collection when using keys method', function () {
+    expect(get_class(EnumCollection::of(StringBackedEnum::class)->keys()))
+        ->toBe(\Illuminate\Support\Collection::class);
+});
+
+it('supports combine', function () {
+    $c1 = new EnumCollection([
+        PureEnum::BLACK,
+        PureEnum::WHITE,
+    ], PureEnum::class);
+    expect($c1->combine(['#0d1117', '#f0f6fc'])->toArray())->toBe([
+        'BLACK' => '#0d1117',
+        'WHITE' => '#f0f6fc',
+    ]);
+});
+
+it('supports mapToDictionary', function () {
+    $c1 = new EnumCollection([
+        StringBackedEnum::SMALL,
+        StringBackedEnum::MEDIUM,
+        StringBackedEnum::LARGE,
+    ], StringBackedEnum::class);
+
+    expect($c1->mapToDictionary(fn ($enum) => [$enum->name => $enum->value])->toArray())->toBe([
+        'SMALL' => ['S'],
+        'MEDIUM' => ['M'],
+        'LARGE' => ['L'],
+    ]);
+});
+
+it('supports prepend', function () {
+    $c1 = new EnumCollection([
+        PureEnum::BLACK,
+        PureEnum::WHITE,
+    ], PureEnum::class);
+    expect($c1->prepend(PureEnum::BLUE)[0])->toBe(PureEnum::BLUE);
+});
+
+
+// it('TODO: errore union se non presente in enum')
+
 it('can use forget method', function () {
     $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED]);
 
