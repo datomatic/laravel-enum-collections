@@ -555,15 +555,9 @@ final class EnumCollection extends Collection
         return new self(items: array_filter($this->items), enumClass: $this->enumClass);
     }
 
-    /**
-     * Get a flattened array of the items in the collection.
-     *
-     * @param  int  $depth
-     * @return static<int, TValue>
-     */
     public function flatten($depth = 1)
     {
-        return new self(items: Arr::flatten($this->items, $depth), enumClass: $this->enumClass);
+        throw new MethodNotSupported('flatten');
     }
 
     public function flip()

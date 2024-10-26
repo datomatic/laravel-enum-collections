@@ -612,17 +612,6 @@ it('supports filter', function () {
     expect($collection->filter($fun))->toBeInstanceOf(EnumCollection::class);
 });
 
-it('supports flatten', function () {
-    $collection = EnumCollection::from([
-        1 => PureEnum::GREEN, 2 => [PureEnum::GREEN, PureEnum::BLACK], 5 => PureEnum::RED
-    ]);
-
-    expect($collection->flatten(1)->all())->toBe([
-        PureEnum::GREEN, PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED
-    ]);
-    expect($collection->flatten(1))->toBeInstanceOf(EnumCollection::class);
-});
-
 it('supports intersect', function () {
     $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED]);
 
@@ -1363,6 +1352,11 @@ it('not supports mergeRecursive', function () {
 it('not supports select', function () {
     $collection = EnumCollection::from([StringBackedEnum::LARGE]);
     expect(fn() => $collection->select('name'))->toThrow(MethodNotSupported::class);
+});
+
+it('not supports flatten', function () {
+    $collection = EnumCollection::from([1 => PureEnum::GREEN, 2 =>PureEnum::BLACK, 5 => PureEnum::RED]);
+    expect(fn() => $collection->flatten(1))->toThrow(MethodNotSupported::class);
 });
 it('not supports replaceRecursive', function () {
     $collection = EnumCollection::from([StringBackedEnum::LARGE]);
