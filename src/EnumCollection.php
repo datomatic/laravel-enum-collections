@@ -58,7 +58,7 @@ final class EnumCollection extends Collection
 
         $items = $this->privateFlatten(Arr::wrap($items));
 
-        if (! $enumClass) {
+        if (!$enumClass) {
             $item = array_values($items)[0] ?? null;
             if ($item instanceof UnitEnum) {
                 $this->setEnumClass(get_class($item));
@@ -92,22 +92,6 @@ final class EnumCollection extends Collection
         return new self($items, $enumClass);
     }
 
-    /**
-     * Set the item at a given offset.
-     *
-     * @param  TKey|null  $key
-     * @param  TValue  $value
-     */
-    public function offsetSet($key, $value): void
-    {
-        $value = $this->getEnumFromValue($value);
-
-        if (is_null($key)) {
-            $this->items[] = $value;
-        } else {
-            $this->items[$key] = $value;
-        }
-    }
 
     /**
      * Specify the Enum for the cast.
@@ -132,11 +116,11 @@ final class EnumCollection extends Collection
      */
     protected function setEnumClass(?string $enumClass): void
     {
-        if (! $enumClass) {
+        if (!$enumClass) {
             throw new Exceptions\MissingEnumClass('enumClass param is required when not pass an enum as argument');
         }
 
-        if (! enum_exists($enumClass)) {
+        if (!enum_exists($enumClass)) {
             throw new Exceptions\WrongEnumClass('enumClass '.$enumClass.' does not exist');
         }
 
@@ -172,7 +156,7 @@ final class EnumCollection extends Collection
     {
         $return = [];
         array_walk_recursive($array, function (mixed $a, int|string $key) use (&$return) {
-            if (! isset($return[$key])) {
+            if (!isset($return[$key])) {
                 $return[$key] = $a;
             } else {
                 $return[] = $a;
@@ -299,6 +283,7 @@ final class EnumCollection extends Collection
             }
         );
     }
+
     /**
      * @return array<TKey, int|string>
      */
@@ -346,6 +331,28 @@ final class EnumCollection extends Collection
         return (new EnumCollection(items: $items, enumClass: $this->enumClass))->toValues();
     }
 
+
+    public static function range($from, $to)
+    {
+        throw new MethodNotSupported('range');
+    }
+    public function median($key = null)
+    {
+        throw new MethodNotSupported('median');
+    }
+    public function mode($key = null)
+    {
+        throw new MethodNotSupported('mode');
+    }
+    public function collapse()
+    {
+        throw new MethodNotSupported('collapse');
+    }
+    public function collapseWithKeys()
+    {
+        throw new MethodNotSupported('collapseWithKeys');
+    }
+
     /**
      * @param  TValue|int|string  $key
      * @param  mixed  $operator
@@ -355,7 +362,7 @@ final class EnumCollection extends Collection
      */
     public function contains($key, $operator = null, $value = null): bool
     {
-        if (! $key instanceof UnitEnum && is_callable($key)) {
+        if (!$key instanceof UnitEnum && is_callable($key)) {
             return parent::contains($key);
         }
 
@@ -379,7 +386,7 @@ final class EnumCollection extends Collection
         $values = array_values(Arr::whereNotNull(
             Arr::map(
                 Arr::wrap($values),
-                fn ($value) => $this->tryGetEnumFromValue($value)
+                fn($value) => $this->tryGetEnumFromValue($value)
             )
         ));
 
@@ -399,7 +406,7 @@ final class EnumCollection extends Collection
      */
     public function doesntContainAny(mixed $values): bool
     {
-        return ! $this->containsAny($values);
+        return !$this->containsAny($values);
     }
 
     /**
@@ -411,35 +418,17 @@ final class EnumCollection extends Collection
      */
     public function containsStrict($key, $operator = null, $value = null): bool
     {
-        if (! $key instanceof UnitEnum) {
+        if (!$key instanceof UnitEnum) {
             throw new Exceptions\ValueError('Value must be an instance of UnitEnum');
         }
 
         return $this->contains($key, $operator, $value);
     }
 
-    /**
-     * Run a map over each of the items.
-     *
-     * @template TMapValue
-     *
-     * @param  callable(TValue, TKey): TMapValue  $callback
-     * @return parent<TKey, TMapValue>
-     */
-    public function map(callable $callback): Collection
-    {
-        return new parent(items: Arr::map($this->items, $callback));
-    }
 
-    /**
-     * Run a map over each of the items.
-     *
-     * @param  callable(TValue, TKey): TValue|int|string  $callback
-     * @return self<TKey, TValue>
-     */
-    public function mapStrict(callable $callback): self
+    public function crossJoin(...$lists)
     {
-        return new self(items: Arr::map($this->items, $callback), enumClass: $this->enumClass);
+        throw new MethodNotSupported('crossJoin');
     }
 
     /**
@@ -543,7 +532,7 @@ final class EnumCollection extends Collection
     {
         if ($keys instanceof Enumerable) {
             $keys = $keys->all();
-        } elseif (! is_array($keys)) {
+        } elseif (!is_array($keys)) {
             $keys = func_get_args();
         }
 
@@ -577,6 +566,11 @@ final class EnumCollection extends Collection
         return new self(items: Arr::flatten($this->items, $depth), enumClass: $this->enumClass);
     }
 
+    public function flip()
+    {
+        throw new MethodNotSupported('flip');
+    }
+
     /**
      * Remove an item from the collection by key.
      *
@@ -594,6 +588,32 @@ final class EnumCollection extends Collection
     }
 
     /**
+     * Group an associative array by a field or using a callback.
+     *
+     * @template TGroupKey of array-key
+     *
+     * @param  (callable(TValue, TKey): TGroupKey)|array|string  $groupBy
+     * @param  bool  $preserveKeys
+     * @return parent<($groupBy is string ? array-key : ($groupBy is array ? array-key : TGroupKey)), static<($preserveKeys is true ? TKey : int), TValue>>
+     */
+    public function groupBy($groupBy, $preserveKeys = false)
+    {
+        return $this->toBase()->groupBy($groupBy, $preserveKeys);
+    }
+
+    /**
+     * Concatenate values of a given key as a string.
+     *
+     * @param  (callable(TValue, TKey): mixed)|string|null  $value
+     * @param  string|null  $glue
+     * @return string
+     */
+    public function implode($value, $glue = null)
+    {
+        return $this->toCollectionValues()->implode($value, $glue);
+    }
+
+    /**
      * Intersect the collection with the given items.
      *
      * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
@@ -601,7 +621,8 @@ final class EnumCollection extends Collection
      */
     public function intersect($items)
     {
-        return new self(items: array_intersect($this->toValues(), $this->getArrayableItemsValues($items)), enumClass: $this->enumClass);
+        return new self(items: array_intersect($this->toValues(), $this->getArrayableItemsValues($items)),
+            enumClass: $this->enumClass);
     }
 
     /**
@@ -613,7 +634,8 @@ final class EnumCollection extends Collection
      */
     public function intersectUsing($items, callable $callback)
     {
-        return new self(array_uintersect($this->items, $this->getArrayableItems($items), $callback), enumClass: $this->enumClass);
+        return new self(array_uintersect($this->items, $this->getArrayableItems($items), $callback),
+            enumClass: $this->enumClass);
     }
 
     /**
@@ -660,7 +682,6 @@ final class EnumCollection extends Collection
         ), enumClass: $this->enumClass);
     }
 
-
     /**
      * Join all items from the collection using a string. The final items can use a separate glue string.
      *
@@ -673,16 +694,50 @@ final class EnumCollection extends Collection
         return $this->toCollectionValues()->join($glue, $finalGlue);
     }
 
+    /**
+     * Get the keys of the collection items.
+     *
+     * @return static<int, TKey>
+     */
+    public function keys(): Collection
+    {
+        return new parent(array_keys($this->items));
+    }
 
     /**
-     * @param mixed $value
-     * @param mixed $key
+     * @param  mixed  $value
+     * @param  mixed  $key
      * @return mixed
      * @throws MethodNotSupported
      */
     public function pluck($value, $key = null)
     {
         throw new MethodNotSupported('pluck');
+    }
+
+
+    /**
+     * Run a map over each of the items.
+     *
+     * @template TMapValue
+     *
+     * @param  callable(TValue, TKey): TMapValue  $callback
+     * @return parent<TKey, TMapValue>
+     */
+    public function map(callable $callback): Collection
+    {
+        return new parent(items: Arr::map($this->items, $callback));
+    }
+
+    /**
+     * Run a map over each of the items.
+     *
+     * @param  callable(TValue, TKey): TValue|int|string  $callback
+     * @return self<TKey, TValue>
+     */
+    public function mapStrict(callable $callback): self
+    {
+        return new self(items: Arr::map($this->items, $callback), enumClass: $this->enumClass);
     }
 
     /**
@@ -740,14 +795,14 @@ final class EnumCollection extends Collection
      */
     public function merge($items)
     {
-        return new self(array_merge($this->toValues(), $this->getArrayableItemsValues($items)), enumClass: $this->enumClass);
+        return new self(array_merge($this->toValues(), $this->getArrayableItemsValues($items)),
+            enumClass: $this->enumClass);
     }
 
     public function mergeRecursive($items)
     {
         throw new MethodNotSupported('mergeRecursive');
     }
-
 
     /**
      * Multiply the items in the collection by the multiplier.
@@ -757,7 +812,7 @@ final class EnumCollection extends Collection
      */
     public function multiply(int $multiplier)
     {
-        $new = new static([],$this->enumClass);
+        $new = new static([], $this->enumClass);
 
         for ($i = 0; $i < $multiplier; $i++) {
             $new->push(...$this->items);
@@ -789,6 +844,7 @@ final class EnumCollection extends Collection
     {
         return new static($this->items + $this->getArrayableItems($items), enumClass: $this->enumClass);
     }
+
     /**
      * Create a new collection consisting of every n-th element.
      *
@@ -827,7 +883,7 @@ final class EnumCollection extends Collection
     {
         $return = parent::pop($count);
 
-        if($return instanceof UnitEnum) {
+        if ($return instanceof UnitEnum) {
             return $return;
         }
 
@@ -881,6 +937,7 @@ final class EnumCollection extends Collection
 
         return $this;
     }
+
     /**
      * Push all of the given items onto the collection.
      *
@@ -936,26 +993,115 @@ final class EnumCollection extends Collection
         throw new MethodNotSupported('sliding');
     }
 
+
     /**
-     * Concatenate values of a given key as a string.
+     * Split a collection into a certain number of groups.
      *
-     * @param  (callable(TValue, TKey): mixed)|string|null  $value
-     * @param  string|null  $glue
-     * @return string
+     * @param  int  $numberOfGroups
+     * @return parent<int, static>
      */
-    public function implode($value, $glue = null)
+    public function split($numberOfGroups)
     {
-        return $this->toCollectionValues()->implode($value, $glue);
+        return $this->toBase()->split($numberOfGroups);
+    }
+
+
+    /**
+     * Chunk the collection into chunks of the given size.
+     *
+     * @param  int  $size
+     * @return parent<int, static>
+     */
+    public function chunk($size)
+    {
+        return $this->toBase()->chunk($size);
     }
 
     /**
-     * Get the keys of the collection items.
+     * Chunk the collection into chunks with a callback.
      *
-     * @return static<int, TKey>
+     * @param  callable(TValue, TKey, static<int, TValue>): bool  $callback
+     * @return parent<int, static<int, TValue>>
      */
-    public function keys(): Collection
+    public function chunkWhile(callable $callback)
     {
-        return new parent(array_keys($this->items));
+        return $this->toBase()->chunkWhile($callback);
+    }
+
+
+    /**
+     * Transform each item in the collection using a callback.
+     *
+     * @param  callable(TValue, TKey): TValue  $callback
+     * @return $this
+     */
+    public function transform(callable $callback)
+    {
+        $this->items = $this->mapStrict($callback)->all();
+
+        return $this;
+    }
+
+    /**
+     * Flatten a multi-dimensional associative array with dots.
+     *
+     * @return static
+     */
+    public function dot()
+    {
+        throw new MethodNotSupported('dot');
+    }
+
+    public function undot()
+    {
+        throw new MethodNotSupported('undot');
+    }
+
+    public function zip($items)
+    {
+        throw new MethodNotSupported('zip');
+    }
+
+    /**
+     * Pad collection to the specified length with a value.
+     *
+     * @param  int  $size
+     * @param  TValue  $value
+     * @return static<int, TValue>
+     * @throws ValueError
+     */
+    public function pad($size, $value)
+    {
+        return new static(array_pad($this->items, $size, $this->getEnumFromValue($value)), enumClass: $this->enumClass);
+    }
+
+    /**
+     * Count the number of items in the collection by a field or using a callback.
+     *
+     * @param  (callable(TValue, TKey): array-key)|string|null  $countBy
+     * @return parent<array-key, int>
+     */
+    public function countBy($countBy = null)
+    {
+        return $this->toBase()->countBy($countBy);
+    }
+
+
+    /**
+     * Set the item at a given offset.
+     *
+     * @param  TKey|null  $key
+     * @param  TValue  $value
+     */
+    public function offsetSet($key, $value): void
+    {
+        $value = $this->getEnumFromValue($value);
+
+        if (is_null($key)) {
+            $this->items[] = $value;
+        } else {
+            $this->items[$key] = $value;
+        }
     }
 
 
