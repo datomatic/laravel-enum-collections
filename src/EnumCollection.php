@@ -1051,6 +1051,18 @@ final class EnumCollection extends Collection
         throw new MethodNotSupported('undot');
     }
 
+    /**
+     * Zip the collection together with one or more arrays.
+     *
+     * e.g. new Collection([1, 2, 3])->zip([4, 5, 6]);
+     *      => [[1, 4], [2, 5], [3, 6]]
+     *
+     * @template TZipValue
+     *
+     * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TZipValue>|iterable<array-key, TZipValue>  ...$items
+     * @return \Illuminate\Support\Enumerable<int, \Illuminate\Support\Enumerable<int, mixed>>
+     * @throw MethodNotSupported
+     */
     public function zip($items)
     {
         throw new MethodNotSupported('zip');
