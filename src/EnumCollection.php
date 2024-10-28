@@ -525,7 +525,7 @@ final class EnumCollection extends Collection
     /**
      * Get all items except for those with the specified keys.
      *
-     * @param  \Illuminate\Support\Enumerable<array-key, TKey>|array<array-key, TKey>|string  $keys
+     * @param  Enumerable<array-key, TKey>|array<array-key, TKey>|string  $keys
      * @return static
      */
     public function except(mixed $keys)
@@ -588,7 +588,7 @@ final class EnumCollection extends Collection
      *
      * @param  (callable(TValue, TKey): TGroupKey)|array|string  $groupBy
      * @param  bool  $preserveKeys
-     * @return parent<($groupBy is string ? array-key : ($groupBy is array ? array-key : TGroupKey)), static<($preserveKeys is true ? TKey : int), TValue>>
+     * @return Collection<($groupBy is string ? array-key : ($groupBy is array ? array-key : TGroupKey)), Collection<($preserveKeys is true ? TKey : int), TValue>>
      */
     public function groupBy($groupBy, $preserveKeys = false)
     {
@@ -716,7 +716,7 @@ final class EnumCollection extends Collection
      * @template TMapValue
      *
      * @param  callable(TValue, TKey): TMapValue  $callback
-     * @return parent<TKey, TMapValue>
+     * @return Collection<TKey, TMapValue>
      */
     public function map(callable $callback): Collection
     {
@@ -759,7 +759,7 @@ final class EnumCollection extends Collection
      * @template TMapWithKeysValue
      *
      * @param  callable(TValue, TKey): array<TMapWithKeysKey, TMapWithKeysValue>  $callback
-     * @return parent<TMapWithKeysKey, TMapWithKeysValue>
+     * @return Collection<TMapWithKeysKey, TMapWithKeysValue>
      */
     public function mapWithKeys(callable $callback)
     {
@@ -821,7 +821,7 @@ final class EnumCollection extends Collection
      * @template TCombineValue
      *
      * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
-     * @return parent<TValue, TCombineValue>
+     * @return Collection<TValue, TCombineValue>
      */
     public function combine($values)
     {
@@ -854,7 +854,7 @@ final class EnumCollection extends Collection
     /**
      * Get the items with the specified keys.
      *
-     * @param  \Illuminate\Support\Enumerable<array-key, TKey>|array<array-key, TKey>|string|null  $keys
+     * @param  Enumerable<array-key, TKey>|array<array-key, TKey>|string|null  $keys
      * @return static
      */
     public function only($keys)
@@ -939,11 +939,11 @@ final class EnumCollection extends Collection
      * @template TConcatValue
      *
      * @param  iterable<TConcatKey, TConcatValue>  $source
-     * @return static<TKey|TConcatKey, TValue|TConcatValue>
+     * @return static<TKey, TValue|TConcatValue>
      */
     public function concat($source)
     {
-        $result = new static($this, enumClass: $this->enumClass);
+        $result = new static($this->items, enumClass: $this->enumClass);
 
         foreach ($source as $item) {
             $result->push($item);
@@ -960,13 +960,24 @@ final class EnumCollection extends Collection
     /**
      * Search the collection for a given value and return the corresponding key if successful.
      *
-     * @param  TValue|(callable(TValue,TKey): bool)  $value
+     * @param  (callable(TValue,TKey): bool)|TValue  $value
      * @param  bool  $strict
      * @return TKey|false
+     * @throws Exception
      */
     public function search($value, $strict = false)
     {
-        return parent::search($this->tryGetEnumFromValue($value), $strict);
+        if (! $this->useAsCallable($value)) {
+            return array_search($this->tryGetEnumFromValue($value), $this->items, $strict);
+        }
+
+        foreach ($this->items as $key => $item) {
+            if ($value($item, $key)) {
+                return $key;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -992,7 +1003,7 @@ final class EnumCollection extends Collection
      * Split a collection into a certain number of groups.
      *
      * @param  int  $numberOfGroups
-     * @return parent<int, static>
+     * @return Collection<int, Collection<TKey, TValue>>
      */
     public function split($numberOfGroups)
     {
@@ -1004,7 +1015,7 @@ final class EnumCollection extends Collection
      * Chunk the collection into chunks of the given size.
      *
      * @param  int  $size
-     * @return parent<int, static>
+     * @return Collection<int, Collection<TKey, TValue>>
      */
     public function chunk($size)
     {
@@ -1014,8 +1025,8 @@ final class EnumCollection extends Collection
     /**
      * Chunk the collection into chunks with a callback.
      *
-     * @param  callable(TValue, TKey, static<int, TValue>): bool  $callback
-     * @return parent<int, static<int, TValue>>
+     * @param  callable(TValue, TKey, Collection<int, TValue>): bool  $callback
+     * @return Collection<int, Collection<int, TValue>>
      */
     public function chunkWhile(callable $callback)
     {
@@ -1060,7 +1071,7 @@ final class EnumCollection extends Collection
      * @template TZipValue
      *
      * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TZipValue>|iterable<array-key, TZipValue>  ...$items
-     * @return \Illuminate\Support\Enumerable<int, \Illuminate\Support\Enumerable<int, mixed>>
+     * @return Enumerable<int, Enumerable<int, mixed>>
      * @throw MethodNotSupported
      */
     public function zip($items)
@@ -1085,7 +1096,7 @@ final class EnumCollection extends Collection
      * Count the number of items in the collection by a field or using a callback.
      *
      * @param  (callable(TValue, TKey): array-key)|string|null  $countBy
-     * @return parent<array-key, int>
+     * @return Collection<array-key, int>
      */
     public function countBy($countBy = null)
     {
