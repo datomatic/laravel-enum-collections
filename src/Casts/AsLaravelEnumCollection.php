@@ -31,6 +31,12 @@ class AsLaravelEnumCollection implements Castable
         return new class($arguments) implements CastsAttributes
         {
             /**
+             * TODO: a caching layer would be nice, so we should probably figure out how to
+             * implement it instead of just disabling it to prevent duplicated values.
+             * */
+            public $withoutObjectCaching = false;
+
+            /**
              * @var array<int, string>
              */
             protected array $arguments;
@@ -41,6 +47,8 @@ class AsLaravelEnumCollection implements Castable
             public function __construct(array $arguments)
             {
                 $this->arguments = $arguments;
+                // TODO: check if it is actually needed just for unique enum collections
+                $this->withoutObjectCaching = $this->getUnique();
             }
 
             public function get($model, $key, $value, $attributes)
