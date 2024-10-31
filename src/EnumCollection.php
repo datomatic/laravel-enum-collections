@@ -85,7 +85,7 @@ final class EnumCollection extends Collection
      *
      * @param  \Illuminate\Contracts\Support\Arrayable<TMakeKey, TMakeValue>|iterable<TMakeKey, TMakeValue>|null  $items
      * @param  class-string<TValue>|null  $enumClass
-     * @return static<TMakeKey, TMakeValue>
+     * @return self<TMakeKey, TMakeValue>
      */
     public static function make($items = [], ?string $enumClass = null)
     {
@@ -435,7 +435,7 @@ final class EnumCollection extends Collection
      * Get the items in the collection that are not present in the given items.
      *
      * @param  Arrayable<TKey,TValue|int|string>|iterable<TKey,TValue|int|string>|TValue|int|string|null  $items
-     * @return static
+     * @return self
      */
     public function diff($items)
     {
@@ -450,7 +450,7 @@ final class EnumCollection extends Collection
      *
      * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
      * @param  callable(TValue, TValue): int  $callback
-     * @return static
+     * @return self
      */
     public function diffUsing($items, callable $callback)
     {
@@ -465,7 +465,7 @@ final class EnumCollection extends Collection
      * Get the items in the collection whose keys and values are not present in the given items.
      *
      * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
-     * @return static
+     * @return self
      */
     public function diffAssoc($items)
     {
@@ -480,7 +480,7 @@ final class EnumCollection extends Collection
      *
      * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
      * @param  callable(TKey, TKey): int  $callback
-     * @return static
+     * @return self
      */
     public function diffAssocUsing($items, callable $callback)
     {
@@ -496,7 +496,7 @@ final class EnumCollection extends Collection
      * Get the items in the collection whose keys are not present in the given items.
      *
      * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
-     * @return static
+     * @return self
      */
     public function diffKeys($items)
     {
@@ -511,7 +511,7 @@ final class EnumCollection extends Collection
      *
      * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
      * @param  callable(TKey, TKey): int  $callback
-     * @return static
+     * @return self
      */
     public function diffKeysUsing($items, callable $callback)
     {
@@ -526,7 +526,7 @@ final class EnumCollection extends Collection
      * Get all items except for those with the specified keys.
      *
      * @param  Enumerable<array-key, TKey>|array<array-key, TKey>|string  $keys
-     * @return static
+     * @return self
      */
     public function except(mixed $keys)
     {
@@ -544,7 +544,7 @@ final class EnumCollection extends Collection
      * Run a filter over each of the items.
      *
      * @param  (callable(TValue, TKey): bool)|null  $callback
-     * @return static
+     * @return self
      */
     public function filter(?callable $callback = null)
     {
@@ -611,7 +611,7 @@ final class EnumCollection extends Collection
      * Intersect the collection with the given items.
      *
      * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
-     * @return static
+     * @return self
      */
     public function intersect($items)
     {
@@ -636,7 +636,7 @@ final class EnumCollection extends Collection
      * Intersect the collection with the given items with additional index check.
      *
      * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
-     * @return static
+     * @return self
      */
     public function intersectAssoc($items)
     {
@@ -651,7 +651,7 @@ final class EnumCollection extends Collection
      *
      * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TValue>|iterable<array-key, TValue>  $items
      * @param  callable(TValue, TValue): int  $callback
-     * @return static
+     * @return self
      */
     public function intersectAssocUsing($items, callable $callback)
     {
@@ -667,7 +667,7 @@ final class EnumCollection extends Collection
      * Intersect the collection with the given items by key.
      *
      * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
-     * @return static
+     * @return self
      */
     public function intersectByKeys($items)
     {
@@ -691,7 +691,7 @@ final class EnumCollection extends Collection
     /**
      * Get the keys of the collection items.
      *
-     * @return static<int, TKey>
+     * @return Collection<int, TKey>
      */
     public function keys(): Collection
     {
@@ -743,7 +743,7 @@ final class EnumCollection extends Collection
      * @template TMapToDictionaryValue
      *
      * @param  callable(TValue, TKey): array<TMapToDictionaryKey, TMapToDictionaryValue>  $callback
-     * @return static<TMapToDictionaryKey, array<int, TMapToDictionaryValue>>
+     * @return Collection<TMapToDictionaryKey, array<int, TMapToDictionaryValue>>
      */
     public function mapToDictionary(callable $callback): Collection
     {
@@ -774,7 +774,7 @@ final class EnumCollection extends Collection
      * @template TMapWithKeysKey of array-key
      *
      * @param  callable(TValue, TKey): array<TMapWithKeysKey, TValue|int|string>  $callback
-     * @return static<TMapWithKeysKey, TValue>
+     * @return self<TMapWithKeysKey, TValue>
      */
     public function mapWithKeysStrict(callable $callback)
     {
@@ -785,7 +785,7 @@ final class EnumCollection extends Collection
      * Merge the collection with the given items.
      *
      * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
-     * @return static
+     * @return self
      */
     public function merge($items)
     {
@@ -802,11 +802,11 @@ final class EnumCollection extends Collection
      * Multiply the items in the collection by the multiplier.
      *
      * @param  int  $multiplier
-     * @return static
+     * @return self
      */
     public function multiply(int $multiplier)
     {
-        $new = new static([], $this->enumClass);
+        $new = new self([], $this->enumClass);
 
         for ($i = 0; $i < $multiplier; $i++) {
             $new->push(...$this->items);
@@ -832,11 +832,11 @@ final class EnumCollection extends Collection
      * Union the collection with the given items.
      *
      * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
-     * @return static
+     * @return self
      */
     public function union($items)
     {
-        return new static($this->items + $this->getArrayableItems($items), enumClass: $this->enumClass);
+        return new self($this->items + $this->getArrayableItems($items), enumClass: $this->enumClass);
     }
 
     /**
@@ -844,22 +844,22 @@ final class EnumCollection extends Collection
      *
      * @param  int  $step
      * @param  int  $offset
-     * @return static
+     * @return self
      */
     public function nth($step, $offset = 0)
     {
-        return new static(parent::nth($step, $offset), enumClass: $this->enumClass);
+        return new self(parent::nth($step, $offset), enumClass: $this->enumClass);
     }
 
     /**
      * Get the items with the specified keys.
      *
      * @param  Enumerable<array-key, TKey>|array<array-key, TKey>|string|null  $keys
-     * @return static
+     * @return self
      */
     public function only($keys)
     {
-        return new static(parent::only($keys), enumClass: $this->enumClass);
+        return new self(parent::only($keys), enumClass: $this->enumClass);
     }
 
     public function select($keys)
@@ -871,7 +871,7 @@ final class EnumCollection extends Collection
      * Get and remove the last N items from the collection.
      *
      * @param  int  $count
-     * @return static<int, TValue>|TValue|null
+     * @return self<int, TValue>|TValue|null
      */
     public function pop($count = 1)
     {
@@ -881,7 +881,7 @@ final class EnumCollection extends Collection
             return $return;
         }
 
-        return new static($return, enumClass: $this->enumClass);
+        return new self($return, enumClass: $this->enumClass);
     }
 
     /**
@@ -939,11 +939,11 @@ final class EnumCollection extends Collection
      * @template TConcatValue
      *
      * @param  iterable<TConcatKey, TConcatValue>  $source
-     * @return static<TKey, TValue|TConcatValue>
+     * @return self<TKey, TValue|TConcatValue>
      */
     public function concat($source)
     {
-        $result = new static($this->items, enumClass: $this->enumClass);
+        $result = new self($this->items, enumClass: $this->enumClass);
 
         foreach ($source as $item) {
             $result->push($item);
@@ -984,13 +984,13 @@ final class EnumCollection extends Collection
      * Get and remove the first N items from the collection.
      *
      * @param  int  $count
-     * @return static<int, TValue>|TValue|null
+     * @return self<int, TValue>|TValue|null
      *
      * @throws \InvalidArgumentException
      */
     public function shift($count = 1)
     {
-        return new static(parent::shift($count), enumClass: $this->enumClass);
+        return new self(parent::shift($count), enumClass: $this->enumClass);
     }
 
     public function sliding($size = 2, $step = 1)
@@ -1050,7 +1050,7 @@ final class EnumCollection extends Collection
     /**
      * Flatten a multi-dimensional associative array with dots.
      *
-     * @return static
+     * @return self
      */
     public function dot()
     {
@@ -1084,12 +1084,12 @@ final class EnumCollection extends Collection
      *
      * @param  int  $size
      * @param  TValue  $value
-     * @return static<int, TValue>
+     * @return self<int, TValue>
      * @throws ValueError
      */
     public function pad($size, $value)
     {
-        return new static(array_pad($this->items, $size, $this->getEnumFromValue($value)), enumClass: $this->enumClass);
+        return new self(array_pad($this->items, $size, $this->getEnumFromValue($value)), enumClass: $this->enumClass);
     }
 
     /**
