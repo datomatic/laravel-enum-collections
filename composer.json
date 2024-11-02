@@ -25,13 +25,13 @@
         "nunomaduro/collision": "^8.4.0",
         "nunomaduro/larastan": "^2.0.1",
         "orchestra/testbench": "^9.0",
-        "pestphp/pest": "^3.0",
-        "pestphp/pest-plugin-laravel": "^v3.0.0",
+        "pestphp/pest": "^2.0|^3.0",
+        "pestphp/pest-plugin-laravel": "^2.0|^v3.0",
         "phpstan/extension-installer": "^1.1",
         "phpstan/phpstan": "^1.10",
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",
-        "phpunit/phpunit": "^11.0",
+        "phpunit/phpunit": "^10.0|^11.0",
         "datomatic/laravel-enum-helper": "^1.0"
     },
     "autoload": {
