@@ -11,6 +11,7 @@ use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Casts\Json;
+use Illuminate\Database\Eloquent\Model;
 use UnitEnum;
 
 /**
@@ -51,7 +52,7 @@ class AsLaravelEnumCollection implements Castable
                 $this->withoutObjectCaching = $this->getUnique();
             }
 
-            public function get($model, $key, $value, $attributes)
+            public function get(Model $model, string $key, mixed $value, array $attributes)
             {
                 $enumClass = $this->getClassEnum();
 
@@ -75,7 +76,7 @@ class AsLaravelEnumCollection implements Castable
             /**
              * @param  Arrayable<int, int|string|TValue>|iterable<int, int|string|TValue>|int|string|null|EnumCollection  $value
              */
-            public function set($model, $key, $value, $attributes)
+            public function set(Model $model, string $key, mixed $value, array $attributes)
             {
                 $enumClass = $this->getClassEnum();
                 $unique = $this->getUnique();
@@ -100,7 +101,7 @@ class AsLaravelEnumCollection implements Castable
              * @param  array<int,string>  $attributes
              * @return array<TKey, int|string>
              */
-            public function serialize(mixed $model, string $key, mixed $value, array $attributes): array
+            public function serialize(Model $model, string $key, mixed $value, array $attributes): array
             {
                 $enumClass = $this->getClassEnum();
 
