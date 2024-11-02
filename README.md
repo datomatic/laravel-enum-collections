@@ -20,9 +20,9 @@ composer require datomatic/laravel-enum-collections
 ```
 
 The main parts of the package are: 
-- [`enumCollection`](#enumCollection)
+- [EnumCollection](#enumCollection)
 - [Eloquent model casting](#casting) 
-- [`HasEnumCollections` trait](#HasEnumCollections-trait)
+- [HasEnumCollections trait](#HasEnumCollections-trait)
 
 ## EnumCollection
 
