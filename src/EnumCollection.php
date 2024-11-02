@@ -604,6 +604,10 @@ final class EnumCollection extends Collection
      */
     public function implode($value, $glue = null)
     {
+        if ($this->useAsCallable($value)) {
+            return implode($glue ?? '', $this->map($value)->all());
+        }
+
         return $this->toCollectionValues()->implode($value, $glue);
     }
 

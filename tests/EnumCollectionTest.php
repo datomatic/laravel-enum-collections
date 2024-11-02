@@ -733,6 +733,11 @@ it('supports implode', function () {
     expect($collection3->implode(','))->toBe(
         'BLACK'.','.'WHITE'
     );
+
+    $collection = EnumCollection::from([StringBackedEnum::SMALL, StringBackedEnum::MEDIUM, StringBackedEnum::LARGE]);
+
+    expect($collection->implode(fn(StringBackedEnum $enum) => $enum->name, $sep))
+        ->toBe('SMALL'.$sep.'MEDIUM'.$sep.'LARGE');
 });
 
 it('supports combine', function () {
