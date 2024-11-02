@@ -251,11 +251,14 @@ $model->field_name->doesntContain(FieldEnum::PROTECTED); // true
 ```
 
 ## HasEnumCollections trait
-If you include also the `HasEnumCollections` into the model, you can query the models with the new where functions `whereContains`, `orWhereContains`, `whereDoesntContain` and `orWhereDoesntContain`.
+If you include also the `HasEnumCollections` into the model, you can query the models with the new where functions `whereContains`, `orWhereContains`, `whereDoesntContain`, `orWhereDoesntContain` ,`whereContainsAny`, `orWhereContainsAny`, `whereDoesntContainAny` and `orWhereDoesntContainAny`.
 
 ```php
 TestModel::whereContains('field_name', FieldEnum::PRIVATE)->get()
 TestModel::whereDoesntContain('field_name', FieldEnum::PRIVATE)->get()
+TestModel::whereContainsAny('field_name', [FieldEnum::PRIVATE, FieldEnum::PUBLIC])->get()
+TestModel::whereDoesntContainAny('field_name', [FieldEnum::PRIVATE, FieldEnum::PUBLIC])->get()
+
 
 TestModel::whereContains('field_name', 1)
     ->whereContains('field_name', FieldEnum::PUBLIC)
