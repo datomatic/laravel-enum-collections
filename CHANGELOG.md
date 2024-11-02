@@ -2,6 +2,14 @@
 
 All notable changes to `laravel-enum-collections` will be documented in this file.
 
+## v3.0.0 - 2024-11-02
+
+- `EnumCollection` now it's a one-dimensional collection that contains only enums.
+- New Unique options on model casting that prevent to have duplciates on `EnumCollection`
+- `EnumCollection` new methods: `containsAny`, `doesntContainAny`, `toValues`, `toCollectionValues`, `mapStrict`, `mapWithKeysStrict`
+- `EnumCollection` methods not supported `range`, `median`, `mode`, `crossJoin`, `flip`, `collapse`, `collapseWithKeys`, `pluck`, `mergeRecursive`, `select`, `flatten`, `replaceRecursive`, `sliding`, `dot`, `undot`, `zip`
+- `EnumCollection` methods that return a normal laravel collection: `map`, `keys`, `mapWithKeys`, `combine`, `mapToDictionary`, `groupBy`, `split`, `splitIn`, `chunk`, `chunkWhile`, `countBy`, `toBase`
+
 ## v2.0.3 - 2024-10-03
 
 - fix phpDoc
@@ -34,6 +42,7 @@ EnumCollection::tryFrom($data, Enum::class);
 
 
 
+
 ```
 - change casting definition in only onle line inside `casts` model property
 
@@ -50,6 +59,7 @@ protected function casts(): array
         'field_name' => AsLaravelEnumCollection::of(FieldEnum::class),
     ];
 }
+
 
 
 
