@@ -1358,7 +1358,6 @@ it('not supports select', function () {
     $collection = EnumCollection::from([StringBackedEnum::LARGE]);
     expect(fn() => $collection->select('name'))->toThrow(MethodNotSupported::class);
 });
-
 it('not supports flatten', function () {
     $collection = EnumCollection::from([1 => PureEnum::GREEN, 2 =>PureEnum::BLACK, 5 => PureEnum::RED]);
     expect(fn() => $collection->flatten(1))->toThrow(MethodNotSupported::class);

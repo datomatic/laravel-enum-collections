@@ -1,4 +1,7 @@
 # Upgrading
+## From v2 to v3
+- Now `EnumCollection` is an one-dimensional extension of collection that contains only enum, so you need to review your code if you use this collection in another way.
+- We checked, rewrited and tested all collection methods, but in case we have missing something please open a issue.
 
 ## From v1 to v2
 
