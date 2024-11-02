@@ -32,6 +32,8 @@ The main parts of the package are:
 - enum case value (only for `BackedEnum`)
 - enum case (string) value (only for `IntBackedEnum`)
 
+`EnumCollection` it's a one-dimensional collection that contains only enums.
+
 ### Creating an EnumCollection
 
 You can create an enum collection in four different ways:
