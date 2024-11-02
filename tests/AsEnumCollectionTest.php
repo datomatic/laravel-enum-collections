@@ -157,6 +157,17 @@ it('will can query model with enum collection', function () {
     expect(TestModel::whereDoesntContain('colors', PureEnum::RED)->count())->toEqual(2);
     expect(TestModel::whereDoesntContain('colors', 'RED')->count())->toEqual(2);
 
+
+    expect(TestModel::whereContainsAny('colors', [PureEnum::YELLOW,PureEnum::BLACK])->count())->toEqual(2);
+    expect(TestModel::whereContainsAny('colors', [PureEnum::RED,PureEnum::BLACK])->count())->toEqual(1);
+    expect(TestModel::whereContainsAny('colors', [PureEnum::RED,PureEnum::WHITE])->count())->toEqual(0);
+    expect(TestModel::whereDoesntContainAny('colors', [PureEnum::RED,PureEnum::WHITE])->count())->toEqual(2);
+    expect(TestModel::whereDoesntContainAny('colors', [PureEnum::YELLOW,PureEnum::BLACK])->count())->toEqual(0);
+    expect(TestModel::whereContainsAny('colors', [PureEnum::RED])
+        ->orWhereContainsAny('colors', [PureEnum::WHITE])->count())->toEqual(0);
+    expect(TestModel::whereContainsAny('colors', [PureEnum::RED])
+        ->orWhereContainsAny('colors', [PureEnum::RED,PureEnum::BLACK])->count())->toEqual(1);
+
     expect(TestModel::whereContains('json', PureEnum::YELLOW)->count())->toEqual(2);
     expect(TestModel::whereContains('json', PureEnum::BLACK)->count())->toEqual(1);
     expect(TestModel::whereContains('json', PureEnum::RED)->count())->toEqual(0);
@@ -167,9 +178,14 @@ it('will can query model with enum collection', function () {
     expect(TestModel::whereContains('sizes', ['S'])->count())->toEqual(2);
     expect(TestModel::whereContains('sizes', 'S')->count())->toEqual(2);
 
+    expect(TestModel::whereContainsAny('sizes', ['M','L'])->count())->toEqual(2);
+    expect(TestModel::whereContainsAny('sizes', ['XL','XXL'])->count())->toEqual(1);
+
+
     expect(TestModel::whereContains('visibilities', [IntBackedEnum::PUBLIC])->count())->toEqual(1);
     expect(TestModel::whereContains('visibilities', IntBackedEnum::PUBLIC)->count())->toEqual(1);
     expect(TestModel::whereContains('visibilities', 2)->count())->toEqual(1);
+    expect(TestModel::whereContainsAny('visibilities', [1,2,3])->count())->toEqual(2);
 
     expect(TestModel::whereContains('permissions', [LaravelEnum::PUBLIC])->count())->toEqual(1);
     expect(TestModel::whereContains('permissions', LaravelEnum::PUBLIC)->count())->toEqual(1);
