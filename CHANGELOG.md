@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-enum-collections` will be documented in this file.
 
+## v3.1.1 - 2024-11-03
+
+- laravel-enum-helper v2
+
 ## v3.1.0 - 2024-11-02
 
 - `whereContainsAny`, `orWhereContainsAny`, `whereDoesntContainAny` and `orWhereDoesntContainAny` scopes on `HasEnumCollections` trait
@@ -48,6 +52,7 @@ EnumCollection::tryFrom($data, Enum::class);
 
 
 
+
 ```
 - change casting definition in only onle line inside `casts` model property
 
@@ -64,6 +69,7 @@ protected function casts(): array
         'field_name' => AsLaravelEnumCollection::of(FieldEnum::class),
     ];
 }
+
 
 
 
