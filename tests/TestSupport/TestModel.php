@@ -11,6 +11,7 @@ use Datomatic\EnumCollections\Tests\TestSupport\Enums\LaravelEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\PureEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\StringBackedEnum;
 use Datomatic\EnumCollections\Traits\HasEnumCollections;
+use Datomatic\EnumCollections\Traits\HasUniqueEnumCollections;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -23,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
 class TestModel extends Model
 {
     use HasEnumCollections;
+    use HasUniqueEnumCollections;
 
     protected $table = 'test_models';
 

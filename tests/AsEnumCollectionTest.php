@@ -89,7 +89,7 @@ it('will return an EnumCollection setting enum collection fields with StringBack
     'missing string value array2' => [['S', 'SS'], [StringBackedEnum::SMALL]],
 ]);
 
-it('will can check if enum collection contains enum', function ($field, $from, $search, $result) {
+it('can check if enum collection contains enum', function ($field, $from, $search, $result) {
     $this->testModel->$field = $from;
     $this->testModel->save();
 
@@ -132,7 +132,7 @@ it('will can check if enum collection contains enum', function ($field, $from, $
     'string enum collection search invalid name' => ['sizes', [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'SMALL', false],
 ]);
 
-it('will can query model with enum collection', function () {
+it('can query model with enum collection', function () {
     \DB::table('test_models')->delete();
 
     $this->testModel->colors = [PureEnum::YELLOW, PureEnum::GREEN];
@@ -224,6 +224,13 @@ it('will can query model with enum collection', function () {
         TestModel::whereContains('colors', 'RED')
             ->orWhereContains('sizes', StringBackedEnum::SMALL)->count()
     )->toEqual(2);
+});
+
+it('will return unique values even while modifying the field via offsetSet', function () {
+    $this->testModel->colors = [PureEnum::YELLOW, PureEnum::YELLOW, PureEnum::YELLOW];
+    $this->testModel->colors[] = PureEnum::YELLOW;
+    $model = $this->testModel;
+    expect($model->colors->count())->toEqual(1);
 });
 
 it('will return unique values when casting as unique and storing repeated values in the model', function () {
