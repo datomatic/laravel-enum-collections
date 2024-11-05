@@ -54,37 +54,40 @@ trait HasEnumCollections
     public function scopeWhereContainsAny(Builder $query, string $key, $value): Builder
     {
         return $this->prepareEnumCollectionArrayScopeQuery($query, $key, $value,
-            fn (Builder $query, $values) => $query->where(function(Builder $query) use ($key, $values){
+            fn (Builder $query, $values) => $query->where(function (Builder $query) use ($key, $values) {
                 foreach ($values as $value) {
                     $query->whereJsonContains($key, $value, 'or');
                 }
             })
         );
     }
+
     public function scopeOrWhereContainsAny(Builder $query, string $key, $value): Builder
     {
         return $this->prepareEnumCollectionArrayScopeQuery($query, $key, $value,
-            fn (Builder $query, $values) => $query->orWhere(function(Builder $query) use ($key, $values){
+            fn (Builder $query, $values) => $query->orWhere(function (Builder $query) use ($key, $values) {
                 foreach ($values as $value) {
                     $query->whereJsonContains($key, $value, 'or');
                 }
             })
         );
     }
+
     public function scopeWhereDoesntContainAny(Builder $query, string $key, $value): Builder
     {
         return $this->prepareEnumCollectionArrayScopeQuery($query, $key, $value,
-            fn (Builder $query, $values) => $query->where(function(Builder $query) use ($key, $values){
+            fn (Builder $query, $values) => $query->where(function (Builder $query) use ($key, $values) {
                 foreach ($values as $value) {
                     $query->whereJsonDoesntContain($key, $value);
                 }
             })
         );
     }
+
     public function scopeOrWhereDoesntContainAny(Builder $query, string $key, $value): Builder
     {
         return $this->prepareEnumCollectionArrayScopeQuery($query, $key, $value,
-            fn (Builder $query, $values) => $query->orWhere(function(Builder $query) use ($key, $values){
+            fn (Builder $query, $values) => $query->orWhere(function (Builder $query) use ($key, $values) {
                 foreach ($values as $value) {
                     $query->whereJsonDoesntContain($key, $value);
                 }

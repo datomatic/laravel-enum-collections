@@ -36,11 +36,11 @@ test('enumCollection can accept only one level array', function ($from, string $
 ]);
 
 it('return an exception if a wrong enum class passed', function () {
-    expect(fn() => EnumCollection::of('WrongClass'))->toThrow(WrongEnumClass::class);
-    expect(fn() => EnumCollection::of(TestModel::class))->toThrow(WrongEnumClass::class);
-    expect(fn() => new EnumCollection([], 'WrongClass'))->toThrow(WrongEnumClass::class);
-    expect(fn() => new EnumCollection([], TestModel::class))->toThrow(WrongEnumClass::class);
-    expect(fn() => new EnumCollection([], TestModel::class))->toThrow(WrongEnumClass::class);
+    expect(fn () => EnumCollection::of('WrongClass'))->toThrow(WrongEnumClass::class);
+    expect(fn () => EnumCollection::of(TestModel::class))->toThrow(WrongEnumClass::class);
+    expect(fn () => new EnumCollection([], 'WrongClass'))->toThrow(WrongEnumClass::class);
+    expect(fn () => new EnumCollection([], TestModel::class))->toThrow(WrongEnumClass::class);
+    expect(fn () => new EnumCollection([], TestModel::class))->toThrow(WrongEnumClass::class);
 });
 
 test('enumCollection can accept an array of enums', function ($from, array $results) {
@@ -59,24 +59,24 @@ test('enumCollection can accept an array of enums', function ($from, array $resu
     'enum array' => [[PureEnum::BLACK, PureEnum::GREEN], [PureEnum::BLACK, PureEnum::GREEN]],
     'string enum array' => [
         [StringBackedEnum::SMALL, StringBackedEnum::MEDIUM, StringBackedEnum::MEDIUM],
-        [StringBackedEnum::SMALL, StringBackedEnum::MEDIUM, StringBackedEnum::MEDIUM]
+        [StringBackedEnum::SMALL, StringBackedEnum::MEDIUM, StringBackedEnum::MEDIUM],
     ],
     'int enum array' => [
-        [IntBackedEnum::PRIVATE, IntBackedEnum::PUBLIC], [IntBackedEnum::PRIVATE, IntBackedEnum::PUBLIC]
+        [IntBackedEnum::PRIVATE, IntBackedEnum::PUBLIC], [IntBackedEnum::PRIVATE, IntBackedEnum::PUBLIC],
     ],
 ]);
 
 test('enumCollection throws an exception if an enum class is not set and an array of values/names is passed',
     function ($from) {
-        expect(fn() => EnumCollection::from($from))->toThrow(MissingEnumClass::class);
-        expect(fn() => EnumCollection::tryFrom($from))->toThrow(MissingEnumClass::class);
-        expect(fn() => new EnumCollection($from))->toThrow(MissingEnumClass::class);
+        expect(fn () => EnumCollection::from($from))->toThrow(MissingEnumClass::class);
+        expect(fn () => EnumCollection::tryFrom($from))->toThrow(MissingEnumClass::class);
+        expect(fn () => new EnumCollection($from))->toThrow(MissingEnumClass::class);
     })->with([
-    //    'enum single' => ['BLACK'],
-    //    'enum array' => [['BLACK', 'GREEN']],
-    'string enum array' => [['S', 'M', 'L']],
-    //    'int enum array' => [[1, 2, 3]],
-]);
+        //    'enum single' => ['BLACK'],
+        //    'enum array' => [['BLACK', 'GREEN']],
+        'string enum array' => [['S', 'M', 'L']],
+        //    'int enum array' => [[1, 2, 3]],
+    ]);
 
 test('enumCollection can accept an array of enums values and names',
     function ($from, string $enumClass, array $results) {
@@ -93,24 +93,24 @@ test('enumCollection can accept an array of enums values and names',
         expect($enumCollection3)->toBeInstanceOf(EnumCollection::class);
         expect($enumCollection3->all())->toEqual($results);
     })->with([
-    'enum single' => ['BLACK', PureEnum::class, [PureEnum::BLACK]],
-    'enum array' => [['BLACK', 'GREEN'], PureEnum::class, [PureEnum::BLACK, PureEnum::GREEN]],
-    'string enum array' => [
-        ['S', 'M', 'M'], StringBackedEnum::class,
-        [StringBackedEnum::SMALL, StringBackedEnum::MEDIUM, StringBackedEnum::MEDIUM]
-    ],
-    'string enum array2' => [
-        ['SMALL', 'MEDIUM', 'MEDIUM'], StringBackedEnum::class,
-        [StringBackedEnum::SMALL, StringBackedEnum::MEDIUM, StringBackedEnum::MEDIUM]
-    ],
-    'int enum array' => [[1, 2], IntBackedEnum::class, [IntBackedEnum::PRIVATE, IntBackedEnum::PUBLIC]],
-    'int enum array2' => [['1', '2'], IntBackedEnum::class, [IntBackedEnum::PRIVATE, IntBackedEnum::PUBLIC]],
-    'int enum array3' => [['PRIVATE', 'PUBLIC'], IntBackedEnum::class, [IntBackedEnum::PRIVATE, IntBackedEnum::PUBLIC]],
-]);
+        'enum single' => ['BLACK', PureEnum::class, [PureEnum::BLACK]],
+        'enum array' => [['BLACK', 'GREEN'], PureEnum::class, [PureEnum::BLACK, PureEnum::GREEN]],
+        'string enum array' => [
+            ['S', 'M', 'M'], StringBackedEnum::class,
+            [StringBackedEnum::SMALL, StringBackedEnum::MEDIUM, StringBackedEnum::MEDIUM],
+        ],
+        'string enum array2' => [
+            ['SMALL', 'MEDIUM', 'MEDIUM'], StringBackedEnum::class,
+            [StringBackedEnum::SMALL, StringBackedEnum::MEDIUM, StringBackedEnum::MEDIUM],
+        ],
+        'int enum array' => [[1, 2], IntBackedEnum::class, [IntBackedEnum::PRIVATE, IntBackedEnum::PUBLIC]],
+        'int enum array2' => [['1', '2'], IntBackedEnum::class, [IntBackedEnum::PRIVATE, IntBackedEnum::PUBLIC]],
+        'int enum array3' => [['PRIVATE', 'PUBLIC'], IntBackedEnum::class, [IntBackedEnum::PRIVATE, IntBackedEnum::PUBLIC]],
+    ]);
 
 test('enumCollection throws an exception if wrong className passed with from', function ($from, string $enumClass) {
-    expect(fn() => EnumCollection::of($enumClass)->from($from))->toThrow(ValueError::class);
-    expect(fn() => new EnumCollection($from, $enumClass))->toThrow(ValueError::class);
+    expect(fn () => EnumCollection::of($enumClass)->from($from))->toThrow(ValueError::class);
+    expect(fn () => new EnumCollection($from, $enumClass))->toThrow(ValueError::class);
 })->with([
     'enum single' => ['BLACK', StringBackedEnum::class],
     'enum array' => [['BLACK', 'GREEN'], IntBackedEnum::class],
@@ -120,17 +120,17 @@ test('enumCollection throws an exception if wrong className passed with from', f
 
 test('enumCollection doesnt throws an exception if wrong className passed with tryFrom',
     function ($from, string $enumClass) {
-        expect(fn() => EnumCollection::of($enumClass)->tryFrom($from))->not->toThrow(ValueError::class);
+        expect(fn () => EnumCollection::of($enumClass)->tryFrom($from))->not->toThrow(ValueError::class);
     })->with([
-    'enum single' => ['BLACK', StringBackedEnum::class],
-    'enum array' => [['BLACK', 'GREEN'], IntBackedEnum::class],
-    'string enum array' => [['S', 'M', 'M'], PureEnum::class],
-    'int enum array' => [[1, 2], PureEnum::class],
-]);
+        'enum single' => ['BLACK', StringBackedEnum::class],
+        'enum array' => [['BLACK', 'GREEN'], IntBackedEnum::class],
+        'string enum array' => [['S', 'M', 'M'], PureEnum::class],
+        'int enum array' => [[1, 2], PureEnum::class],
+    ]);
 
 test('enumCollection throws an exception if wrong value/name passed with from', function ($from, string $enumClass) {
-    expect(fn() => EnumCollection::of($enumClass)->from($from))->toThrow(ValueError::class);
-    expect(fn() => new EnumCollection($from, $enumClass))->toThrow(ValueError::class);
+    expect(fn () => EnumCollection::of($enumClass)->from($from))->toThrow(ValueError::class);
+    expect(fn () => new EnumCollection($from, $enumClass))->toThrow(ValueError::class);
 })->with([
     'enum single' => ['SS', StringBackedEnum::class],
     'enum array' => [['EFF', '3493400'], IntBackedEnum::class],
@@ -139,7 +139,7 @@ test('enumCollection throws an exception if wrong value/name passed with from', 
 ]);
 
 test('enumCollection throws an exception if wrong value/name passed with tryFrom', function ($from, string $enumClass) {
-    expect(fn() => EnumCollection::of($enumClass)->tryFrom($from))->not->toThrow(ValueError::class);
+    expect(fn () => EnumCollection::of($enumClass)->tryFrom($from))->not->toThrow(ValueError::class);
 })->with([
     'enum single' => ['SS', StringBackedEnum::class],
     'enum array' => [['EFF', '3493400'], IntBackedEnum::class],
@@ -157,7 +157,7 @@ it('can enumCollection get enumClass', function (?string $enumClass) {
 ]);
 
 it('throws MissingEnumClass if pass null to of function', function () {
-    expect(fn() => EnumCollection::of(null))->toThrow(MissingEnumClass::class);
+    expect(fn () => EnumCollection::of(null))->toThrow(MissingEnumClass::class);
 });
 
 test('enumCollection toValues method', function ($from, ?string $enumClass, array $results) {
@@ -177,7 +177,7 @@ test('enumCollection toValues method', function ($from, ?string $enumClass, arra
     'string enum array' => [['S', 'M', 'M'], StringBackedEnum::class, ['S', 'M', 'M']],
     'string enum array2' => [['SMALL', 'MEDIUM', 'MEDIUM'], StringBackedEnum::class, ['S', 'M', 'M']],
     'string enum array3' => [
-        [StringBackedEnum::SMALL, StringBackedEnum::MEDIUM, StringBackedEnum::MEDIUM], null, ['S', 'M', 'M']
+        [StringBackedEnum::SMALL, StringBackedEnum::MEDIUM, StringBackedEnum::MEDIUM], null, ['S', 'M', 'M'],
     ],
     'int enum array' => [[1, 2], IntBackedEnum::class, [1, 2]],
     'int enum array2' => [['1', '2'], IntBackedEnum::class, [1, 2]],
@@ -191,13 +191,13 @@ it('will can check if EnumCollection contains enum', function ($from, $search, $
     $enumCollection3 = new EnumCollection($from);
 
     expect($enumCollection->contains($search))->toEqual($result);
-    expect($enumCollection->doesntContain($search))->toEqual(!$result);
+    expect($enumCollection->doesntContain($search))->toEqual(! $result);
 
     expect($enumCollection2->contains($search))->toEqual($result);
-    expect($enumCollection2->doesntContain($search))->toEqual(!$result);
+    expect($enumCollection2->doesntContain($search))->toEqual(! $result);
 
     expect($enumCollection3->contains($search))->toEqual($result);
-    expect($enumCollection3->doesntContain($search))->toEqual(!$result);
+    expect($enumCollection3->doesntContain($search))->toEqual(! $result);
 })->with([
     'pure enum collection search value' => [[PureEnum::GREEN, PureEnum::BLACK], 'GREEN', true],
     'pure enum collection search invalid value' => [[PureEnum::GREEN, PureEnum::BLACK], 'PURPLE', false],
@@ -212,32 +212,32 @@ it('will can check if EnumCollection contains enum', function ($from, $search, $
     'int enum collection search invalid value' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], 'A', false],
     'int enum collection search invalid value2' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], 4, false],
     'int enum collection search enum' => [
-        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], IntBackedEnum::PROTECTED, true
+        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], IntBackedEnum::PROTECTED, true,
     ],
     'int enum collection search invalid enum' => [
-        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], IntBackedEnum::PUBLIC, false
+        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], IntBackedEnum::PUBLIC, false,
     ],
     'int enum collection search name' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], 'PROTECTED', true],
     'int enum collection search invalid name' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], 'PUBLIC', false],
 
     'string enum collection search value' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'L', true],
     'string enum collection search invalid value' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'LD', false
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'LD', false,
     ],
     'string enum collection search invalid value int' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 4, false
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 4, false,
     ],
     'string enum collection search enum' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], StringBackedEnum::EXTRA_LARGE, true
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], StringBackedEnum::EXTRA_LARGE, true,
     ],
     'string enum collection search invalid enum' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], StringBackedEnum::SMALL, false
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], StringBackedEnum::SMALL, false,
     ],
     'string enum collection search name' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'EXTRA_LARGE', true
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'EXTRA_LARGE', true,
     ],
     'string enum collection search invalid name' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'SMALL', false
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'SMALL', false,
     ],
 ]);
 
@@ -248,18 +248,18 @@ it('supports contains', function () {
 
     expect($collection->contains('GREEN'))->toBeTrue();
     expect($collection->contains('PURPLE'))->toBeFalse();
-    expect($collection->contains(fn($enum) => $enum === PureEnum::GREEN))->toBeTrue();
-    expect($collection->contains(fn($enum) => $enum->name === 'PURPLE'))->toBeFalse();
+    expect($collection->contains(fn ($enum) => $enum === PureEnum::GREEN))->toBeTrue();
+    expect($collection->contains(fn ($enum) => $enum->name === 'PURPLE'))->toBeFalse();
 
     expect($collection2->contains('GREEN'))->toBeTrue();
     expect($collection2->contains('PURPLE'))->toBeFalse();
-    expect($collection2->contains(fn($enum) => $enum === PureEnum::GREEN))->toBeTrue();
-    expect($collection2->contains(fn($enum) => $enum->name === 'PURPLE'))->toBeFalse();
+    expect($collection2->contains(fn ($enum) => $enum === PureEnum::GREEN))->toBeTrue();
+    expect($collection2->contains(fn ($enum) => $enum->name === 'PURPLE'))->toBeFalse();
 
     expect($collection3->contains('GREEN'))->toBeTrue();
     expect($collection3->contains('PURPLE'))->toBeFalse();
-    expect($collection3->contains(fn($enum) => $enum === PureEnum::GREEN))->toBeTrue();
-    expect($collection3->contains(fn($enum) => $enum->name === 'PURPLE'))->toBeFalse();
+    expect($collection3->contains(fn ($enum) => $enum === PureEnum::GREEN))->toBeTrue();
+    expect($collection3->contains(fn ($enum) => $enum->name === 'PURPLE'))->toBeFalse();
 });
 
 it('will can check if EnumCollection containsAny enum', function ($from, $search, $result) {
@@ -268,13 +268,13 @@ it('will can check if EnumCollection containsAny enum', function ($from, $search
     $enumCollection3 = new EnumCollection($from);
 
     expect($enumCollection->containsAny($search))->toEqual($result);
-    expect($enumCollection->doesntContainAny($search))->toEqual(!$result);
+    expect($enumCollection->doesntContainAny($search))->toEqual(! $result);
 
     expect($enumCollection2->containsAny($search))->toEqual($result);
-    expect($enumCollection2->doesntContainAny($search))->toEqual(!$result);
+    expect($enumCollection2->doesntContainAny($search))->toEqual(! $result);
 
     expect($enumCollection3->containsAny($search))->toEqual($result);
-    expect($enumCollection3->doesntContainAny($search))->toEqual(!$result);
+    expect($enumCollection3->doesntContainAny($search))->toEqual(! $result);
 })->with([
     'pure enum collection search value' => [[PureEnum::GREEN, PureEnum::BLACK], 'GREEN', true],
     'pure enum collection search value2' => [[PureEnum::GREEN, PureEnum::BLACK], ['GREEN'], true],
@@ -288,12 +288,12 @@ it('will can check if EnumCollection containsAny enum', function ($from, $search
     'pure enum collection search enum' => [[PureEnum::GREEN, PureEnum::BLACK], PureEnum::BLACK, true],
     'pure enum collection search enum2' => [[PureEnum::GREEN, PureEnum::BLACK], [PureEnum::BLACK], true],
     'pure enum collection search enum3' => [
-        [PureEnum::GREEN, PureEnum::BLACK], [PureEnum::BLACK, PureEnum::BLUE], true
+        [PureEnum::GREEN, PureEnum::BLACK], [PureEnum::BLACK, PureEnum::BLUE], true,
     ],
     'pure enum collection search invalid enum' => [[PureEnum::GREEN, PureEnum::BLACK], PureEnum::YELLOW, false],
     'pure enum collection search invalid enum2' => [[PureEnum::GREEN, PureEnum::BLACK], [PureEnum::YELLOW], false],
     'pure enum collection search invalid enum3' => [
-        [PureEnum::GREEN, PureEnum::BLACK], [PureEnum::YELLOW, PureEnum::BLUE], false
+        [PureEnum::GREEN, PureEnum::BLACK], [PureEnum::YELLOW, PureEnum::BLUE], false,
     ],
     'pure enum collection search name' => [[PureEnum::GREEN, PureEnum::BLACK], 'BLACK', true],
     'pure enum collection search name2' => [[PureEnum::GREEN, PureEnum::BLACK], ['BLACK'], true],
@@ -309,17 +309,17 @@ it('will can check if EnumCollection containsAny enum', function ($from, $search
     'int enum collection search value string' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], '3', true],
     'int enum collection search value string2' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['3'], true],
     'int enum collection search value string3' => [
-        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['3', '4'], true
+        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['3', '4'], true,
     ],
 
     'int enum collection search invalid string value' => [
-        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], 'A', false
+        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], 'A', false,
     ],
     'int enum collection search invalid string value2' => [
-        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['A'], false
+        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['A'], false,
     ],
     'int enum collection search invalid string value3' => [
-        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['A', 'B'], false
+        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['A', 'B'], false,
     ],
 
     'int enum collection search invalid value2' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], 4, false],
@@ -327,113 +327,112 @@ it('will can check if EnumCollection containsAny enum', function ($from, $search
     'int enum collection search invalid value23' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], [4, 5], false],
 
     'int enum collection search enum' => [
-        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], IntBackedEnum::PROTECTED, true
+        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], IntBackedEnum::PROTECTED, true,
     ],
     'int enum collection search enum2' => [
-        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], [IntBackedEnum::PROTECTED], true
+        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], [IntBackedEnum::PROTECTED], true,
     ],
     'int enum collection search enum3' => [
-        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], [IntBackedEnum::PROTECTED, IntBackedEnum::PUBLIC], true
+        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], [IntBackedEnum::PROTECTED, IntBackedEnum::PUBLIC], true,
     ],
 
     'int enum collection search invalid enum' => [
-        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], IntBackedEnum::PUBLIC, false
+        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], IntBackedEnum::PUBLIC, false,
     ],
     'int enum collection search invalid enum2' => [
-        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], [IntBackedEnum::PUBLIC], false
+        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], [IntBackedEnum::PUBLIC], false,
     ],
     'int enum collection search invalid enum3' => [
-        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], [IntBackedEnum::PUBLIC, IntBackedEnum::PUBLIC], false
+        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], [IntBackedEnum::PUBLIC, IntBackedEnum::PUBLIC], false,
     ],
 
     'int enum collection search name' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], 'PROTECTED', true],
     'int enum collection search name2' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['PROTECTED'], true],
     'int enum collection search name3' => [
-        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['PROTECTED', 'PRIVATE'], true
+        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['PROTECTED', 'PRIVATE'], true,
     ],
 
     'int enum collection search invalid name' => [[IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], 'PUBLIC', false],
     'int enum collection search invalid name2' => [
-        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['PUBLIC'], false
+        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['PUBLIC'], false,
     ],
     'int enum collection search invalid name3' => [
-        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['PUBLIC', 'SEMI'], false
+        [IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED], ['PUBLIC', 'SEMI'], false,
     ],
 
     'string enum collection search value' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'L', true],
     'string enum collection search value2' => [[StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['L'], true],
     'string enum collection search value3' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['L', 'M'], true
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['L', 'M'], true,
     ],
 
     'string enum collection search invalid value' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'LD', false
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'LD', false,
     ],
     'string enum collection search invalid value2' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['LD'], false
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['LD'], false,
     ],
     'string enum collection search invalid value3' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['LD', 'MD'], false
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['LD', 'MD'], false,
     ],
 
     'string enum collection search invalid value int' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 4, false
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 4, false,
     ],
     'string enum collection search invalid value int2' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], [4], false
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], [4], false,
     ],
     'string enum collection search invalid value int3' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], [4, 5], false
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], [4, 5], false,
     ],
 
     'string enum collection search enum' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], StringBackedEnum::EXTRA_LARGE, true
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], StringBackedEnum::EXTRA_LARGE, true,
     ],
     'string enum collection search enum2' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], [StringBackedEnum::EXTRA_LARGE], true
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], [StringBackedEnum::EXTRA_LARGE], true,
     ],
     'string enum collection search enum3' => [
         [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE],
-        [StringBackedEnum::EXTRA_LARGE, StringBackedEnum::LARGE], true
+        [StringBackedEnum::EXTRA_LARGE, StringBackedEnum::LARGE], true,
     ],
 
     'string enum collection search invalid enum' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], StringBackedEnum::SMALL, false
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], StringBackedEnum::SMALL, false,
     ],
     'string enum collection search invalid enum2' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], [StringBackedEnum::SMALL], false
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], [StringBackedEnum::SMALL], false,
     ],
     'string enum collection search invalid enum3' => [
         [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], [StringBackedEnum::SMALL, StringBackedEnum::MEDIUM],
-        false
+        false,
     ],
 
     'string enum collection search name' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'EXTRA_LARGE', true
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'EXTRA_LARGE', true,
     ],
     'string enum collection search name2' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['EXTRA_LARGE'], true
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['EXTRA_LARGE'], true,
     ],
     'string enum collection search name3' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['EXTRA_LARGE', 'LARGE'], true
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['EXTRA_LARGE', 'LARGE'], true,
     ],
 
     'string enum collection search invalid name' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'SMALL', false
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], 'SMALL', false,
     ],
     'string enum collection search invalid name2' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['SMALL'], false
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['SMALL'], false,
     ],
     'string enum collection search invalid name3' => [
-        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['SMALL', 'MEDIUM'], false
+        [StringBackedEnum::LARGE, StringBackedEnum::EXTRA_LARGE], ['SMALL', 'MEDIUM'], false,
     ],
 ]);
-
 
 it('supports containsStrict', function () {
     $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK]);
     expect($collection->containsStrict(PureEnum::GREEN))->toBeTrue();
-    expect(fn()=> $collection->containsStrict('GREEN'))->toThrow(ValueError::class);
+    expect(fn () => $collection->containsStrict('GREEN'))->toThrow(ValueError::class);
 });
 
 it('supports all', function () {
@@ -447,16 +446,16 @@ it('supports first', function () {
     $collection3 = new EnumCollection([PureEnum::GREEN, PureEnum::BLACK]);
 
     expect($collection->first())->toBe(PureEnum::GREEN);
-    expect($collection->first(fn($enum) => $enum->name === 'PURPLE'))->toBeNull();
-    expect($collection->first(fn($enum) => $enum->name === 'BLACK'))->toBe(PureEnum::BLACK);
+    expect($collection->first(fn ($enum) => $enum->name === 'PURPLE'))->toBeNull();
+    expect($collection->first(fn ($enum) => $enum->name === 'BLACK'))->toBe(PureEnum::BLACK);
 
     expect($collection2->first())->toBe(PureEnum::GREEN);
-    expect($collection2->first(fn($enum) => $enum->name === 'PURPLE'))->toBeNull();
-    expect($collection2->first(fn($enum) => $enum->name === 'BLACK'))->toBe(PureEnum::BLACK);
+    expect($collection2->first(fn ($enum) => $enum->name === 'PURPLE'))->toBeNull();
+    expect($collection2->first(fn ($enum) => $enum->name === 'BLACK'))->toBe(PureEnum::BLACK);
 
     expect($collection3->first())->toBe(PureEnum::GREEN);
-    expect($collection3->first(fn($enum) => $enum->name === 'PURPLE'))->toBeNull();
-    expect($collection3->first(fn($enum) => $enum->name === 'BLACK'))->toBe(PureEnum::BLACK);
+    expect($collection3->first(fn ($enum) => $enum->name === 'PURPLE'))->toBeNull();
+    expect($collection3->first(fn ($enum) => $enum->name === 'BLACK'))->toBe(PureEnum::BLACK);
 });
 
 it('supports map', function () {
@@ -464,10 +463,10 @@ it('supports map', function () {
     $collection2 = EnumCollection::tryFrom([PureEnum::GREEN, PureEnum::BLACK]);
     $collection3 = new EnumCollection([PureEnum::GREEN, PureEnum::BLACK]);
 
-    expect($collection->map(fn($enum) => $enum->name)->all())->toBe(['GREEN', 'BLACK']);
-    expect($collection2->map(fn($enum) => $enum->name)->all())->toBe(['GREEN', 'BLACK']);
-    expect($collection3->map(fn($enum) => $enum->name)->all())->toBe(['GREEN', 'BLACK']);
-    expect($collection3->map(fn($enum) => $enum->name))->toBeInstanceOf(Collection::class);
+    expect($collection->map(fn ($enum) => $enum->name)->all())->toBe(['GREEN', 'BLACK']);
+    expect($collection2->map(fn ($enum) => $enum->name)->all())->toBe(['GREEN', 'BLACK']);
+    expect($collection3->map(fn ($enum) => $enum->name)->all())->toBe(['GREEN', 'BLACK']);
+    expect($collection3->map(fn ($enum) => $enum->name))->toBeInstanceOf(Collection::class);
 });
 
 it('supports mapStrict', function () {
@@ -475,15 +474,15 @@ it('supports mapStrict', function () {
     $collection2 = EnumCollection::tryFrom([PureEnum::GREEN, PureEnum::BLACK]);
     $collection3 = new EnumCollection([PureEnum::GREEN, PureEnum::BLACK]);
 
-    expect($collection->mapStrict(fn($enum) => $enum->name)->all())->toBe([PureEnum::GREEN, PureEnum::BLACK]);
-    expect($collection->mapStrict(fn($enum) => $enum->next())->all())->toBe([PureEnum::BLUE, PureEnum::RED]);
+    expect($collection->mapStrict(fn ($enum) => $enum->name)->all())->toBe([PureEnum::GREEN, PureEnum::BLACK]);
+    expect($collection->mapStrict(fn ($enum) => $enum->next())->all())->toBe([PureEnum::BLUE, PureEnum::RED]);
 
-    expect($collection2->mapStrict(fn($enum) => $enum->name)->all())->toBe([PureEnum::GREEN, PureEnum::BLACK]);
-    expect($collection2->mapStrict(fn($enum) => $enum->next())->all())->toBe([PureEnum::BLUE, PureEnum::RED]);
+    expect($collection2->mapStrict(fn ($enum) => $enum->name)->all())->toBe([PureEnum::GREEN, PureEnum::BLACK]);
+    expect($collection2->mapStrict(fn ($enum) => $enum->next())->all())->toBe([PureEnum::BLUE, PureEnum::RED]);
 
-    expect($collection3->mapStrict(fn($enum) => $enum->name)->all())->toBe([PureEnum::GREEN, PureEnum::BLACK]);
-    expect($collection3->mapStrict(fn($enum) => $enum->next())->all())->toBe([PureEnum::BLUE, PureEnum::RED]);
-    expect($collection3->mapStrict(fn($enum) => $enum->next()))->toBeInstanceOf(EnumCollection::class);
+    expect($collection3->mapStrict(fn ($enum) => $enum->name)->all())->toBe([PureEnum::GREEN, PureEnum::BLACK]);
+    expect($collection3->mapStrict(fn ($enum) => $enum->next())->all())->toBe([PureEnum::BLUE, PureEnum::RED]);
+    expect($collection3->mapStrict(fn ($enum) => $enum->next()))->toBeInstanceOf(EnumCollection::class);
 });
 
 it('supports map get', function () {
@@ -523,20 +522,20 @@ it('supports diffUsing', function () {
     $collection2 = EnumCollection::tryFrom([PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED]);
     $collection3 = new EnumCollection([PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED]);
 
-    $fun = fn($item1, $item2) => $item1->name === $item2->name ? 0 : -1;
+    $fun = fn ($item1, $item2) => $item1->name === $item2->name ? 0 : -1;
 
     expect($collection->diffUsing([PureEnum::BLACK], $fun)->values()->all())->toBe([
-        PureEnum::GREEN, PureEnum::RED
+        PureEnum::GREEN, PureEnum::RED,
     ]);
     expect($collection->diffUsing([PureEnum::BLACK, PureEnum::RED], $fun)->toValues())->toBe(['GREEN']);
 
     expect($collection2->diffUsing([PureEnum::BLACK], $fun)->values()->all())->toBe([
-        PureEnum::GREEN, PureEnum::RED
+        PureEnum::GREEN, PureEnum::RED,
     ]);
     expect($collection2->diffUsing([PureEnum::BLACK, PureEnum::RED], $fun)->toValues())->toBe(['GREEN']);
 
     expect($collection3->diffUsing([PureEnum::BLACK], $fun)->values()->all())->toBe([
-        PureEnum::GREEN, PureEnum::RED
+        PureEnum::GREEN, PureEnum::RED,
     ]);
     expect($collection3->diffUsing([PureEnum::BLACK, PureEnum::RED], $fun)->toValues())->toBe(['GREEN']);
     expect($collection3->diffUsing([PureEnum::BLACK, PureEnum::RED], $fun))->toBeInstanceOf(EnumCollection::class);
@@ -552,9 +551,9 @@ it('supports diffAssoc', function () {
 it('supports diffAssocUsing', function () {
     $collection = EnumCollection::from([2 => PureEnum::GREEN, 3 => PureEnum::BLACK, 4 => PureEnum::RED]);
 
-    $fun = fn($item1, $item2) => $item1 <=> $item2;
+    $fun = fn ($item1, $item2) => $item1 <=> $item2;
     expect($collection->diffAssocUsing([3 => PureEnum::BLACK], $fun)->all())->toBe([
-        2 => PureEnum::GREEN, 4 => PureEnum::RED
+        2 => PureEnum::GREEN, 4 => PureEnum::RED,
     ]);
 });
 
@@ -568,15 +567,15 @@ it('supports diffKeys', function () {
 it('supports diffKeysUsing', function () {
     $collection = EnumCollection::from([2 => PureEnum::GREEN, 3 => PureEnum::BLACK, 4 => PureEnum::RED]);
 
-    $fun = fn($item1, $item2) => $item1 <=> $item2;
+    $fun = fn ($item1, $item2) => $item1 <=> $item2;
     expect($collection->diffKeysUsing([3 => PureEnum::BLACK], $fun)->all())->toBe([
-        2 => PureEnum::GREEN, 4 => PureEnum::RED
+        2 => PureEnum::GREEN, 4 => PureEnum::RED,
     ]);
 });
 
 it('supports duplicates', function () {
     $collection = EnumCollection::from([
-        1 => PureEnum::GREEN, 2 => PureEnum::GREEN, 3 => PureEnum::BLACK, 4 => PureEnum::RED, 5 => PureEnum::RED
+        1 => PureEnum::GREEN, 2 => PureEnum::GREEN, 3 => PureEnum::BLACK, 4 => PureEnum::RED, 5 => PureEnum::RED,
     ]);
 
     expect($collection->duplicates()->all())->toBe([2 => PureEnum::GREEN, 5 => PureEnum::RED]);
@@ -584,7 +583,7 @@ it('supports duplicates', function () {
 });
 it('supports duplicatesStrict', function () {
     $collection = EnumCollection::from([
-        1 => PureEnum::GREEN, 2 => PureEnum::GREEN, 3 => PureEnum::BLACK, 4 => PureEnum::RED, 5 => PureEnum::RED
+        1 => PureEnum::GREEN, 2 => PureEnum::GREEN, 3 => PureEnum::BLACK, 4 => PureEnum::RED, 5 => PureEnum::RED,
     ]);
 
     expect($collection->duplicatesStrict()->all())->toBe([2 => PureEnum::GREEN, 5 => PureEnum::RED]);
@@ -593,21 +592,21 @@ it('supports duplicatesStrict', function () {
 
 it('supports except', function () {
     $collection = EnumCollection::from([
-        1 => PureEnum::GREEN, 2 => PureEnum::GREEN, 3 => PureEnum::BLACK, 4 => PureEnum::RED, 5 => PureEnum::RED
+        1 => PureEnum::GREEN, 2 => PureEnum::GREEN, 3 => PureEnum::BLACK, 4 => PureEnum::RED, 5 => PureEnum::RED,
     ]);
 
     expect($collection->except([3, 4])->all())->toBe([
-        1 => PureEnum::GREEN, 2 => PureEnum::GREEN, 5 => PureEnum::RED
+        1 => PureEnum::GREEN, 2 => PureEnum::GREEN, 5 => PureEnum::RED,
     ]);
     expect($collection->except([3, 4]))->toBeInstanceOf(EnumCollection::class);
 });
 
 it('supports filter', function () {
     $collection = EnumCollection::from([
-        1 => PureEnum::GREEN, 2 => PureEnum::GREEN, 3 => PureEnum::BLACK, 4 => PureEnum::RED, 5 => PureEnum::RED
+        1 => PureEnum::GREEN, 2 => PureEnum::GREEN, 3 => PureEnum::BLACK, 4 => PureEnum::RED, 5 => PureEnum::RED,
     ]);
 
-    $fun = fn($enum) => strlen($enum->name) < 4;
+    $fun = fn ($enum) => strlen($enum->name) < 4;
     expect($collection->filter($fun)->all())->toBe([4 => PureEnum::RED, 5 => PureEnum::RED]);
     expect($collection->filter($fun))->toBeInstanceOf(EnumCollection::class);
 });
@@ -620,7 +619,7 @@ it('supports intersect', function () {
 });
 
 it('supports intersectUsing', function () {
-    $callback = fn($v1, $v2) => $v1->value <=> $v2->value;
+    $callback = fn ($v1, $v2) => $v1->value <=> $v2->value;
     $collection = EnumCollection::from([IntBackedEnum::PROTECTED, IntBackedEnum::PRIVATE, IntBackedEnum::PROTECTED]);
     $collection2 = [1, 3, 3, 2, 1];
 
@@ -638,11 +637,11 @@ it('supports intersectAssoc', function () {
 
 it('supports intersectByKeys', function () {
     $collection = EnumCollection::from([
-        'a' => StringBackedEnum::SMALL, 'b' => StringBackedEnum::MEDIUM, 'c' => StringBackedEnum::LARGE
+        'a' => StringBackedEnum::SMALL, 'b' => StringBackedEnum::MEDIUM, 'c' => StringBackedEnum::LARGE,
     ]);
     $collection2 = ['b' => StringBackedEnum::LARGE, 'c' => StringBackedEnum::MEDIUM, 'f' => StringBackedEnum::SMALL];
     expect($collection->intersectByKeys($collection2)->all())->toBe([
-        'b' => StringBackedEnum::MEDIUM, 'c' => StringBackedEnum::LARGE
+        'b' => StringBackedEnum::MEDIUM, 'c' => StringBackedEnum::LARGE,
     ]);
     expect($collection->intersectByKeys($collection2))->toBeInstanceOf(EnumCollection::class);
 });
@@ -676,7 +675,7 @@ it('supports join', function () {
 
 it('supports keys', function () {
     $collection = EnumCollection::from([
-        'a' => StringBackedEnum::SMALL, 'b' => StringBackedEnum::MEDIUM, 'c' => StringBackedEnum::LARGE
+        'a' => StringBackedEnum::SMALL, 'b' => StringBackedEnum::MEDIUM, 'c' => StringBackedEnum::LARGE,
     ]);
     expect($collection->keys()->all())->toBe(['a', 'b', 'c']);
 
@@ -686,29 +685,29 @@ it('supports keys', function () {
 
 it('supports last', function () {
     $collection = EnumCollection::from([
-        'a' => StringBackedEnum::SMALL, 'b' => StringBackedEnum::MEDIUM, 'c' => StringBackedEnum::LARGE
+        'a' => StringBackedEnum::SMALL, 'b' => StringBackedEnum::MEDIUM, 'c' => StringBackedEnum::LARGE,
     ]);
     expect($collection->last())->toBe(StringBackedEnum::LARGE);
 });
 
 it('supports mapWithKeys', function () {
     $collection = EnumCollection::from([StringBackedEnum::SMALL, StringBackedEnum::MEDIUM, StringBackedEnum::LARGE]);
-    expect($collection->mapWithKeys(fn($enum) => [$enum->name => $enum->value])->all())->toBe([
+    expect($collection->mapWithKeys(fn ($enum) => [$enum->name => $enum->value])->all())->toBe([
         'SMALL' => StringBackedEnum::SMALL->value,
         'MEDIUM' => StringBackedEnum::MEDIUM->value,
-        'LARGE' => StringBackedEnum::LARGE->value
+        'LARGE' => StringBackedEnum::LARGE->value,
     ]);
-    expect($collection->mapWithKeys(fn($enum) => [$enum->name => $enum->value]))->toBeInstanceOf(Collection::class);
+    expect($collection->mapWithKeys(fn ($enum) => [$enum->name => $enum->value]))->toBeInstanceOf(Collection::class);
 });
 
 it('supports mapWithKeysStrinct', function () {
     $collection = EnumCollection::from([StringBackedEnum::SMALL, StringBackedEnum::MEDIUM, StringBackedEnum::LARGE]);
-    expect($collection->mapWithKeysStrict(fn($enum) => [$enum->name => $enum->value])->all())->toBe([
+    expect($collection->mapWithKeysStrict(fn ($enum) => [$enum->name => $enum->value])->all())->toBe([
         'SMALL' => StringBackedEnum::SMALL,
         'MEDIUM' => StringBackedEnum::MEDIUM,
-        'LARGE' => StringBackedEnum::LARGE
+        'LARGE' => StringBackedEnum::LARGE,
     ]);
-    expect($collection->mapWithKeysStrict(fn($enum
+    expect($collection->mapWithKeysStrict(fn ($enum
     ) => [$enum->name => $enum->value]))->toBeInstanceOf(EnumCollection::class);
 });
 
@@ -736,7 +735,7 @@ it('supports implode', function () {
 
     $collection = EnumCollection::from([StringBackedEnum::SMALL, StringBackedEnum::MEDIUM, StringBackedEnum::LARGE]);
 
-    expect($collection->implode(fn(StringBackedEnum $enum) => $enum->name, $sep))
+    expect($collection->implode(fn (StringBackedEnum $enum) => $enum->name, $sep))
         ->toBe('SMALL'.$sep.'MEDIUM'.$sep.'LARGE');
 });
 
@@ -763,12 +762,12 @@ it('supports mapToDictionary', function () {
         StringBackedEnum::LARGE,
     ], StringBackedEnum::class);
 
-    expect($collection->mapToDictionary(fn($enum) => [$enum->name => $enum->value])->all())->toBe([
+    expect($collection->mapToDictionary(fn ($enum) => [$enum->name => $enum->value])->all())->toBe([
         'SMALL' => ['S'],
         'MEDIUM' => ['M'],
         'LARGE' => ['L'],
     ]);
-    expect($collection->mapToDictionary(fn($enum) => [$enum->name => $enum->value]))->toBeInstanceOf(Collection::class);
+    expect($collection->mapToDictionary(fn ($enum) => [$enum->name => $enum->value]))->toBeInstanceOf(Collection::class);
 });
 
 it('supports forget', function () {
@@ -779,25 +778,25 @@ it('supports forget', function () {
 });
 
 it('supports get', function () {
-    $collection = EnumCollection::from([33=>PureEnum::WHITE]);
+    $collection = EnumCollection::from([33 => PureEnum::WHITE]);
     expect($collection->get(33))->toBe(PureEnum::WHITE);
 });
 
 it('supports getOrPut', function () {
-    $collection = EnumCollection::from([33=>PureEnum::WHITE]);
-    expect($collection->getOrPut(33,PureEnum::WHITE))->toBe(PureEnum::WHITE);
-    expect($collection->getOrPut(22,PureEnum::RED))->toBe(PureEnum::RED);
+    $collection = EnumCollection::from([33 => PureEnum::WHITE]);
+    expect($collection->getOrPut(33, PureEnum::WHITE))->toBe(PureEnum::WHITE);
+    expect($collection->getOrPut(22, PureEnum::RED))->toBe(PureEnum::RED);
 });
 
 it('supports groupBy', function () {
     $collection = EnumCollection::from([PureEnum::WHITE, PureEnum::BLACK, PureEnum::RED, PureEnum::BLUE, PureEnum::YELLOW]);
-    $collection = $collection->groupBy(fn(PureEnum $item) => strlen($item->name));
+    $collection = $collection->groupBy(fn (PureEnum $item) => strlen($item->name));
     expect($collection)->toBeInstanceOf(Collection::class);
 });
 
 it('supports keyBy', function () {
     $collection = EnumCollection::from([PureEnum::WHITE, PureEnum::BLACK]);
-    $collection = $collection->keyBy(fn(PureEnum $item) => $item->name);
+    $collection = $collection->keyBy(fn (PureEnum $item) => $item->name);
     expect($collection)->toBeInstanceOf(EnumCollection::class);
     expect($collection->all())->toBe(['WHITE' => PureEnum::WHITE, 'BLACK' => PureEnum::BLACK]);
 });
@@ -811,7 +810,7 @@ it('supports has', function () {
 it('supports hasAny', function () {
     $collection = EnumCollection::from([PureEnum::WHITE, PureEnum::BLACK]);
     expect($collection->hasAny(1))->toBeTrue();
-    expect($collection->hasAny(1,2))->toBeTrue();
+    expect($collection->hasAny(1, 2))->toBeTrue();
 });
 
 it('supports merge', function () {
@@ -819,10 +818,10 @@ it('supports merge', function () {
     $collection2 = EnumCollection::from([PureEnum::WHITE, PureEnum::RED]);
 
     expect($collection->merge($collection2)->all())->toBe([
-        PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED, PureEnum::WHITE, PureEnum::RED
+        PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED, PureEnum::WHITE, PureEnum::RED,
     ]);
     expect($collection->merge($collection2)->unique()->all())->toBe([
-        PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED, PureEnum::WHITE
+        PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED, PureEnum::WHITE,
     ]);
     expect($collection->merge($collection2))->toBeInstanceOf(EnumCollection::class);
 });
@@ -831,7 +830,7 @@ it('supports multiply', function () {
     $collection = EnumCollection::from([PureEnum::WHITE, PureEnum::RED]);
 
     expect($collection->multiply(2)->all())->toBe([
-        PureEnum::WHITE, PureEnum::RED, PureEnum::WHITE, PureEnum::RED
+        PureEnum::WHITE, PureEnum::RED, PureEnum::WHITE, PureEnum::RED,
     ]);
     expect($collection->multiply(2))->toBeInstanceOf(EnumCollection::class);
 });
@@ -855,37 +854,36 @@ it('supports union', function () {
     ]))->toBeInstanceOf(EnumCollection::class);
 });
 
-
 it('supports nth', function () {
     $collection = EnumCollection::from([
-        PureEnum::WHITE, PureEnum::RED, PureEnum::YELLOW, PureEnum::BLUE, PureEnum::BLACK
+        PureEnum::WHITE, PureEnum::RED, PureEnum::YELLOW, PureEnum::BLUE, PureEnum::BLACK,
     ]);
 
     expect($collection->nth(2, 1)->all())->toBe([
-        PureEnum::RED, PureEnum::BLUE
+        PureEnum::RED, PureEnum::BLUE,
     ]);
     expect($collection->nth(2, 1))->toBeInstanceOf(EnumCollection::class);
 });
 
 it('supports only', function () {
     $collection = EnumCollection::from([
-        PureEnum::WHITE, PureEnum::RED, PureEnum::YELLOW, PureEnum::BLUE, PureEnum::BLACK
+        PureEnum::WHITE, PureEnum::RED, PureEnum::YELLOW, PureEnum::BLUE, PureEnum::BLACK,
     ]);
 
     expect($collection->only([2, 1])->all())->toBe([
-        1 => PureEnum::RED, 2 => PureEnum::YELLOW
+        1 => PureEnum::RED, 2 => PureEnum::YELLOW,
     ]);
     expect($collection->only([2, 1]))->toBeInstanceOf(EnumCollection::class);
 });
 
 it('supports pop', function () {
     $collection = EnumCollection::from([
-        PureEnum::WHITE, PureEnum::RED, PureEnum::YELLOW, PureEnum::BLUE, PureEnum::BLACK
+        PureEnum::WHITE, PureEnum::RED, PureEnum::YELLOW, PureEnum::BLUE, PureEnum::BLACK,
     ]);
     expect($collection->pop(2)->all())->toBe([PureEnum::BLACK, PureEnum::BLUE]);
 
     $collection = EnumCollection::from([
-        PureEnum::WHITE, PureEnum::RED, PureEnum::YELLOW, PureEnum::BLUE, PureEnum::BLACK
+        PureEnum::WHITE, PureEnum::RED, PureEnum::YELLOW, PureEnum::BLUE, PureEnum::BLACK,
     ]);
     expect($collection->pop())->toBe(PureEnum::BLACK);
 });
@@ -895,7 +893,7 @@ it('supports prepend', function () {
 
     expect($collection->prepend(PureEnum::WHITE)->all())->toBe([PureEnum::WHITE, PureEnum::YELLOW, PureEnum::BLUE]);
     expect($collection->prepend('WHITE')->all())->toBe([
-        PureEnum::WHITE, PureEnum::WHITE, PureEnum::YELLOW, PureEnum::BLUE
+        PureEnum::WHITE, PureEnum::WHITE, PureEnum::YELLOW, PureEnum::BLUE,
     ]);
     expect($collection->prepend(PureEnum::WHITE))->toBeInstanceOf(EnumCollection::class);
 });
@@ -905,7 +903,7 @@ it('supports push', function () {
 
     expect($collection->push(PureEnum::WHITE)->all())->toBe([PureEnum::YELLOW, PureEnum::BLUE, PureEnum::WHITE]);
     expect($collection->push('WHITE')->all())->toBe([
-        PureEnum::YELLOW, PureEnum::BLUE, PureEnum::WHITE, PureEnum::WHITE
+        PureEnum::YELLOW, PureEnum::BLUE, PureEnum::WHITE, PureEnum::WHITE,
     ]);
     expect($collection->push(PureEnum::WHITE))->toBeInstanceOf(EnumCollection::class);
 });
@@ -915,7 +913,7 @@ it('supports unshift', function () {
 
     expect($collection->unshift(PureEnum::WHITE)->all())->toBe([PureEnum::WHITE, PureEnum::YELLOW, PureEnum::BLUE]);
     expect($collection->unshift('WHITE')->all())->toBe([
-        PureEnum::WHITE, PureEnum::WHITE, PureEnum::YELLOW, PureEnum::BLUE
+        PureEnum::WHITE, PureEnum::WHITE, PureEnum::YELLOW, PureEnum::BLUE,
     ]);
     expect($collection->unshift('WHITE'))->toBeInstanceOf(EnumCollection::class);
 });
@@ -924,10 +922,10 @@ it('supports concat', function () {
     $collection = EnumCollection::from([PureEnum::YELLOW, PureEnum::BLUE]);
 
     expect($collection->concat([PureEnum::WHITE])->all())->toBe([
-        PureEnum::YELLOW, PureEnum::BLUE, PureEnum::WHITE
+        PureEnum::YELLOW, PureEnum::BLUE, PureEnum::WHITE,
     ]);
     expect($collection->concat(['name' => 'WHITE'])->all())->toBe([
-        PureEnum::YELLOW, PureEnum::BLUE, PureEnum::WHITE
+        PureEnum::YELLOW, PureEnum::BLUE, PureEnum::WHITE,
     ]);
     expect($collection->concat(['name' => 'WHITE']))->toBeInstanceOf(EnumCollection::class);
 });
@@ -937,7 +935,7 @@ it('supports pull', function () {
 
     expect($collection->push(PureEnum::WHITE)->all())->toBe([PureEnum::YELLOW, PureEnum::BLUE, PureEnum::WHITE]);
     expect($collection->push('WHITE')->all())->toBe([
-        PureEnum::YELLOW, PureEnum::BLUE, PureEnum::WHITE, PureEnum::WHITE
+        PureEnum::YELLOW, PureEnum::BLUE, PureEnum::WHITE, PureEnum::WHITE,
     ]);
     expect($collection->push(PureEnum::WHITE))->toBeInstanceOf(EnumCollection::class);
 });
@@ -952,7 +950,7 @@ it('supports put', function () {
 
 it('supports random', function () {
     $collection = EnumCollection::from([
-        PureEnum::WHITE, PureEnum::RED, PureEnum::YELLOW, PureEnum::BLUE, PureEnum::BLACK
+        PureEnum::WHITE, PureEnum::RED, PureEnum::YELLOW, PureEnum::BLUE, PureEnum::BLACK,
     ]);
 
     expect($collection->random())->toBeInstanceOf(PureEnum::class);
@@ -966,7 +964,7 @@ it('supports replace', function () {
 
     $collection = EnumCollection::from([PureEnum::WHITE, PureEnum::RED, PureEnum::YELLOW]);
     expect($collection->replace([1 => PureEnum::BLACK])->all())->toBe([
-        PureEnum::WHITE, PureEnum::BLACK, PureEnum::YELLOW
+        PureEnum::WHITE, PureEnum::BLACK, PureEnum::YELLOW,
     ]);
 });
 
@@ -1024,28 +1022,26 @@ it('supports skip', function () {
 
 it('supports skipUntil', function () {
     $collection = EnumCollection::from([PureEnum::WHITE, PureEnum::RED, PureEnum::YELLOW]);
-    $collection = $collection->skipUntil(fn(PureEnum $item) => $item->name === 'RED');
+    $collection = $collection->skipUntil(fn (PureEnum $item) => $item->name === 'RED');
 
     expect($collection)->toBeInstanceOf(EnumCollection::class);
     expect($collection->all())
         ->toBe([1 => PureEnum::RED, 2 => PureEnum::YELLOW]);
 
-
-    $collection2 = $collection->skipUntil(fn(PureEnum $item) => $item->name === 'ddd');
+    $collection2 = $collection->skipUntil(fn (PureEnum $item) => $item->name === 'ddd');
     expect($collection2)->toBeInstanceOf(EnumCollection::class);
     expect($collection2->isEmpty())->toBeTrue();
 });
 
 it('supports skipWhile', function () {
     $collection = EnumCollection::from([PureEnum::WHITE, PureEnum::RED, PureEnum::YELLOW]);
-    $collection = $collection->skipUntil(fn(PureEnum $item) => strlen($item->name) < 5);
+    $collection = $collection->skipUntil(fn (PureEnum $item) => strlen($item->name) < 5);
 
     expect($collection)->toBeInstanceOf(EnumCollection::class);
     expect($collection->all())
         ->toBe([1 => PureEnum::RED, 2 => PureEnum::YELLOW]);
 
-
-    $collection2 = $collection->skipUntil(fn(PureEnum $item) => $item->name === 'ddd');
+    $collection2 = $collection->skipUntil(fn (PureEnum $item) => $item->name === 'ddd');
     expect($collection2)->toBeInstanceOf(EnumCollection::class);
     expect($collection2->isEmpty())->toBeTrue();
 });
@@ -1074,31 +1070,31 @@ it('supports splitIn', function () {
     $collection = $collection->splitIn(2);
     expect($collection)->toBeInstanceOf(Collection::class);
     expect($collection->toArray())->toBe([
-        [PureEnum::WHITE, PureEnum::RED], [2 => PureEnum::YELLOW, 3 => PureEnum::BLUE]
+        [PureEnum::WHITE, PureEnum::RED], [2 => PureEnum::YELLOW, 3 => PureEnum::BLUE],
     ]);
 });
 
 it('supports sole', function () {
     $collection = EnumCollection::from([PureEnum::WHITE, PureEnum::RED, PureEnum::YELLOW, PureEnum::BLUE]);
-    $result = $collection->sole(fn(PureEnum $enum) => $enum->name === 'RED');
+    $result = $collection->sole(fn (PureEnum $enum) => $enum->name === 'RED');
     expect($result)->toBeInstanceOf(PureEnum::class);
 
     $collection = EnumCollection::from([
-        PureEnum::WHITE, PureEnum::RED, PureEnum::YELLOW, PureEnum::BLUE, PureEnum::RED
+        PureEnum::WHITE, PureEnum::RED, PureEnum::YELLOW, PureEnum::BLUE, PureEnum::RED,
     ]);
-    expect(fn() => $collection->sole(fn(PureEnum $enum
+    expect(fn () => $collection->sole(fn (PureEnum $enum
     ) => $enum->name === 'RED'))->toThrow(MultipleItemsFoundException::class);
 });
 
 it('supports firstOrFail', function () {
     $collection = EnumCollection::from([PureEnum::WHITE, PureEnum::RED, PureEnum::YELLOW, PureEnum::BLUE]);
-    $result = $collection->firstOrFail(fn(PureEnum $enum) => $enum->name === 'RED');
+    $result = $collection->firstOrFail(fn (PureEnum $enum) => $enum->name === 'RED');
     expect($result)->toBe(PureEnum::RED);
 
     $collection = EnumCollection::from([
-        PureEnum::WHITE, PureEnum::RED, PureEnum::YELLOW, PureEnum::BLUE, PureEnum::RED
+        PureEnum::WHITE, PureEnum::RED, PureEnum::YELLOW, PureEnum::BLUE, PureEnum::RED,
     ]);
-    expect(fn() => $collection->sole(fn(PureEnum $enum
+    expect(fn () => $collection->sole(fn (PureEnum $enum
     ) => $enum->name === 'REDA'))->toThrow(ItemNotFoundException::class);
 });
 
@@ -1107,7 +1103,7 @@ it('supports chunk', function () {
     $collection = $collection->chunk(2);
     expect($collection)->toBeInstanceOf(Collection::class);
     expect($collection->toArray())->toBe([
-        [PureEnum::WHITE, PureEnum::RED], [2 => PureEnum::YELLOW, 3 => PureEnum::BLUE]
+        [PureEnum::WHITE, PureEnum::RED], [2 => PureEnum::YELLOW, 3 => PureEnum::BLUE],
     ]);
 });
 
@@ -1118,7 +1114,7 @@ it('supports chunkWhile', function () {
     });
     expect($collection)->toBeInstanceOf(Collection::class);
     expect($collection->toArray())->toBe([
-        [PureEnum::WHITE, PureEnum::WHITE], [2 => PureEnum::YELLOW], [3 => PureEnum::BLUE]
+        [PureEnum::WHITE, PureEnum::WHITE], [2 => PureEnum::YELLOW], [3 => PureEnum::BLUE],
     ]);
 });
 
@@ -1127,12 +1123,12 @@ it('supports sort', function () {
     $collection = $collection->sort();
     expect($collection)->toBeInstanceOf(EnumCollection::class);
 
-    $collection = $collection->sort(fn(PureEnum $a, PureEnum $b) => $a->name <=> $b->name);
+    $collection = $collection->sort(fn (PureEnum $a, PureEnum $b) => $a->name <=> $b->name);
     expect($collection)->toBeInstanceOf(EnumCollection::class);
     expect($collection->values()->all())->toBe([PureEnum::BLUE, PureEnum::WHITE, PureEnum::WHITE, PureEnum::YELLOW]);
 
     $collection = EnumCollection::of(PureEnum::class);
-    $collection = $collection->sort(fn(PureEnum $a, PureEnum $b) => $a->name <=> $b->name);
+    $collection = $collection->sort(fn (PureEnum $a, PureEnum $b) => $a->name <=> $b->name);
     expect($collection)->toBeInstanceOf(EnumCollection::class);
 });
 
@@ -1148,7 +1144,7 @@ it('supports sortBy', function () {
     expect($collection)->toBeInstanceOf(EnumCollection::class);
     expect($collection->values()->all())->toBe([PureEnum::BLUE, PureEnum::WHITE, PureEnum::WHITE, PureEnum::YELLOW]);
 
-    $collection = $collection->sortBy(fn(PureEnum $a, int $key) => $a->name);
+    $collection = $collection->sortBy(fn (PureEnum $a, int $key) => $a->name);
     expect($collection)->toBeInstanceOf(EnumCollection::class);
     expect($collection->values()->all())->toBe([PureEnum::BLUE, PureEnum::WHITE, PureEnum::WHITE, PureEnum::YELLOW]);
 });
@@ -1159,14 +1155,14 @@ it('supports sortByDesc', function () {
     expect($collection)->toBeInstanceOf(EnumCollection::class);
     expect($collection->values()->all())->toBe([PureEnum::YELLOW, PureEnum::WHITE, PureEnum::WHITE, PureEnum::BLUE]);
 
-    $collection = $collection->sortByDesc(fn(PureEnum $a, int $key) => $a->name);
+    $collection = $collection->sortByDesc(fn (PureEnum $a, int $key) => $a->name);
     expect($collection)->toBeInstanceOf(EnumCollection::class);
     expect($collection->values()->all())->toBe([PureEnum::YELLOW, PureEnum::WHITE, PureEnum::WHITE, PureEnum::BLUE]);
 });
 
 it('supports sortKeys', function () {
     $collection = EnumCollection::from([
-        3 => PureEnum::WHITE, 2 => PureEnum::WHITE, 1 => PureEnum::YELLOW, 0 => PureEnum::BLUE
+        3 => PureEnum::WHITE, 2 => PureEnum::WHITE, 1 => PureEnum::YELLOW, 0 => PureEnum::BLUE,
     ]);
     $collection = $collection->sortKeys();
     expect($collection)->toBeInstanceOf(EnumCollection::class);
@@ -1182,7 +1178,7 @@ it('supports sortKeysDesc', function () {
 
 it('supports sortKeysUsing', function () {
     $collection = EnumCollection::from([
-        3 => PureEnum::WHITE, 2 => PureEnum::WHITE, 1 => PureEnum::YELLOW, 0 => PureEnum::BLUE
+        3 => PureEnum::WHITE, 2 => PureEnum::WHITE, 1 => PureEnum::YELLOW, 0 => PureEnum::BLUE,
     ]);
     $collection = $collection->sortKeysUsing('strnatcasecmp');
     expect($collection)->toBeInstanceOf(EnumCollection::class);
@@ -1223,10 +1219,10 @@ it('supports takeWhile', function () {
 
 it('supports transform', function () {
     $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK]);
-    expect($collection->transform(fn($enum) => $enum->next())->all())->toBe([PureEnum::BLUE, PureEnum::RED]);
+    expect($collection->transform(fn ($enum) => $enum->next())->all())->toBe([PureEnum::BLUE, PureEnum::RED]);
 
     $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK]);
-    expect($collection->transform(fn($enum) => $enum->name)->all())->toBe([PureEnum::GREEN, PureEnum::BLACK]);
+    expect($collection->transform(fn ($enum) => $enum->name)->all())->toBe([PureEnum::GREEN, PureEnum::BLACK]);
 });
 
 it('supports unique', function () {
@@ -1236,7 +1232,7 @@ it('supports unique', function () {
     expect($collection->all())->toBe([PureEnum::WHITE, 2 => PureEnum::YELLOW, 3 => PureEnum::BLUE]);
 
     $collection = EnumCollection::from([PureEnum::WHITE, PureEnum::WHITE, PureEnum::YELLOW, PureEnum::BLUE]);
-    $collection = $collection->unique(fn(PureEnum $item) => $item->name);
+    $collection = $collection->unique(fn (PureEnum $item) => $item->name);
     expect($collection)->toBeInstanceOf(EnumCollection::class);
     expect($collection->all())->toBe([PureEnum::WHITE, 2 => PureEnum::YELLOW, 3 => PureEnum::BLUE]);
 
@@ -1248,7 +1244,7 @@ it('supports unique', function () {
 
 it('supports values', function () {
     $collection = EnumCollection::from([
-        3 => PureEnum::WHITE, 2 => PureEnum::WHITE, 1 => PureEnum::YELLOW, 0 => PureEnum::BLUE
+        3 => PureEnum::WHITE, 2 => PureEnum::WHITE, 1 => PureEnum::YELLOW, 0 => PureEnum::BLUE,
     ]);
     $collection = $collection->values();
     expect($collection)->toBeInstanceOf(EnumCollection::class);
@@ -1261,7 +1257,7 @@ it('supports pad', function () {
     expect($collection)->toBeInstanceOf(EnumCollection::class);
     expect($collection->all())->toBe([PureEnum::WHITE, PureEnum::WHITE, PureEnum::WHITE]);
 
-    expect(fn() => $collection->pad(2, 'bdd'))->toThrow(ValueError::class);
+    expect(fn () => $collection->pad(2, 'bdd'))->toThrow(ValueError::class);
 });
 
 it('supports count', function () {
@@ -1290,97 +1286,96 @@ it('supports toBase', function () {
 });
 
 it('supports offsetExists', function () {
-    $collection = EnumCollection::from([33=>PureEnum::WHITE]);
+    $collection = EnumCollection::from([33 => PureEnum::WHITE]);
     expect($collection->offsetExists(33))->toBeTrue();
     expect($collection->offsetExists(2))->toBeFalse();
 });
 
 it('supports offsetGet', function () {
-    $collection = EnumCollection::from([33=>PureEnum::WHITE]);
+    $collection = EnumCollection::from([33 => PureEnum::WHITE]);
     expect($collection->offsetGet(33))->toBe(PureEnum::WHITE);
     expect($collection[33])->toBe(PureEnum::WHITE);
 });
 
 it('supports offsetSet', function () {
-    $collection = EnumCollection::from([33=>PureEnum::WHITE]);
-    $collection->offsetSet(13,'WHITE');
-    expect($collection->all())->toBe([33=>PureEnum::WHITE,13=>PureEnum::WHITE]);
-    $collection->offsetSet(1,PureEnum::WHITE);
-    expect($collection->all())->toBe([33=>PureEnum::WHITE,13=>PureEnum::WHITE,1=>PureEnum::WHITE]);
-    $collection[1] =PureEnum::RED;
-    expect($collection->all())->toBe([33=>PureEnum::WHITE,13=>PureEnum::WHITE,1=>PureEnum::RED]);
+    $collection = EnumCollection::from([33 => PureEnum::WHITE]);
+    $collection->offsetSet(13, 'WHITE');
+    expect($collection->all())->toBe([33 => PureEnum::WHITE, 13 => PureEnum::WHITE]);
+    $collection->offsetSet(1, PureEnum::WHITE);
+    expect($collection->all())->toBe([33 => PureEnum::WHITE, 13 => PureEnum::WHITE, 1 => PureEnum::WHITE]);
+    $collection[1] = PureEnum::RED;
+    expect($collection->all())->toBe([33 => PureEnum::WHITE, 13 => PureEnum::WHITE, 1 => PureEnum::RED]);
 });
 
 it('supports offsetUnset', function () {
-    $collection = EnumCollection::from([33=>PureEnum::WHITE]);
+    $collection = EnumCollection::from([33 => PureEnum::WHITE]);
     $collection->offsetUnset(33);
     expect($collection->all())->toBe([]);
 });
 
-
 it('not supports range', function () {
     $collection = EnumCollection::from([StringBackedEnum::LARGE]);
-    expect(fn() => $collection->range(1,2))->toThrow(MethodNotSupported::class);
+    expect(fn () => $collection->range(1, 2))->toThrow(MethodNotSupported::class);
 });
 it('not supports median', function () {
     $collection = EnumCollection::from([StringBackedEnum::LARGE]);
-    expect(fn() => $collection->median())->toThrow(MethodNotSupported::class);
+    expect(fn () => $collection->median())->toThrow(MethodNotSupported::class);
 });
 it('not supports mode', function () {
     $collection = EnumCollection::from([StringBackedEnum::LARGE]);
-    expect(fn() => $collection->mode())->toThrow(MethodNotSupported::class);
+    expect(fn () => $collection->mode())->toThrow(MethodNotSupported::class);
 });
 it('not supports crossJoin', function () {
     $collection = EnumCollection::from([StringBackedEnum::LARGE]);
-    expect(fn() => $collection->crossJoin(1,2))->toThrow(MethodNotSupported::class);
+    expect(fn () => $collection->crossJoin(1, 2))->toThrow(MethodNotSupported::class);
 });
 it('not supports flip', function () {
     $collection = EnumCollection::from([StringBackedEnum::LARGE]);
-    expect(fn() => $collection->flip())->toThrow(MethodNotSupported::class);
+    expect(fn () => $collection->flip())->toThrow(MethodNotSupported::class);
 });
 it('not supports collapse', function () {
     $collection = EnumCollection::from([StringBackedEnum::LARGE]);
-    expect(fn() => $collection->collapse())->toThrow(MethodNotSupported::class);
+    expect(fn () => $collection->collapse())->toThrow(MethodNotSupported::class);
 });
 it('not supports collapseWithKeys', function () {
     $collection = EnumCollection::from([StringBackedEnum::LARGE]);
-    expect(fn() => $collection->collapse())->toThrow(MethodNotSupported::class);
+    expect(fn () => $collection->collapse())->toThrow(MethodNotSupported::class);
 });
 it('not supports pluck', function () {
     $collection = EnumCollection::from([StringBackedEnum::LARGE]);
-    expect(fn() => $collection->pluck('name'))->toThrow(MethodNotSupported::class);
+    expect(fn () => $collection->pluck('name'))->toThrow(MethodNotSupported::class);
 });
 it('not supports mergeRecursive', function () {
     $collection = EnumCollection::from([StringBackedEnum::LARGE]);
-    expect(fn() => $collection->mergeRecursive([]))->toThrow(MethodNotSupported::class);
+    expect(fn () => $collection->mergeRecursive([]))->toThrow(MethodNotSupported::class);
 });
 it('not supports select', function () {
     $collection = EnumCollection::from([StringBackedEnum::LARGE]);
-    expect(fn() => $collection->select('name'))->toThrow(MethodNotSupported::class);
+    expect(fn () => $collection->select('name'))->toThrow(MethodNotSupported::class);
 });
 it('not supports flatten', function () {
-    $collection = EnumCollection::from([1 => PureEnum::GREEN, 2 =>PureEnum::BLACK, 5 => PureEnum::RED]);
-    expect(fn() => $collection->flatten(1))->toThrow(MethodNotSupported::class);
+    $collection = EnumCollection::from([1 => PureEnum::GREEN, 2 => PureEnum::BLACK, 5 => PureEnum::RED]);
+    expect(fn () => $collection->flatten(1))->toThrow(MethodNotSupported::class);
 });
 it('not supports replaceRecursive', function () {
     $collection = EnumCollection::from([StringBackedEnum::LARGE]);
-    expect(fn() => $collection->replaceRecursive(['name']))->toThrow(MethodNotSupported::class);
+    expect(fn () => $collection->replaceRecursive(['name']))->toThrow(MethodNotSupported::class);
 });
 it('not supports sliding', function () {
     $collection = EnumCollection::from([StringBackedEnum::LARGE]);
-    expect(fn() => $collection->sliding())->toThrow(MethodNotSupported::class);
+    expect(fn () => $collection->sliding())->toThrow(MethodNotSupported::class);
 });
 it('not supports dot', function () {
     $collection = EnumCollection::from([StringBackedEnum::LARGE]);
-    expect(fn() => $collection->dot())->toThrow(MethodNotSupported::class);
+    expect(fn () => $collection->dot())->toThrow(MethodNotSupported::class);
 });
 it('not supports undot', function () {
     $collection = EnumCollection::from([StringBackedEnum::LARGE]);
-    expect(fn() => $collection->undot())->toThrow(MethodNotSupported::class);
+    expect(fn () => $collection->undot())->toThrow(MethodNotSupported::class);
 });
 it('not supports zip', function () {
     $collection = EnumCollection::from([StringBackedEnum::LARGE]);
-    expect(fn() => $collection->zip([]))->toThrow(MethodNotSupported::class);
+    expect(fn () => $collection->zip([]))->toThrow(MethodNotSupported::class);
 });
 
 it('forwards call to underlying collection', function () {

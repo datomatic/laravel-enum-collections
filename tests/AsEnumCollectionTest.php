@@ -11,7 +11,7 @@ use Datomatic\EnumCollections\Tests\TestSupport\TestModel;
 use Datomatic\EnumCollections\Tests\TestSupport\TestModel11;
 
 beforeEach(function () {
-    $this->modelClass  = app()->version() >= 11 ? TestModel::class : TestModel11::class;
+    $this->modelClass = app()->version() >= 11 ? TestModel::class : TestModel11::class;
     $this->testModel = new $this->modelClass;
 });
 
@@ -158,16 +158,15 @@ it('can query model with enum collection', function () {
     expect($this->modelClass::whereDoesntContain('colors', PureEnum::RED)->count())->toEqual(2);
     expect($this->modelClass::whereDoesntContain('colors', 'RED')->count())->toEqual(2);
 
-
-    expect($this->modelClass::whereContainsAny('colors', [PureEnum::YELLOW,PureEnum::BLACK])->count())->toEqual(2);
-    expect($this->modelClass::whereContainsAny('colors', [PureEnum::RED,PureEnum::BLACK])->count())->toEqual(1);
-    expect($this->modelClass::whereContainsAny('colors', [PureEnum::RED,PureEnum::WHITE])->count())->toEqual(0);
-    expect($this->modelClass::whereDoesntContainAny('colors', [PureEnum::RED,PureEnum::WHITE])->count())->toEqual(2);
-    expect($this->modelClass::whereDoesntContainAny('colors', [PureEnum::YELLOW,PureEnum::BLACK])->count())->toEqual(0);
+    expect($this->modelClass::whereContainsAny('colors', [PureEnum::YELLOW, PureEnum::BLACK])->count())->toEqual(2);
+    expect($this->modelClass::whereContainsAny('colors', [PureEnum::RED, PureEnum::BLACK])->count())->toEqual(1);
+    expect($this->modelClass::whereContainsAny('colors', [PureEnum::RED, PureEnum::WHITE])->count())->toEqual(0);
+    expect($this->modelClass::whereDoesntContainAny('colors', [PureEnum::RED, PureEnum::WHITE])->count())->toEqual(2);
+    expect($this->modelClass::whereDoesntContainAny('colors', [PureEnum::YELLOW, PureEnum::BLACK])->count())->toEqual(0);
     expect($this->modelClass::whereContainsAny('colors', [PureEnum::RED])
         ->orWhereContainsAny('colors', [PureEnum::WHITE])->count())->toEqual(0);
     expect($this->modelClass::whereContainsAny('colors', [PureEnum::RED])
-        ->orWhereContainsAny('colors', [PureEnum::RED,PureEnum::BLACK])->count())->toEqual(1);
+        ->orWhereContainsAny('colors', [PureEnum::RED, PureEnum::BLACK])->count())->toEqual(1);
 
     expect($this->modelClass::whereContains('json', PureEnum::YELLOW)->count())->toEqual(2);
     expect($this->modelClass::whereContains('json', PureEnum::BLACK)->count())->toEqual(1);
@@ -179,14 +178,13 @@ it('can query model with enum collection', function () {
     expect($this->modelClass::whereContains('sizes', ['S'])->count())->toEqual(2);
     expect($this->modelClass::whereContains('sizes', 'S')->count())->toEqual(2);
 
-    expect($this->modelClass::whereContainsAny('sizes', ['M','L'])->count())->toEqual(2);
-    expect($this->modelClass::whereContainsAny('sizes', ['XL','XXL'])->count())->toEqual(1);
-
+    expect($this->modelClass::whereContainsAny('sizes', ['M', 'L'])->count())->toEqual(2);
+    expect($this->modelClass::whereContainsAny('sizes', ['XL', 'XXL'])->count())->toEqual(1);
 
     expect($this->modelClass::whereContains('visibilities', [IntBackedEnum::PUBLIC])->count())->toEqual(1);
     expect($this->modelClass::whereContains('visibilities', IntBackedEnum::PUBLIC)->count())->toEqual(1);
     expect($this->modelClass::whereContains('visibilities', 2)->count())->toEqual(1);
-    expect($this->modelClass::whereContainsAny('visibilities', [1,2,3])->count())->toEqual(2);
+    expect($this->modelClass::whereContainsAny('visibilities', [1, 2, 3])->count())->toEqual(2);
 
     expect($this->modelClass::whereContains('permissions', [LaravelEnum::PUBLIC])->count())->toEqual(1);
     expect($this->modelClass::whereContains('permissions', LaravelEnum::PUBLIC)->count())->toEqual(1);

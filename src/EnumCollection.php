@@ -58,7 +58,7 @@ final class EnumCollection extends Collection
 
         $items = $this->privateFlatten(Arr::wrap($items));
 
-        if (!$enumClass) {
+        if (! $enumClass) {
             $item = array_values($items)[0] ?? null;
             if ($item instanceof UnitEnum) {
                 $this->setEnumClass(get_class($item));
@@ -71,7 +71,7 @@ final class EnumCollection extends Collection
         );
 
         foreach ($items as $key => $value) {
-            $items[$key] = $this->getEnumFromValue($value);;
+            $items[$key] = $this->getEnumFromValue($value);
         }
         /** @var array<TKey,TValue> $items */
         $this->items = $items;
@@ -91,7 +91,6 @@ final class EnumCollection extends Collection
     {
         return new self($items, $enumClass);
     }
-
 
     /**
      * Specify the Enum for the cast.
@@ -116,11 +115,11 @@ final class EnumCollection extends Collection
      */
     protected function setEnumClass(?string $enumClass): void
     {
-        if (!$enumClass) {
+        if (! $enumClass) {
             throw new Exceptions\MissingEnumClass('enumClass param is required when not pass an enum as argument');
         }
 
-        if (!enum_exists($enumClass)) {
+        if (! enum_exists($enumClass)) {
             throw new Exceptions\WrongEnumClass('enumClass '.$enumClass.' does not exist');
         }
 
@@ -156,7 +155,7 @@ final class EnumCollection extends Collection
     {
         $return = [];
         array_walk_recursive($array, function (mixed $a, int|string $key) use (&$return) {
-            if (!isset($return[$key])) {
+            if (! isset($return[$key])) {
                 $return[$key] = $a;
             } else {
                 $return[] = $a;
@@ -292,7 +291,6 @@ final class EnumCollection extends Collection
         return new parent($this->toValues());
     }
 
-
     /**
      * @param  TValue  $enum
      */
@@ -331,23 +329,26 @@ final class EnumCollection extends Collection
         return (new EnumCollection(items: $items, enumClass: $this->enumClass))->toValues();
     }
 
-
     public static function range($from, $to)
     {
         throw new MethodNotSupported('range');
     }
+
     public function median($key = null)
     {
         throw new MethodNotSupported('median');
     }
+
     public function mode($key = null)
     {
         throw new MethodNotSupported('mode');
     }
+
     public function collapse()
     {
         throw new MethodNotSupported('collapse');
     }
+
     public function collapseWithKeys()
     {
         throw new MethodNotSupported('collapseWithKeys');
@@ -362,7 +363,7 @@ final class EnumCollection extends Collection
      */
     public function contains($key, $operator = null, $value = null): bool
     {
-        if (!$key instanceof UnitEnum && is_callable($key)) {
+        if (! $key instanceof UnitEnum && is_callable($key)) {
             return parent::contains($key);
         }
 
@@ -386,7 +387,7 @@ final class EnumCollection extends Collection
         $values = array_values(Arr::whereNotNull(
             Arr::map(
                 Arr::wrap($values),
-                fn($value) => $this->tryGetEnumFromValue($value)
+                fn ($value) => $this->tryGetEnumFromValue($value)
             )
         ));
 
@@ -406,7 +407,7 @@ final class EnumCollection extends Collection
      */
     public function doesntContainAny(mixed $values): bool
     {
-        return !$this->containsAny($values);
+        return ! $this->containsAny($values);
     }
 
     /**
@@ -418,13 +419,12 @@ final class EnumCollection extends Collection
      */
     public function containsStrict($key, $operator = null, $value = null): bool
     {
-        if (!$key instanceof UnitEnum) {
+        if (! $key instanceof UnitEnum) {
             throw new Exceptions\ValueError('Value must be an instance of UnitEnum');
         }
 
         return $this->contains($key, $operator, $value);
     }
-
 
     public function crossJoin(...$lists)
     {
@@ -532,7 +532,7 @@ final class EnumCollection extends Collection
     {
         if ($keys instanceof Enumerable) {
             $keys = $keys->all();
-        } elseif (!is_array($keys)) {
+        } elseif (! is_array($keys)) {
             $keys = func_get_args();
         }
 
@@ -706,13 +706,13 @@ final class EnumCollection extends Collection
      * @param  mixed  $value
      * @param  mixed  $key
      * @return mixed
+     *
      * @throws MethodNotSupported
      */
     public function pluck($value, $key = null)
     {
         throw new MethodNotSupported('pluck');
     }
-
 
     /**
      * Run a map over each of the items.
@@ -805,7 +805,6 @@ final class EnumCollection extends Collection
     /**
      * Multiply the items in the collection by the multiplier.
      *
-     * @param  int  $multiplier
      * @return self
      */
     public function multiply(int $multiplier)
@@ -967,6 +966,7 @@ final class EnumCollection extends Collection
      * @param  (callable(TValue,TKey): bool)|TValue  $value
      * @param  bool  $strict
      * @return TKey|false
+     *
      * @throws Exception
      */
     public function search($value, $strict = false)
@@ -1002,7 +1002,6 @@ final class EnumCollection extends Collection
         throw new MethodNotSupported('sliding');
     }
 
-
     /**
      * Split a collection into a certain number of groups.
      *
@@ -1013,7 +1012,6 @@ final class EnumCollection extends Collection
     {
         return $this->toBase()->split($numberOfGroups);
     }
-
 
     /**
      * Chunk the collection into chunks of the given size.
@@ -1036,7 +1034,6 @@ final class EnumCollection extends Collection
     {
         return $this->toBase()->chunkWhile($callback);
     }
-
 
     /**
      * Transform each item in the collection using a callback.
@@ -1076,6 +1073,7 @@ final class EnumCollection extends Collection
      *
      * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TZipValue>|iterable<array-key, TZipValue>  ...$items
      * @return Enumerable<int, Enumerable<int, mixed>>
+     *
      * @throw MethodNotSupported
      */
     public function zip($items)
@@ -1089,6 +1087,7 @@ final class EnumCollection extends Collection
      * @param  int  $size
      * @param  TValue  $value
      * @return self<int, TValue>
+     *
      * @throws ValueError
      */
     public function pad($size, $value)
@@ -1107,7 +1106,6 @@ final class EnumCollection extends Collection
         return $this->toBase()->countBy($countBy);
     }
 
-
     /**
      * Set the item at a given offset.
      *
@@ -1125,9 +1123,9 @@ final class EnumCollection extends Collection
         }
     }
 
-
     /**
      * @return mixed
+     *
      * @throws MethodNotSupported
      */
     public static function empty()
