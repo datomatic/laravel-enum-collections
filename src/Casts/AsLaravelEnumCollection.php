@@ -80,7 +80,9 @@ class AsLaravelEnumCollection implements Castable
 
                 if ($unique) {
                     $values = $values->unique();
-                    $model->forgetClassCastCacheKey($key);
+                    if(method_exists($model, 'forgetClassCastCacheKey')){
+                        $model->forgetClassCastCacheKey($key);
+                    }
                 }
 
                 $values = $values->toValues();
