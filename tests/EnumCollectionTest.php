@@ -773,8 +773,8 @@ it('supports mapToDictionary', function () {
 it('supports forget', function () {
     $collection = EnumCollection::from([PureEnum::GREEN, PureEnum::BLACK, PureEnum::RED]);
 
-    expect($collection->forget(0)->all())->toBe([1 => PureEnum::BLACK, 2 => PureEnum::RED]);
     expect($collection->forget(0))->toBeInstanceOf(EnumCollection::class);
+    expect($collection->all())->toBe([1 => PureEnum::BLACK, 2 => PureEnum::RED]);
 });
 
 it('supports get', function () {
