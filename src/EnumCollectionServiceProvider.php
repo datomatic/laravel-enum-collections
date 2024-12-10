@@ -17,5 +17,10 @@ class EnumCollectionServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package->name('laravel-enum-collections');
+
+        $this->publishes([
+            $this->package->basePath('/../stubs/LaravelEnumCollectionModelIdeHelperHook.stub')
+                => app_path('Support/IdeHelper/LaravelEnumCollectionModelIdeHelperHook.stub'),
+        ], 'ide-helper-hooks');
     }
 }

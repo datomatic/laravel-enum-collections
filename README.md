@@ -19,10 +19,26 @@ You can install the package via composer:
 composer require datomatic/laravel-enum-collections
 ```
 
-The main parts of the package are: 
+The main parts of the package are:
 - [EnumCollection](#enumCollection)
-- [Eloquent model casting](#casting) 
+- [Eloquent model casting](#casting)
 - [HasEnumCollections trait](#HasEnumCollections-trait)
+
+
+### Using Laravel IDE Helper?
+If you are using [Laravel IDE Helper](https://github.com/barryvdh/laravel-ide-helper), you need to run the following command:
+
+```bash
+php artisan vendor:publish --tag=ide-helper-hooks
+```
+and add `LaravelEnumCollectionModelIdeHelperHook::class` on `model_hooks` array in `config/ide-helper.php`
+
+```php
+    'model_hooks' => [
+        ...,
+        LaravelEnumCollectionModelIdeHelperHook::class,
+    ],
+```
 
 ## EnumCollection
 

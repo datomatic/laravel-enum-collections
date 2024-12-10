@@ -65,7 +65,7 @@ class AsLaravelEnumCollection implements Castable
             }
 
             /**
-             * @param  Arrayable<int, int|string|TValue>|iterable<int, int|string|TValue>|int|string|null|EnumCollection  $value
+             * @param  Arrayable<TKey, int|string|TValue>|iterable<TKey, int|string|TValue>|int|string|null|EnumCollection<TKey,TValue>  $value
              */
             public function set(Model $model, string $key, mixed $value, array $attributes)
             {

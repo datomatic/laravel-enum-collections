@@ -1,0 +1,38 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Support\IdeHelper;
+
+use Barryvdh\LaravelIdeHelper\Console\ModelsCommand;
+use Barryvdh\LaravelIdeHelper\Contracts\ModelHookInterface;
+use Datomatic\EnumCollections\Casts\AsLaravelEnumCollection;
+use Datomatic\EnumCollections\EnumCollection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+
+class LaravelEnumCollectionModelIdeHelperHook implements ModelHookInterface
+{
+    public function run(ModelsCommand $command, Model $model): void
+    {
+        foreach ($model->getCasts() as $attribute => $cast) {
+            if(Str::contains($cast, ':') && Str::contains($cast, AsLaravelEnumCollection::class)) {
+                strtok($cast, ':');
+                $params = strtok(':');
+                $params = $params ? explode(',', $params) : [];
+                $type = $this->getCollectionTypeHint('\\' . EnumCollection::class,'\\' . $params[0]);
+                $command->setProperty($attribute, $type);
+            }
+        }
+    }
+
+    protected function getCollectionTypeHint(string $collectionClassNameInModel, string $relatedModel): string
+    {
+        $useGenericsSyntax = config('ide-helper.use_generics_annotations', true);
+        if ($useGenericsSyntax) {
+            return $collectionClassNameInModel . '<int, ' . $relatedModel . '>';
+        } else {
+            return $collectionClassNameInModel . '|' . $relatedModel . '[]';
+        }
+    }
+
+}
