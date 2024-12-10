@@ -29,7 +29,7 @@ The main parts of the package are:
 If you are using [Laravel IDE Helper](https://github.com/barryvdh/laravel-ide-helper), you need to run the following command:
 
 ```bash
-php artisan vendor:publish --tag=ide-helper-hooks
+php artisan vendor:publish --tag="laravel-enum-collections-ide-helper-hooks"
 ```
 and add `LaravelEnumCollectionModelIdeHelperHook::class` on `model_hooks` array in `config/ide-helper.php`
 
