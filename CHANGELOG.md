@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-enum-collections` will be documented in this file.
 
+## v3.2.0 - 2024-12-10
+
+- added Laravel IDE helper model hook
+
 ## v3.1.1 - 2024-11-03
 
 - laravel-enum-helper v2
@@ -53,6 +57,7 @@ EnumCollection::tryFrom($data, Enum::class);
 
 
 
+
 ```
 - change casting definition in only onle line inside `casts` model property
 
@@ -69,6 +74,7 @@ protected function casts(): array
         'field_name' => AsLaravelEnumCollection::of(FieldEnum::class),
     ];
 }
+
 
 
 
