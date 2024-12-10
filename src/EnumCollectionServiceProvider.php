@@ -20,7 +20,7 @@ class EnumCollectionServiceProvider extends PackageServiceProvider
 
         $this->publishes([
             $this->package->basePath('/../stubs/LaravelEnumCollectionModelIdeHelperHook.stub')
-                => app_path('Support/IdeHelper/LaravelEnumCollectionModelIdeHelperHook.stub'),
+                => app_path('Support/IdeHelper/LaravelEnumCollectionModelIdeHelperHook.php'),
         ], 'ide-helper-hooks');
     }
 }
