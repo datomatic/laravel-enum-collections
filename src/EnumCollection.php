@@ -329,7 +329,7 @@ final class EnumCollection extends Collection
         return (new EnumCollection(items: $items, enumClass: $this->enumClass))->toValues();
     }
 
-    public static function range($from, $to)
+    public static function range($from, $to, $step = 1)
     {
         throw new MethodNotSupported('range');
     }
@@ -1017,9 +1017,10 @@ final class EnumCollection extends Collection
      * Chunk the collection into chunks of the given size.
      *
      * @param  int  $size
+     * @param  bool  $preserveKeys
      * @return Collection<int, Collection<TKey, TValue>>
      */
-    public function chunk($size)
+    public function chunk($size, $preserveKeys = true)
     {
         return $this->toBase()->chunk($size);
     }
