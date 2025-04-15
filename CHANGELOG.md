@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-enum-collections` will be documented in this file.
 
+## v3.3.1 - 2025-04-15
+
+- fix
+
 ## v3.3.0 - 2025-02-24
 
 - Laravel 12 compatibility
@@ -68,6 +72,7 @@ EnumCollection::tryFrom($data, Enum::class);
 
 
 
+
 ```
 - change casting definition in only onle line inside `casts` model property
 
@@ -84,6 +89,7 @@ protected function casts(): array
         'field_name' => AsLaravelEnumCollection::of(FieldEnum::class),
     ];
 }
+
 
 
 
