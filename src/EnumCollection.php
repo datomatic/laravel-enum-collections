@@ -1052,9 +1052,10 @@ final class EnumCollection extends Collection
     /**
      * Flatten a multi-dimensional associative array with dots.
      *
-     * @return self
+     * @param  int  $depth
+     * @return static
      */
-    public function dot()
+    public function dot($depth = INF)
     {
         throw new MethodNotSupported('dot');
     }
