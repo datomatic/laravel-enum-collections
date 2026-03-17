@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-enum-collections` will be documented in this file.
 
+## v3.3.3 - 2026-03-17
+
+fix for new param on `dot` method
+
 ## v3.3.2 - 2026-03-17
 
 Laravel 13 support
@@ -78,6 +82,7 @@ EnumCollection::tryFrom($data, Enum::class);
 
 
 
+
 ```
 - change casting definition in only onle line inside `casts` model property
 
@@ -94,6 +99,7 @@ protected function casts(): array
         'field_name' => AsLaravelEnumCollection::of(FieldEnum::class),
     ];
 }
+
 
 
 
