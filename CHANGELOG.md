@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-enum-collections` will be documented in this file.
 
+## v3.4.1 - 2026-04-08
+
+Fix Collection `range` method definition changed on Laravel v13.3
+
 ## v3.4.0 - 2026-03-17
 
 Laravel 13 support
@@ -95,6 +99,7 @@ EnumCollection::tryFrom($data, Enum::class);
 
 
 
+
 ```
 - change casting definition in only onle line inside `casts` model property
 
@@ -111,6 +116,7 @@ protected function casts(): array
         'field_name' => AsLaravelEnumCollection::of(FieldEnum::class),
     ];
 }
+
 
 
 
