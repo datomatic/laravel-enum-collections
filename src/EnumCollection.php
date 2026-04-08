@@ -329,7 +329,7 @@ final class EnumCollection extends Collection
         return (new EnumCollection(items: $items, enumClass: $this->enumClass))->toValues();
     }
 
-    public static function range($from, $to, $step = 1)
+    public static function range($from, $to, $step = 1, ...$args)
     {
         throw new MethodNotSupported('range');
     }
