@@ -87,9 +87,9 @@ final class EnumCollection extends Collection
      * @param  class-string<TValue>|null  $enumClass
      * @return self<TMakeKey, TMakeValue>
      */
-    public static function make($items = [], ?string $enumClass = null)
+    public static function make($items = [], ...$args)
     {
-        return new self($items, $enumClass);
+        return new self($items, ...$args);
     }
 
     /**
@@ -1130,7 +1130,7 @@ final class EnumCollection extends Collection
      *
      * @throws MethodNotSupported
      */
-    public static function empty()
+    public static function empty(...$args)
     {
         throw new MethodNotSupported('empty');
     }
