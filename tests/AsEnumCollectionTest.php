@@ -8,18 +8,16 @@ use Datomatic\EnumCollections\Tests\TestSupport\Enums\LaravelEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\PureEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\Enums\StringBackedEnum;
 use Datomatic\EnumCollections\Tests\TestSupport\TestModel;
-use Datomatic\EnumCollections\Tests\TestSupport\TestModel11;
 
 beforeEach(function () {
-    $this->modelClass = app()->version() >= 11 ? TestModel::class : TestModel11::class;
-    $this->testModel = new $this->modelClass;
+    $this->testModel = new TestModel;
 });
 
 it('will return an EnumCollection setting enum collection fields with pure enum', function ($from, array $results) {
     $this->testModel->colors = $from;
     $this->testModel->save();
 
-    $model = $this->modelClass::find($this->testModel->id);
+    $model = TestModel::find($this->testModel->id);
 
     expect($model->colors)->toBeInstanceOf(EnumCollection::class);
 
@@ -35,7 +33,7 @@ it('will return an EnumCollection setting enum collection fields with IntBackedE
     $this->testModel->visibilities = $from;
     $this->testModel->save();
 
-    $model = $this->modelClass::find($this->testModel->id);
+    $model = TestModel::find($this->testModel->id);
 
     expect($model->visibilities)->toBeInstanceOf(EnumCollection::class);
 
@@ -55,7 +53,7 @@ it('will return an EnumCollection setting enum collection fields with LaravelEnu
     $this->testModel->permissions = $from;
     $this->testModel->save();
 
-    $model = $this->modelClass::find($this->testModel->id);
+    $model = TestModel::find($this->testModel->id);
 
     expect($model->permissions)->toBeInstanceOf(EnumCollection::class);
     expect($model->permissions->toArray())->toEqual($results);
@@ -74,7 +72,7 @@ it('will return an EnumCollection setting enum collection fields with StringBack
     $this->testModel->sizes = $from;
     $this->testModel->save();
 
-    $model = $this->modelClass::find($this->testModel->id);
+    $model = TestModel::find($this->testModel->id);
 
     expect($model->sizes)->toBeInstanceOf(EnumCollection::class);
     expect($model->sizes->values()->toArray())->toEqual($results);
@@ -94,7 +92,7 @@ it('can check if enum collection contains enum', function ($field, $from, $searc
     $this->testModel->$field = $from;
     $this->testModel->save();
 
-    $model = $this->modelClass::find($this->testModel->id);
+    $model = TestModel::find($this->testModel->id);
     expect($model->$field->contains($search))->toEqual($result);
     expect($model->$field->doesntContain($search))->toEqual(! $result);
 })->with([
@@ -151,76 +149,76 @@ it('can query model with enum collection', function () {
     $this->testModel->sizes = [StringBackedEnum::SMALL, StringBackedEnum::MEDIUM];
     $this->testModel->save();
 
-    expect($this->modelClass::whereContains('colors', PureEnum::YELLOW)->count())->toEqual(2);
-    expect($this->modelClass::whereContains('colors', PureEnum::BLACK)->count())->toEqual(1);
-    expect($this->modelClass::whereContains('colors', PureEnum::RED)->count())->toEqual(0);
-    expect($this->modelClass::whereContains('colors', 'RED')->count())->toEqual(0);
-    expect($this->modelClass::whereDoesntContain('colors', PureEnum::RED)->count())->toEqual(2);
-    expect($this->modelClass::whereDoesntContain('colors', 'RED')->count())->toEqual(2);
+    expect(TestModel::whereContains('colors', PureEnum::YELLOW)->count())->toEqual(2);
+    expect(TestModel::whereContains('colors', PureEnum::BLACK)->count())->toEqual(1);
+    expect(TestModel::whereContains('colors', PureEnum::RED)->count())->toEqual(0);
+    expect(TestModel::whereContains('colors', 'RED')->count())->toEqual(0);
+    expect(TestModel::whereDoesntContain('colors', PureEnum::RED)->count())->toEqual(2);
+    expect(TestModel::whereDoesntContain('colors', 'RED')->count())->toEqual(2);
 
-    expect($this->modelClass::whereContainsAny('colors', [PureEnum::YELLOW, PureEnum::BLACK])->count())->toEqual(2);
-    expect($this->modelClass::whereContainsAny('colors', [PureEnum::RED, PureEnum::BLACK])->count())->toEqual(1);
-    expect($this->modelClass::whereContainsAny('colors', [PureEnum::RED, PureEnum::WHITE])->count())->toEqual(0);
-    expect($this->modelClass::whereDoesntContainAny('colors', [PureEnum::RED, PureEnum::WHITE])->count())->toEqual(2);
-    expect($this->modelClass::whereDoesntContainAny('colors', [PureEnum::YELLOW, PureEnum::BLACK])->count())->toEqual(0);
-    expect($this->modelClass::whereContainsAny('colors', [PureEnum::RED])
+    expect(TestModel::whereContainsAny('colors', [PureEnum::YELLOW, PureEnum::BLACK])->count())->toEqual(2);
+    expect(TestModel::whereContainsAny('colors', [PureEnum::RED, PureEnum::BLACK])->count())->toEqual(1);
+    expect(TestModel::whereContainsAny('colors', [PureEnum::RED, PureEnum::WHITE])->count())->toEqual(0);
+    expect(TestModel::whereDoesntContainAny('colors', [PureEnum::RED, PureEnum::WHITE])->count())->toEqual(2);
+    expect(TestModel::whereDoesntContainAny('colors', [PureEnum::YELLOW, PureEnum::BLACK])->count())->toEqual(0);
+    expect(TestModel::whereContainsAny('colors', [PureEnum::RED])
         ->orWhereContainsAny('colors', [PureEnum::WHITE])->count())->toEqual(0);
-    expect($this->modelClass::whereContainsAny('colors', [PureEnum::RED])
+    expect(TestModel::whereContainsAny('colors', [PureEnum::RED])
         ->orWhereContainsAny('colors', [PureEnum::RED, PureEnum::BLACK])->count())->toEqual(1);
 
-    expect($this->modelClass::whereContains('json', PureEnum::YELLOW)->count())->toEqual(2);
-    expect($this->modelClass::whereContains('json', PureEnum::BLACK)->count())->toEqual(1);
-    expect($this->modelClass::whereContains('json', PureEnum::RED)->count())->toEqual(0);
-    expect($this->modelClass::whereContains('json', 'RED')->count())->toEqual(0);
-    expect($this->modelClass::whereDoesntContain('json', PureEnum::RED)->count())->toEqual(2);
-    expect($this->modelClass::whereDoesntContain('json', 'RED')->count())->toEqual(2);
+    expect(TestModel::whereContains('json', PureEnum::YELLOW)->count())->toEqual(2);
+    expect(TestModel::whereContains('json', PureEnum::BLACK)->count())->toEqual(1);
+    expect(TestModel::whereContains('json', PureEnum::RED)->count())->toEqual(0);
+    expect(TestModel::whereContains('json', 'RED')->count())->toEqual(0);
+    expect(TestModel::whereDoesntContain('json', PureEnum::RED)->count())->toEqual(2);
+    expect(TestModel::whereDoesntContain('json', 'RED')->count())->toEqual(2);
 
-    expect($this->modelClass::whereContains('sizes', ['S'])->count())->toEqual(2);
-    expect($this->modelClass::whereContains('sizes', 'S')->count())->toEqual(2);
+    expect(TestModel::whereContains('sizes', ['S'])->count())->toEqual(2);
+    expect(TestModel::whereContains('sizes', 'S')->count())->toEqual(2);
 
-    expect($this->modelClass::whereContainsAny('sizes', ['M', 'L'])->count())->toEqual(2);
-    expect($this->modelClass::whereContainsAny('sizes', ['XL', 'XXL'])->count())->toEqual(1);
+    expect(TestModel::whereContainsAny('sizes', ['M', 'L'])->count())->toEqual(2);
+    expect(TestModel::whereContainsAny('sizes', ['XL', 'XXL'])->count())->toEqual(1);
 
-    expect($this->modelClass::whereContains('visibilities', [IntBackedEnum::PUBLIC])->count())->toEqual(1);
-    expect($this->modelClass::whereContains('visibilities', IntBackedEnum::PUBLIC)->count())->toEqual(1);
-    expect($this->modelClass::whereContains('visibilities', 2)->count())->toEqual(1);
-    expect($this->modelClass::whereContainsAny('visibilities', [1, 2, 3])->count())->toEqual(2);
+    expect(TestModel::whereContains('visibilities', [IntBackedEnum::PUBLIC])->count())->toEqual(1);
+    expect(TestModel::whereContains('visibilities', IntBackedEnum::PUBLIC)->count())->toEqual(1);
+    expect(TestModel::whereContains('visibilities', 2)->count())->toEqual(1);
+    expect(TestModel::whereContainsAny('visibilities', [1, 2, 3])->count())->toEqual(2);
 
-    expect($this->modelClass::whereContains('permissions', [LaravelEnum::PUBLIC])->count())->toEqual(1);
-    expect($this->modelClass::whereContains('permissions', LaravelEnum::PUBLIC)->count())->toEqual(1);
-    expect($this->modelClass::whereContains('permissions', 2)->count())->toEqual(1);
+    expect(TestModel::whereContains('permissions', [LaravelEnum::PUBLIC])->count())->toEqual(1);
+    expect(TestModel::whereContains('permissions', LaravelEnum::PUBLIC)->count())->toEqual(1);
+    expect(TestModel::whereContains('permissions', 2)->count())->toEqual(1);
 
     expect(
-        $this->modelClass::whereContains('colors', PureEnum::BLACK)
+        TestModel::whereContains('colors', PureEnum::BLACK)
             ->whereContains('colors', PureEnum::BLUE)->count()
     )->toEqual(1);
 
     expect(
-        $this->modelClass::whereContains('colors', PureEnum::BLACK)
+        TestModel::whereContains('colors', PureEnum::BLACK)
             ->whereContains('colors', PureEnum::BLUE)->count()
     )->toEqual(1);
 
     expect(
-        $this->modelClass::whereContains('colors', [PureEnum::BLACK, PureEnum::BLUE])->count()
+        TestModel::whereContains('colors', [PureEnum::BLACK, PureEnum::BLUE])->count()
     )->toEqual(1);
     expect(
-        $this->modelClass::whereContains('colors', collect([PureEnum::BLACK, PureEnum::BLUE]))->count()
+        TestModel::whereContains('colors', collect([PureEnum::BLACK, PureEnum::BLUE]))->count()
     )->toEqual(1);
     expect(
-        $this->modelClass::whereContains('colors', EnumCollection::make([PureEnum::BLACK, PureEnum::BLUE]))->count()
-    )->toEqual(1);
-
-    expect(
-        $this->modelClass::whereContains('colors', ['BLACK', 'BLUE'])->count()
+        TestModel::whereContains('colors', EnumCollection::make([PureEnum::BLACK, PureEnum::BLUE]))->count()
     )->toEqual(1);
 
     expect(
-        $this->modelClass::whereContains('colors', PureEnum::RED)
+        TestModel::whereContains('colors', ['BLACK', 'BLUE'])->count()
+    )->toEqual(1);
+
+    expect(
+        TestModel::whereContains('colors', PureEnum::RED)
             ->orWhereContains('sizes', StringBackedEnum::SMALL)->count()
     )->toEqual(2);
 
     expect(
-        $this->modelClass::whereContains('colors', 'RED')
+        TestModel::whereContains('colors', 'RED')
             ->orWhereContains('sizes', StringBackedEnum::SMALL)->count()
     )->toEqual(2);
 });
@@ -236,7 +234,7 @@ it('will return unique values when casting as unique and storing repeated values
     $this->testModel->colors = [PureEnum::YELLOW, PureEnum::YELLOW, PureEnum::YELLOW];
     $this->testModel->save();
 
-    $model = $this->modelClass::find($this->testModel->id);
+    $model = TestModel::find($this->testModel->id);
 
     expect($model->colors)->toBeInstanceOf(EnumCollection::class);
     expect($model->colors->toArray())->toEqual([PureEnum::YELLOW]);
@@ -246,7 +244,7 @@ it('stores unique values for backed enums', function () {
     $this->testModel->visibilities = [IntBackedEnum::PRIVATE, IntBackedEnum::PRIVATE, IntBackedEnum::PRIVATE];
     $this->testModel->save();
 
-    $model = $this->modelClass::find($this->testModel->id);
+    $model = TestModel::find($this->testModel->id);
 
     expect($model->visibilities)->toBeInstanceOf(EnumCollection::class);
     expect($model->visibilities->toArray())->toEqual([IntBackedEnum::PRIVATE]);
@@ -256,29 +254,29 @@ it('stores unique values for backed enums, even with mixed enums and values', fu
     $this->testModel->visibilities = ['1', 2, IntBackedEnum::PUBLIC];
     $this->testModel->save();
 
-    $model = $this->modelClass::find($this->testModel->id);
+    $model = TestModel::find($this->testModel->id);
 
     expect($model->visibilities)->toBeInstanceOf(EnumCollection::class);
     expect($model->visibilities->toArray())->toEqual([IntBackedEnum::PRIVATE, IntBackedEnum::PUBLIC]);
 });
 
 it('return empty collection if empty array on db', function () {
-    $model = new $this->modelClass;
+    $model = new TestModel;
     $model->visibilities = [];
     $model->save();
 
-    $model = $this->modelClass::find($model->id);
+    $model = TestModel::find($model->id);
 
     expect($model->visibilities)->toBeInstanceOf(EnumCollection::class);
     expect($model->visibilities->toArray())->toEqual([]);
 });
 
 it('return empty collection if null on db', function () {
-    $model = new $this->modelClass;
+    $model = new TestModel;
     $model->visibilities = null;
     $model->save();
 
-    $model = $this->modelClass::find($model->id);
+    $model = TestModel::find($model->id);
 
     expect($model->visibilities)->toBeInstanceOf(EnumCollection::class);
     expect($model->visibilities->toArray())->toEqual([]);

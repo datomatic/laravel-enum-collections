@@ -152,12 +152,6 @@ class TestModel extends Model
 {
     use HasEnumCollections;
     
-    //Laravel 9/10
-    protected $casts = [
-        'field_name' => AsLaravelEnumCollection::class.':'.FieldEnum::class,
-    ];
-    
-    //Laravel 11
     protected function casts(): array
     {
         return [
