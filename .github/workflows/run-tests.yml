@@ -32,6 +32,10 @@ jobs:
         include:
           - laravel: 13.*
             testbench: 11.*
+        exclude:
+          # Lowest dependency versions predate PHP 8.6
+          - php: 8.6
+            stability: prefer-lowest
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
@@ -60,3 +64,4 @@ jobs:
         run: vendor/bin/pest --no-coverage
         env:
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
+          DB_PASSWORD: password

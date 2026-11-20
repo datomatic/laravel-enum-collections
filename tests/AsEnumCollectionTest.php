@@ -134,7 +134,7 @@ it('can check if enum collection contains enum', function ($field, $from, $searc
 ]);
 
 it('can query model with enum collection', function () {
-    \DB::table('test_models')->delete();
+    DB::table('test_models')->delete();
 
     $this->testModel->colors = [PureEnum::YELLOW, PureEnum::GREEN];
     $this->testModel->json = [PureEnum::YELLOW->name, PureEnum::GREEN->name];

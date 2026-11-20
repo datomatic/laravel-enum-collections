@@ -12,6 +12,7 @@ use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\Eloquent\Casts\Json;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use UnitEnum;
 
 /**
@@ -25,7 +26,7 @@ class AsLaravelEnumCollection implements Castable
      *
      *
      * @param  array{class-string<TValue>}  $arguments
-     * @return \Illuminate\Contracts\Database\Eloquent\CastsAttributes<\Illuminate\Support\Collection<array-key, TValue>, iterable<TValue>>
+     * @return CastsAttributes<Collection<array-key, TValue>, iterable<TValue>>
      */
     public static function castUsing(array $arguments)
     {
@@ -80,7 +81,7 @@ class AsLaravelEnumCollection implements Castable
 
                 if ($unique) {
                     $values = $values->unique();
-                    if(method_exists($model, 'forgetClassCastCacheKey')){
+                    if (method_exists($model, 'forgetClassCastCacheKey')) {
                         $model->forgetClassCastCacheKey($key);
                     }
                 }

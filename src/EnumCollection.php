@@ -83,7 +83,7 @@ final class EnumCollection extends Collection
      * @template TMakeKey of array-key
      * @template TMakeValue
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TMakeKey, TMakeValue>|iterable<TMakeKey, TMakeValue>|null  $items
+     * @param  Arrayable<TMakeKey, TMakeValue>|iterable<TMakeKey, TMakeValue>|null  $items
      * @param  class-string<TValue>|null  $enumClass
      * @return self<TMakeKey, TMakeValue>
      */
@@ -420,7 +420,7 @@ final class EnumCollection extends Collection
     public function containsStrict($key, $operator = null, $value = null): bool
     {
         if (! $key instanceof UnitEnum) {
-            throw new Exceptions\ValueError('Value must be an instance of UnitEnum');
+            throw new ValueError('Value must be an instance of UnitEnum');
         }
 
         return $this->contains($key, $operator, $value);
@@ -448,7 +448,7 @@ final class EnumCollection extends Collection
     /**
      * Get the items in the collection that are not present in the given items, using the callback.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
+     * @param  Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
      * @param  callable(TValue, TValue): int  $callback
      * @return self
      */
@@ -464,7 +464,7 @@ final class EnumCollection extends Collection
     /**
      * Get the items in the collection whose keys and values are not present in the given items.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
+     * @param  Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
      * @return self
      */
     public function diffAssoc($items)
@@ -478,7 +478,7 @@ final class EnumCollection extends Collection
     /**
      * Get the items in the collection whose keys and values are not present in the given items, using the callback.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
+     * @param  Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
      * @param  callable(TKey, TKey): int  $callback
      * @return self
      */
@@ -495,7 +495,7 @@ final class EnumCollection extends Collection
     /**
      * Get the items in the collection whose keys are not present in the given items.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
+     * @param  Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
      * @return self
      */
     public function diffKeys($items)
@@ -509,7 +509,7 @@ final class EnumCollection extends Collection
     /**
      * Get the items in the collection whose keys are not present in the given items, using the callback.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
+     * @param  Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
      * @param  callable(TKey, TKey): int  $callback
      * @return self
      */
@@ -614,7 +614,7 @@ final class EnumCollection extends Collection
     /**
      * Intersect the collection with the given items.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @param  Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
      * @return self
      */
     public function intersect($items)
@@ -626,7 +626,7 @@ final class EnumCollection extends Collection
     /**
      * Intersect the collection with the given items, using the callback.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
+     * @param  Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
      * @param  callable(TValue, TValue): int  $callback
      * @return self
      */
@@ -639,7 +639,7 @@ final class EnumCollection extends Collection
     /**
      * Intersect the collection with the given items with additional index check.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @param  Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
      * @return self
      */
     public function intersectAssoc($items)
@@ -653,7 +653,7 @@ final class EnumCollection extends Collection
     /**
      * Intersect the collection with the given items with additional index check, using the callback.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TValue>|iterable<array-key, TValue>  $items
+     * @param  Arrayable<array-key, TValue>|iterable<array-key, TValue>  $items
      * @param  callable(TValue, TValue): int  $callback
      * @return self
      */
@@ -670,7 +670,7 @@ final class EnumCollection extends Collection
     /**
      * Intersect the collection with the given items by key.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
+     * @param  Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
      * @return self
      */
     public function intersectByKeys($items)
@@ -788,7 +788,7 @@ final class EnumCollection extends Collection
     /**
      * Merge the collection with the given items.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
+     * @param  Arrayable<TKey, TValue>|iterable<TKey, TValue>  $items
      * @return self
      */
     public function merge($items)
@@ -823,7 +823,7 @@ final class EnumCollection extends Collection
      *
      * @template TCombineValue
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
+     * @param  Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
      * @return Collection<TValue, TCombineValue>
      */
     public function combine($values)
@@ -834,7 +834,7 @@ final class EnumCollection extends Collection
     /**
      * Union the collection with the given items.
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
+     * @param  Arrayable<TKey, TValue|int|string>|iterable<TKey, TValue|int|string>|TValue|int|string|null  $items
      * @return self
      */
     public function union($items)
@@ -1073,7 +1073,7 @@ final class EnumCollection extends Collection
      *
      * @template TZipValue
      *
-     * @param  \Illuminate\Contracts\Support\Arrayable<array-key, TZipValue>|iterable<array-key, TZipValue>  ...$items
+     * @param  Arrayable<array-key, TZipValue>|iterable<array-key, TZipValue>  ...$items
      * @return Enumerable<int, Enumerable<int, mixed>>
      *
      * @throw MethodNotSupported
