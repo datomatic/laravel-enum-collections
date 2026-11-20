@@ -18,6 +18,14 @@ class TestCase extends Orchestra
         $this->setUpDatabase();
     }
 
+    protected function tearDown(): void
+    {
+        // Release the MySQL connection after each test, otherwise CI hits "Too many connections"
+        $this->app['db']->disconnect();
+
+        parent::tearDown();
+    }
+
     protected function getPackageProviders($app)
     {
         return [
