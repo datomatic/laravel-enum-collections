@@ -2,6 +2,17 @@
 
 All notable changes to `laravel-enum-collections` will be documented in this file.
 
+## v3.5.0 - 2026-11-20
+
+Adds PHP 8.6 support. Dev tooling aligned with Laravel 13 (Pest 4/5, PHPUnit 12/13, Testbench 11) and CI fixed.
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2.5.0 to 3.0.0 by @dependabot[bot] in https://github.com/datomatic/laravel-enum-collections/pull/31
+* Bump dependabot/fetch-metadata from 3.0.0 to 3.1.0 by @dependabot[bot] in https://github.com/datomatic/laravel-enum-collections/pull/32
+
+**Full Changelog**: https://github.com/datomatic/laravel-enum-collections/compare/v3.4.2...v3.5.0
+
 ## v3.4.2 - 2026-04-09
 
 Fix Collection `make` method definition changed on Laravel v13.3
@@ -105,6 +116,7 @@ EnumCollection::tryFrom($data, Enum::class);
 
 
 
+
 ```
 - change casting definition in only onle line inside `casts` model property
 
@@ -121,6 +133,7 @@ protected function casts(): array
         'field_name' => AsLaravelEnumCollection::of(FieldEnum::class),
     ];
 }
+
 
 
 
