@@ -1,0 +1,437 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method Illuminate\\Contracts\\Database\\Eloquent\\CastsAttributes@anonymous/Casts/AsLaravelEnumCollection\.php\:33\:\:serialize\(\) should return array\<TKey of \(int\|string\), int\|string\> but returns array\<int, int\|string\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Casts/AsLaravelEnumCollection.php
+
+		-
+			message: '#^Parameter \#1 \$data of method Datomatic\\EnumCollections\\EnumCollection\<\(int\|string\),UnitEnum\>\:\:tryFrom\(\) expects Illuminate\\Contracts\\Support\\Arrayable\<\(int\|string\), int\|string\|UnitEnum\>\|int\|iterable\<\(int\|string\), int\|string\|UnitEnum\>\|string\|UnitEnum\|null, Illuminate\\Contracts\\Support\\Arrayable\<TKey of \(int\|string\), int\|string\|TValue of UnitEnum\>\|int\|iterable\<TKey of \(int\|string\), int\|string\|TValue of UnitEnum\>\|string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Casts/AsLaravelEnumCollection.php
+
+		-
+			message: '#^Parameter \#1 \$data of method Datomatic\\EnumCollections\\EnumCollection\<\(int\|string\),UnitEnum\>\:\:tryFrom\(\) expects Illuminate\\Contracts\\Support\\Arrayable\<\(int\|string\), int\|string\|UnitEnum\>\|int\|iterable\<\(int\|string\), int\|string\|UnitEnum\>\|string\|UnitEnum\|null, Illuminate\\Contracts\\Support\\Arrayable\<int, int\|string\|TValue of UnitEnum\>\|int\|iterable\<int, int\|string\|TValue of UnitEnum\>\|string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Casts/AsLaravelEnumCollection.php
+
+		-
+			message: '#^Parameter \#1 \$data of method Datomatic\\EnumCollections\\EnumCollection\<\(int\|string\),UnitEnum\>\:\:tryFrom\(\) expects Illuminate\\Contracts\\Support\\Arrayable\<\(int\|string\), int\|string\|UnitEnum\>\|int\|iterable\<\(int\|string\), int\|string\|UnitEnum\>\|string\|UnitEnum\|null, array\<mixed, mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Casts/AsLaravelEnumCollection.php
+
+		-
+			message: '#^Default value of the parameter \#1 \$depth \(float\) of method Datomatic\\EnumCollections\\EnumCollection\:\:dot\(\) is incompatible with type int\.$#'
+			identifier: parameter.defaultValue
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Instanceof between TValue of UnitEnum and UnitEnum will always evaluate to true\.$#'
+			identifier: instanceof.alwaysTrue
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:chunkWhile\(\) should return Illuminate\\Support\\Collection\<int, Illuminate\\Support\\Collection\<int, TValue of UnitEnum\>\> but returns Illuminate\\Support\\Collection\<int, Illuminate\\Support\\Collection\<TKey of \(int\|string\), TValue of UnitEnum\>\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:combine\(\) should return Illuminate\\Support\\Collection\<TValue of UnitEnum, TCombineValue\> but returns Illuminate\\Support\\Collection\<int\|string, TValue of UnitEnum\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:concat\(\) should return Datomatic\\EnumCollections\\EnumCollection\<TKey of \(int\|string\), TConcatValue\|TValue of UnitEnum\> but returns Datomatic\\EnumCollections\\EnumCollection\<TKey of \(int\|string\), TValue of UnitEnum\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:diff\(\) return type with generic class Datomatic\\EnumCollections\\EnumCollection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:diffAssoc\(\) return type with generic class Datomatic\\EnumCollections\\EnumCollection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:diffAssocUsing\(\) return type with generic class Datomatic\\EnumCollections\\EnumCollection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:diffKeys\(\) return type with generic class Datomatic\\EnumCollections\\EnumCollection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:diffKeysUsing\(\) return type with generic class Datomatic\\EnumCollections\\EnumCollection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:diffUsing\(\) return type with generic class Datomatic\\EnumCollections\\EnumCollection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:empty\(\) has parameter \$args with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:except\(\) return type with generic class Datomatic\\EnumCollections\\EnumCollection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:filter\(\) return type with generic class Datomatic\\EnumCollections\\EnumCollection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:getCollectionArrayableItems\(\) has parameter \$items with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:getCollectionArrayableItems\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:getEnumFromValue\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:groupBy\(\) has parameter \$groupBy with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:groupBy\(\) should return Illuminate\\Support\\Collection\<int\|string\|TGroupKey of \(int\|string\), Illuminate\\Support\\Collection\<int\|TKey of \(int\|string\), TValue of UnitEnum\>\> but returns Illuminate\\Support\\Collection\<\(int\|string\), Illuminate\\Support\\Collection\<int\|TKey of \(int\|string\), mixed\>\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:intersect\(\) return type with generic class Datomatic\\EnumCollections\\EnumCollection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:intersectAssoc\(\) return type with generic class Datomatic\\EnumCollections\\EnumCollection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:intersectAssocUsing\(\) return type with generic class Datomatic\\EnumCollections\\EnumCollection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:intersectByKeys\(\) return type with generic class Datomatic\\EnumCollections\\EnumCollection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:intersectUsing\(\) return type with generic class Datomatic\\EnumCollections\\EnumCollection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:join\(\) should return string but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:make\(\) has parameter \$args with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:make\(\) should return Datomatic\\EnumCollections\\EnumCollection\<TMakeKey of \(int\|string\), TMakeValue\> but returns Datomatic\\EnumCollections\\EnumCollection\<TMakeKey of \(int\|string\), UnitEnum\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:merge\(\) return type with generic class Datomatic\\EnumCollections\\EnumCollection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:multiply\(\) return type with generic class Datomatic\\EnumCollections\\EnumCollection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:nth\(\) return type with generic class Datomatic\\EnumCollections\\EnumCollection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:only\(\) return type with generic class Datomatic\\EnumCollections\\EnumCollection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:pad\(\) should return Datomatic\\EnumCollections\\EnumCollection\<int, TValue of UnitEnum\> but returns Datomatic\\EnumCollections\\EnumCollection\<int\|TKey of \(int\|string\), TValue of UnitEnum\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:pop\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:range\(\) has parameter \$args with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:shift\(\) never returns TValue of UnitEnum so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:shift\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:split\(\) should return Illuminate\\Support\\Collection\<int, Illuminate\\Support\\Collection\<TKey of \(int\|string\), TValue of UnitEnum\>\> but returns Illuminate\\Support\\Collection\<int, Illuminate\\Support\\Collection\<int\|TKey of \(int\|string\), TValue of UnitEnum\>\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:toCollectionValues\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Method Datomatic\\EnumCollections\\EnumCollection\:\:union\(\) return type with generic class Datomatic\\EnumCollections\\EnumCollection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^PHPDoc tag @method for method Datomatic\\EnumCollections\\EnumCollection\:\:from\(\) return type contains generic class Datomatic\\EnumCollections\\EnumCollection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^PHPDoc tag @method for method Datomatic\\EnumCollections\\EnumCollection\:\:tryFrom\(\) return type contains generic class Datomatic\\EnumCollections\\EnumCollection but does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$callback with type \(callable\)\|int\|string is not subtype of native type callable\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$enumClass$#'
+			identifier: parameter.notFound
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$items$#'
+			identifier: parameter.notFound
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^PHPDoc tag @return with type array\<TKey of \(int\|string\), int\|string\> is incompatible with native type Illuminate\\Support\\Collection\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Parameter \#1 \$array \(array\<TKey of \(int\|string\), TValue of UnitEnum\>\) to function array_filter does not contain falsy values, the array will always stay the same\.$#'
+			identifier: arrayFilter.same
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			identifier: argument.type
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Part \$value \(mixed\) of encapsed string cannot be cast to string\.$#'
+			identifier: encapsedStringPart.nonString
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Property Illuminate\\Support\\Collection\<TKey of \(int\|string\),TValue of UnitEnum\>\:\:\$items \(array\<TKey of \(int\|string\), TValue of UnitEnum\>\) does not accept array\<int\|TKey of \(int\|string\), mixed\>\.$#'
+			identifier: assign.propertyType
+			count: 3
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Return type \(Datomatic\\EnumCollections\\EnumCollection\<int, Datomatic\\EnumCollections\\EnumCollection\<TKey of \(int\|string\), TValue of UnitEnum\>\>\) of method Datomatic\\EnumCollections\\EnumCollection\:\:sliding\(\) should be compatible with return type \(static\(Illuminate\\Support\\Collection\<int, static\(Illuminate\\Support\\Collection\<TKey of \(int\|string\), TValue\>\)\>\)\) of method Illuminate\\Support\\Collection\<TKey of \(int\|string\),TValue of UnitEnum\>\:\:sliding\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Return type \(Datomatic\\EnumCollections\\EnumCollection\<int, Datomatic\\EnumCollections\\EnumCollection\<TKey of \(int\|string\), TValue of UnitEnum\>\>\) of method Datomatic\\EnumCollections\\EnumCollection\:\:sliding\(\) should be compatible with return type \(static\(Illuminate\\Support\\Enumerable\<int, static\(Illuminate\\Support\\Enumerable\<TKey of \(int\|string\), TValue\>\)\>\)\) of method Illuminate\\Support\\Enumerable\<TKey of \(int\|string\),TValue of UnitEnum\>\:\:sliding\(\)$#'
+			identifier: method.childReturnType
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Self\-out type \(\$key is null \? static\(Illuminate\\Support\\Collection\<int\|TKey of \(int\|string\) \(class Illuminate\\Support\\Collection, parameter\), TValue \(class Illuminate\\Support\\Collection, parameter\)\>\) \: \$this\(Illuminate\\Support\\Collection\<TKey of \(int\|string\) \(class Illuminate\\Support\\Collection, argument\), TValue \(class Illuminate\\Support\\Collection, argument\)\>\)\) of method Datomatic\\EnumCollections\\EnumCollection\:\:prepend is not subtype of Datomatic\\EnumCollections\\EnumCollection\.$#'
+			identifier: selfOut.type
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Self\-out type static\(Illuminate\\Support\\Collection\<\(array\<TKey of \(int\|string\) \(class Illuminate\\Support\\Collection, parameter\), mixed\> is array\<int, mixed\> \? int \: TKey of \(int\|string\) \(class Illuminate\\Support\\Collection, parameter\)\), TValue \(class Illuminate\\Support\\Collection, parameter\)\>\) of method Datomatic\\EnumCollections\\EnumCollection\:\:shift is not subtype of Datomatic\\EnumCollections\\EnumCollection\.$#'
+			identifier: selfOut.type
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Self\-out type static\(Illuminate\\Support\\Collection\<TKey of \(int\|string\) \(class Illuminate\\Support\\Collection, parameter\), TMapValue \(method Illuminate\\Support\\Collection\:\:transform\(\), parameter\)\>\) of method Datomatic\\EnumCollections\\EnumCollection\:\:transform is not subtype of Datomatic\\EnumCollections\\EnumCollection\.$#'
+			identifier: selfOut.type
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Self\-out type static\(Illuminate\\Support\\Collection\<int\|TKey of \(int\|string\) \(class Illuminate\\Support\\Collection, parameter\), TValue \(class Illuminate\\Support\\Collection, parameter\)\>\) of method Datomatic\\EnumCollections\\EnumCollection\:\:push is not subtype of Datomatic\\EnumCollections\\EnumCollection\.$#'
+			identifier: selfOut.type
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Self\-out type static\(Illuminate\\Support\\Collection\<int\|TKey of \(int\|string\) \(class Illuminate\\Support\\Collection, parameter\), TValue \(class Illuminate\\Support\\Collection, parameter\)\>\) of method Datomatic\\EnumCollections\\EnumCollection\:\:unshift is not subtype of Datomatic\\EnumCollections\\EnumCollection\.$#'
+			identifier: selfOut.type
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Trying to invoke \(callable\(TValue, TKey\)\: bool\)\|TValue of UnitEnum but it might not be a callable\.$#'
+			identifier: callable.nonCallable
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Type UnitEnum in generic type Illuminate\\Support\\Collection\<UnitEnum, mixed\> in PHPDoc tag @return is not subtype of template type TKey of \(int\|string\) of class Illuminate\\Support\\Collection\.$#'
+			identifier: generics.notSubtype
+			count: 1
+			path: src/EnumCollection.php
+
+		-
+			message: '#^Type mixed in generic type Datomatic\\EnumCollections\\EnumCollection\<\(int\|string\), mixed\> in PHPDoc tag @return is not subtype of template type TValue of UnitEnum of class Datomatic\\EnumCollections\\EnumCollection\.$#'
+			identifier: generics.notSubtype
+			count: 2
+			path: src/EnumCollection.php
+
+		-
+			message: '#^PHPDoc tag @method for method Datomatic\\EnumCollections\\Traits\\HasEnumCollections\:\:orWhereContains\(\) return type contains generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Traits/HasEnumCollections.php
+
+		-
+			message: '#^PHPDoc tag @method for method Datomatic\\EnumCollections\\Traits\\HasEnumCollections\:\:orWhereContainsAny\(\) return type contains generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Traits/HasEnumCollections.php
+
+		-
+			message: '#^PHPDoc tag @method for method Datomatic\\EnumCollections\\Traits\\HasEnumCollections\:\:orWhereDoesntContain\(\) return type contains generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Traits/HasEnumCollections.php
+
+		-
+			message: '#^PHPDoc tag @method for method Datomatic\\EnumCollections\\Traits\\HasEnumCollections\:\:orWhereDoesntContainAny\(\) return type contains generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Traits/HasEnumCollections.php
+
+		-
+			message: '#^PHPDoc tag @method for method Datomatic\\EnumCollections\\Traits\\HasEnumCollections\:\:whereContains\(\) return type contains generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Traits/HasEnumCollections.php
+
+		-
+			message: '#^PHPDoc tag @method for method Datomatic\\EnumCollections\\Traits\\HasEnumCollections\:\:whereContainsAny\(\) return type contains generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Traits/HasEnumCollections.php
+
+		-
+			message: '#^PHPDoc tag @method for method Datomatic\\EnumCollections\\Traits\\HasEnumCollections\:\:whereDoesntContain\(\) return type contains generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Traits/HasEnumCollections.php
+
+		-
+			message: '#^PHPDoc tag @method for method Datomatic\\EnumCollections\\Traits\\HasEnumCollections\:\:whereDoesntContainAny\(\) return type contains generic class Illuminate\\Database\\Eloquent\\Builder but does not specify its types\: TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Traits/HasEnumCollections.php
+
+		-
+			message: '#^Trait Datomatic\\EnumCollections\\Traits\\HasEnumCollections is used zero times and is not analysed\.$#'
+			identifier: trait.unused
+			count: 1
+			path: src/Traits/HasEnumCollections.php
+
+		-
+			message: '#^Trait Datomatic\\EnumCollections\\Traits\\HasUniqueEnumCollections is used zero times and is not analysed\.$#'
+			identifier: trait.unused
+			count: 1
+			path: src/Traits/HasUniqueEnumCollections.php
