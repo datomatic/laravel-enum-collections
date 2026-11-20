@@ -19,22 +19,19 @@ jobs:
           - 3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     runs-on: ${{ matrix.os }}
+    env:
+      # Composer 2.9 blocks old releases with advisories, which breaks prefer-lowest jobs
+      COMPOSER_NO_SECURITY_BLOCKING: 1
     strategy:
       fail-fast: true
       matrix:
         os: [ubuntu-latest]
-        php: [8.5, 8.4]
-        laravel: [12.55,13.*]
+        php: [8.6, 8.5, 8.4]
+        laravel: [13.*]
         stability: [prefer-lowest, prefer-stable]
         include:
-          - laravel: 12.55
-            testbench: 10.*
-            phpunit: 12.*
-            carbon: ^2.63
           - laravel: 13.*
-            testbench: 10.*
-            phpunit: 12.*
-            carbon: ^2.63
+            testbench: 11.*
 
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
@@ -60,6 +57,6 @@ jobs:
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
       - name: Execute tests
-        run: vendor/bin/pest
+        run: vendor/bin/pest --no-coverage
         env:
           DB_PORT: ${{ job.services.mysql.ports[3306] }}
